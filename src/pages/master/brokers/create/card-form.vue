@@ -30,14 +30,14 @@ const errors = defineModel<IFormError>('errors', {
 const isSaving = defineModel('is-saving', { default: false });
 
 onMounted(async () => {
-  const counter = await retrieveCounterApi('banks');
+  const counter = await retrieveCounterApi('brokers');
   data.value.code = counter.value;
 });
 </script>
 
 <template>
   <base-card>
-    <template #header>Banks</template>
+    <template #header>Brokers</template>
 
     <div class="flex flex-col gap-4 my-5">
       <base-input layout="horizontal" label="Code" required v-model="data.code" :errors="errors.code" :disabled="isSaving" />

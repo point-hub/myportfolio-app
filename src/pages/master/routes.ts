@@ -1,4 +1,5 @@
 import bankRoutes from './banks/routes';
+import brokerRoutes from './brokers/routes';
 import exampleRoutes from './examples/routes';
 import issuerRoutes from './issuers/routes';
 import ownerRoutes from './owners/routes';
@@ -19,5 +20,6 @@ export default {
     issuerRoutes,
     ownerRoutes,
     bankRoutes,
+    brokerRoutes,
   ],
 };

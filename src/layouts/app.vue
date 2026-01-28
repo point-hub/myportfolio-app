@@ -85,6 +85,7 @@ onMounted(() => {
     if (authStore.hasPermission('roles:module')) { masterMenu.submenu?.push({ name: 'Roles', path: '/master/roles' }); }
     if (authStore.hasPermission('owners:module')) { masterMenu.submenu?.push({ name: 'Owners', path: '/master/owners' }); }
     if (authStore.hasPermission('banks:module')) { masterMenu.submenu?.push({ name: 'Banks', path: '/master/banks' }); }
+    if (authStore.hasPermission('brokers:module')) { masterMenu.submenu?.push({ name: 'Brokers', path: '/master/brokers' }); }
     if (authStore.hasPermission('issuers:module')) { masterMenu.submenu?.push({ name: 'Issuers', path: '/master/issuers' }); }
     appMenu.value[0]?.menu?.push(masterMenu);
   }

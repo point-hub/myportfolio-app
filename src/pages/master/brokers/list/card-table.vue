@@ -4,7 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import TableSettingModal from '@/components/table-setting-modal.vue';
-import { getRolesApi, type IRoleData } from '@/composables/api/master/roles/get.api';
+import { getBrokersApi, type IBrokerData } from '@/composables/api/master/brokers/get.api';
 import { useQueryParams } from '@/composables/query-params';
 import { useTableFilter } from '@/composables/table-filter';
 import { useTableSetting } from '@/composables/table-setting';
@@ -31,6 +31,11 @@ const {
   columns: {
     code: { label: 'Code', isVisible: true, isSelectable: false },
     name: { label: 'Name', isVisible: true, isSelectable: false },
+    branch: { label: 'Branch', isVisible: false, isSelectable: true },
+    address: { label: 'Address', isVisible: false, isSelectable: true },
+    phone: { label: 'Phone', isVisible: false, isSelectable: true },
+    account_number: { label: 'Account Number', isVisible: true, isSelectable: true },
+    account_name: { label: 'Account Name', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },
@@ -52,12 +57,22 @@ const {
     all: '',
     code: '',
     name: '',
+    branch: '',
+    address: '',
+    phone: '',
+    account_number: '',
+    account_name: '',
     notes: '',
     is_archived: 'false',
   },
   initialSortKeys: {
     code: 0,
     name: 0,
+    branch: 0,
+    address: 0,
+    phone: 0,
+    account_number: 0,
+    account_name: 0,
     notes: 0,
     is_archived: 0,
   },
@@ -73,13 +88,14 @@ const authStore = useAuthStore();
 
 /**
  * Reactive references for:
- * - roles data retrieved from API
+ * - brokers data retrieved from API
  * - loading state
  * - control flags to prevent unnecessary watcher triggers
  */
-const roles = ref<IRoleData[]>();
+const brokers = ref<IBrokerData[]>();
 const isInitialSetup = ref(true);
 const isLoading = ref(false);
+const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
 
 /**
  * References for dynamic UI components like row menus and delete modal.
@@ -93,7 +109,7 @@ const deleteModalRef = ref();
  */
 const onPageUpdate = async () => {
   if (!isInitialSetup.value) {
-    await getRoles(pagination.page);
+    await getBrokers(pagination.page);
     await updateQueryParams({ 'page': pagination.page.toString() });
   }
 };
@@ -104,7 +120,7 @@ const onPageUpdate = async () => {
 const resetPageAndFetch = async () => {
   pagination.page = 1;
   await updateQueryParams({ page: 1 });
-  await getRoles();
+  await getBrokers();
 };
 
 /**
@@ -112,16 +128,16 @@ const resetPageAndFetch = async () => {
  * Manages loading state and error handling with user notifications.
  * @param page - Current page number to fetch (default 1)
  */
-const getRoles = async (page = 1) => {
+const getBrokers = async (page = 1) => {
   try {
     isLoading.value = true;
-    const response = await getRolesApi({
+    const response = await getBrokersApi({
       search: filter,
       sort: sortObjectToString(sort),
       page,
       page_size: pagination.page_size,
     });
-    roles.value = response.data;
+    brokers.value = response.data;
     Object.assign(pagination, response.pagination);
   } catch (error) {
     const errorResponse = handleError(error);
@@ -152,22 +168,22 @@ const onResetFilter = async () => {
   resetFilter();
 
   // Fetch data without any filters applied
-  await getRoles();
+  await getBrokers();
 
   setTimeout(() => { isInitialSetup.value = false; }, 1000);
 };
 
 /**
- * Opens the delete confirmation modal for a specific role.
+ * Opens the delete confirmation modal for a specific broker.
  * Also closes the row menu popover.
- * @param role - The data row to delete
+ * @param broker - The data row to delete
  * @param index - Index of the row for UI references
  */
-const onDeleteModal = (role: IRoleData, index: number) => {
+const onDeleteModal = (broker: IBrokerData, index: number) => {
   rowMenuRef.value[index].toggle(false);
   deleteModalRef.value.toggleModal({
-    _id: role._id,
-    label: `${role.name}`,
+    _id: broker._id,
+    label: `${broker.name}`,
   });
 };
 
@@ -176,7 +192,7 @@ const onDeleteModal = (role: IRoleData, index: number) => {
  * Refreshes the data list.
  */
 const onDeleted = async () => {
-  await getRoles();
+  await getBrokers();
 };
 
 /**
@@ -201,7 +217,7 @@ onMounted(async () => {
   });
 
   // Fetch initial data
-  await getRoles(pagination.page);
+  await getBrokers(pagination.page);
 
   setTimeout(() => { isInitialSetup.value = false; }, 1000);
 });
@@ -250,12 +266,10 @@ watch(sort, async () => {
     await resetPageAndFetch();
   }
 });
-
-const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
 </script>
 
 <template>
-  <base-card title="Roles">
+  <base-card title="Brokers">
     <div class="flex flex-col lg:flex-row gap-2 items-center justify-between mb-8">
       <div class="flex-1 w-full">
         <base-input v-model="filter.all" placeholder="Search..." border="full" :readonly="isLoading">
@@ -265,7 +279,7 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
         </base-input>
       </div>
       <div class="flex gap-1">
-        <router-link v-if="authStore.hasPermission('roles:create')" to="/master/roles/create">
+        <router-link v-if="authStore.hasPermission('brokers:create')" to="/master/brokers/create">
           <base-button color="primary" shape="sharp" class="font-bold">
             <base-icon class="i-lucide:square-plus" /> CREATE
           </base-button>
@@ -306,6 +320,21 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
             <th v-if="columns['name']?.isVisible">
               <base-input v-model="filter.name" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
+            <th v-if="columns['branch']?.isVisible">
+              <base-input v-model="filter.branch" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['address']?.isVisible">
+              <base-input v-model="filter.address" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['phone']?.isVisible">
+              <base-input v-model="filter.phone" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['account_number']?.isVisible">
+              <base-input v-model="filter.account_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['account_name']?.isVisible">
+              <base-input v-model="filter.account_name" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['notes']?.isVisible">
               <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -332,8 +361,8 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
             </td>
           </tr>
 
-          <!-- Show no data found message if no roles and query params exist -->
-          <tr v-if="!isLoading && roles?.length === 0 && route.query">
+          <!-- Show no data found message if no brokers and query params exist -->
+          <tr v-if="!isLoading && brokers?.length === 0 && route.query">
             <td :colspan="countVisibleColumns + 1">
               <div class="w-full flex-col p-10 items-center justify-center gap-2 text-center">
                 <p class="text-xl">Data Not Found</p>
@@ -344,9 +373,9 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
             </td>
           </tr>
 
-          <!-- Render rows of role data when available -->
-          <template v-if="!isLoading && roles && roles.length > 0">
-            <tr v-for="(role, index) in roles" :key="index">
+          <!-- Render rows of broker data when available -->
+          <template v-if="!isLoading && brokers && brokers.length > 0">
+            <tr v-for="(broker, index) in brokers" :key="index">
               <td>
                 <!-- Row action menu -->
                 <base-popover placement="bottom" ref="rowMenuRef">
@@ -356,21 +385,21 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
                   <template #content>
                     <base-card class="p-0! gap-0! -mt-2" shadow>
                       <div class="flex flex-col">
-                        <router-link :to="`/master/roles/${role._id}`">
+                        <router-link :to="`/master/brokers/${broker._id}`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-book-open-cover" />
                             <p class="flex-1">View</p>
                           </base-button>
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
-                        <router-link v-if="authStore.hasPermission('roles:update')" :to="`/master/roles/${role._id}/edit`">
+                        <router-link v-if="authStore.hasPermission('brokers:update')" :to="`/master/brokers/${broker._id}/edit`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-file-pen" />
                             <p class="flex-1">Edit</p>
                           </base-button>
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
-                        <base-button v-if="authStore.hasPermission('roles:delete')" @click="onDeleteModal(role, index)" variant="text" color="danger" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
+                        <base-button v-if="authStore.hasPermission('brokers:delete')" @click="onDeleteModal(broker, index)" variant="text" color="danger" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                           <base-icon icon="i-fa7-light-trash-xmark" />
                           <p class="flex-1">Delete</p>
                         </base-button>
@@ -380,16 +409,21 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
                 </base-popover>
               </td>
 
-              <!-- Role fields rendered conditionally based on column visibility -->
+              <!-- Broker fields rendered conditionally based on column visibility -->
               <td v-if="columns['code']?.isVisible">
-                <router-link :to="`/master/roles/${role._id}`" class="text-blue">{{ role.code }}</router-link>
+                <router-link :to="`/master/brokers/${broker._id}`" class="text-blue">{{ broker.code }}</router-link>
               </td>
               <td v-if="columns['name']?.isVisible">
-                <router-link :to="`/master/roles/${role._id}`" class="text-blue">{{ role.name }}</router-link>
+                <router-link :to="`/master/brokers/${broker._id}`" class="text-blue">{{ broker.name }}</router-link>
               </td>
-              <td v-if="columns['notes']?.isVisible">{{ role.notes }}</td>
+              <td v-if="columns['branch']?.isVisible">{{ broker.branch }}</td>
+              <td v-if="columns['address']?.isVisible">{{ broker.address }}</td>
+              <td v-if="columns['phone']?.isVisible">{{ broker.phone }}</td>
+              <td v-if="columns['account_number']?.isVisible">{{ broker.account_number }}</td>
+              <td v-if="columns['account_name']?.isVisible">{{ broker.account_name }}</td>
+              <td v-if="columns['notes']?.isVisible">{{ broker.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
-                <base-badge v-if="role.is_archived" variant="filled" color="danger" class="font-bold">
+                <base-badge v-if="broker.is_archived" variant="filled" color="danger" class="font-bold">
                   <base-icon icon="i-fa7-solid:box-archive" /> ARCHIVED
                 </base-badge>
                 <base-badge v-else variant="filled" color="success" class="font-bold">

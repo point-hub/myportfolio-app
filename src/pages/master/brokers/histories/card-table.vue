@@ -3,16 +3,23 @@ import { watchDebounced } from '@vueuse/core';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import BaseDateRangePicker from '@/components/base-date-range-picker.vue';
 import TableSettingModal from '@/components/table-setting-modal.vue';
-import { getRolesApi, type IRoleData } from '@/composables/api/master/roles/get.api';
+import { getAuditLogsApi, type IGetAuditLogsApiResponse } from '@/composables/api/administrator/audit-logs/get.api';
 import { useQueryParams } from '@/composables/query-params';
 import { useTableFilter } from '@/composables/table-filter';
 import { useTableSetting } from '@/composables/table-setting';
-import { useAuthStore } from '@/stores/auth.store';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
+import { formatDate } from '@/utils/date';
+import { getEntityLink } from '@/utils/router-resolver';
 
-import ModalDelete from '../components/delete-modal/index.vue';
+/**
+ * Utilities for updating query parameters in the URL.
+ */
+const { updateQueryParams, applyQueryParams } = useQueryParams();
+const route = useRoute();
+const router = useRouter();
 
 /**
  * Setup table columns and visibility state using the useTableSetting composable.
@@ -29,10 +36,12 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    code: { label: 'Code', isVisible: true, isSelectable: false },
-    name: { label: 'Name', isVisible: true, isSelectable: false },
-    notes: { label: 'Notes', isVisible: false, isSelectable: true },
-    is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
+    created_at: { label: 'Date', isVisible: true, isSelectable: false },
+    actor_type: { label: 'Actor Type', isVisible: true, isSelectable: true },
+    actor_id: { label: 'Actor ID', isVisible: false, isSelectable: true },
+    actor_name: { label: 'Actor Name', isVisible: true, isSelectable: false },
+    action: { label: 'Action', isVisible: true, isSelectable: false },
+    user_reason: { label: 'User Reason', isVisible: true, isSelectable: true },
   },
 });
 
@@ -50,42 +59,34 @@ const {
 } = useTableFilter({
   initialFilter: {
     all: '',
-    code: '',
-    name: '',
-    notes: '',
-    is_archived: 'false',
+    created_at: '',
+    created_at_from: '',
+    created_at_to: '',
+    actor_type: '',
+    actor_id: '',
+    actor_name: '',
+    action: '',
+    user_reason: '',
   },
   initialSortKeys: {
-    code: 0,
-    name: 0,
-    notes: 0,
-    is_archived: 0,
+    created_at: -1,
+    actor_type: 0,
+    actor_id: 0,
+    actor_name: 0,
+    action: 0,
+    user_reason: 0,
   },
 });
 
 /**
- * Utilities for updating query parameters in the URL.
- */
-const { updateQueryParams, applyQueryParams } = useQueryParams();
-const route = useRoute();
-const router = useRouter();
-const authStore = useAuthStore();
-
-/**
  * Reactive references for:
- * - roles data retrieved from API
+ * - auditLogs data retrieved from API
  * - loading state
  * - control flags to prevent unnecessary watcher triggers
  */
-const roles = ref<IRoleData[]>();
+const auditLogs = ref<IGetAuditLogsApiResponse>();
 const isInitialSetup = ref(true);
 const isLoading = ref(false);
-
-/**
- * References for dynamic UI components like row menus and delete modal.
- */
-const rowMenuRef = ref();
-const deleteModalRef = ref();
 
 /**
  * Function triggered when pagination page changes.
@@ -93,7 +94,7 @@ const deleteModalRef = ref();
  */
 const onPageUpdate = async () => {
   if (!isInitialSetup.value) {
-    await getRoles(pagination.page);
+    await getAuditLogs(pagination.page);
     await updateQueryParams({ 'page': pagination.page.toString() });
   }
 };
@@ -104,7 +105,7 @@ const onPageUpdate = async () => {
 const resetPageAndFetch = async () => {
   pagination.page = 1;
   await updateQueryParams({ page: 1 });
-  await getRoles();
+  await getAuditLogs();
 };
 
 /**
@@ -112,16 +113,23 @@ const resetPageAndFetch = async () => {
  * Manages loading state and error handling with user notifications.
  * @param page - Current page number to fetch (default 1)
  */
-const getRoles = async (page = 1) => {
+const getAuditLogs = async (page = 1) => {
   try {
     isLoading.value = true;
-    const response = await getRolesApi({
-      search: filter,
+    const response = await getAuditLogsApi({
+      search: {
+        ...filter,
+        created_at_from: formatDate(filter.created_at_from, { boundary: 'start-of-day' }),
+        created_at_to: formatDate(filter.created_at_to, { boundary: 'end-of-day' }),
+        entity_type: 'brokers',
+        entity_id: String(route.params.id),
+      },
+      group_by_operation_id: true,
       sort: sortObjectToString(sort),
       page,
       page_size: pagination.page_size,
     });
-    roles.value = response.data;
+    auditLogs.value = response;
     Object.assign(pagination, response.pagination);
   } catch (error) {
     const errorResponse = handleError(error);
@@ -152,31 +160,9 @@ const onResetFilter = async () => {
   resetFilter();
 
   // Fetch data without any filters applied
-  await getRoles();
+  await getAuditLogs();
 
   setTimeout(() => { isInitialSetup.value = false; }, 1000);
-};
-
-/**
- * Opens the delete confirmation modal for a specific role.
- * Also closes the row menu popover.
- * @param role - The data row to delete
- * @param index - Index of the row for UI references
- */
-const onDeleteModal = (role: IRoleData, index: number) => {
-  rowMenuRef.value[index].toggle(false);
-  deleteModalRef.value.toggleModal({
-    _id: role._id,
-    label: `${role.name}`,
-  });
-};
-
-/**
- * Handler called after a successful deletion.
- * Refreshes the data list.
- */
-const onDeleted = async () => {
-  await getRoles();
 };
 
 /**
@@ -185,7 +171,6 @@ const onDeleted = async () => {
  */
 onMounted(async () => {
   isInitialSetup.value = true;
-
   // Set initial page size from table setting
   pagination.page_size = pageSize.value.size;
 
@@ -199,9 +184,16 @@ onMounted(async () => {
     pageSizeOptions,
     columns,
   });
+  if (Object.keys(route.query).length === 0) {
+    await updateQueryParams({
+      search: filter,
+      sort: sortObjectToString(sort),
+      page: pagination.page.toString(),
+      'page-size': pagination.page_size.toString(),
+    });
+  }
 
-  // Fetch initial data
-  await getRoles(pagination.page);
+  await getAuditLogs(pagination.page);
 
   setTimeout(() => { isInitialSetup.value = false; }, 1000);
 });
@@ -211,7 +203,7 @@ onMounted(async () => {
  * Resets page to 1 and fetches data on filter change.
  * Skips if flagged to prevent API calls on initial setup or manual resets.
  */
-watchDebounced(filter, async () => {
+watchDebounced(() => ({...filter}), async () => {
   if (!isInitialSetup.value) {
     await updateQueryParams({ search: filter });
     await resetPageAndFetch();
@@ -251,11 +243,11 @@ watch(sort, async () => {
   }
 });
 
-const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
+
 </script>
 
 <template>
-  <base-card title="Roles">
+  <base-card title="Audit Logs">
     <div class="flex flex-col lg:flex-row gap-2 items-center justify-between mb-8">
       <div class="flex-1 w-full">
         <base-input v-model="filter.all" placeholder="Search..." border="full" :readonly="isLoading">
@@ -265,11 +257,6 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
         </base-input>
       </div>
       <div class="flex gap-1">
-        <router-link v-if="authStore.hasPermission('roles:create')" to="/master/roles/create">
-          <base-button color="primary" shape="sharp" class="font-bold">
-            <base-icon class="i-lucide:square-plus" /> CREATE
-          </base-button>
-        </router-link>
         <base-button color="info" @click="open()" :disabled="isLoading" class="font-bold">
           <base-icon class="i-ph:sliders-horizontal-bold" />
         </base-button>
@@ -280,7 +267,6 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
       <base-table>
         <thead>
           <tr>
-            <th class="w-1"></th>
             <!-- Render visible column headers with sortable buttons -->
             <template v-for="(column, key) in columns">
               <th :key="key" v-if="columns[key]?.isVisible">
@@ -297,27 +283,47 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
           </tr>
 
           <tr class="bg-slate-100 dark:bg-slate-700">
-            <th class="w-1"></th>
-
             <!-- Render filter inputs for visible columns -->
-            <th v-if="columns['code']?.isVisible">
-              <base-input v-model="filter.code" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['name']?.isVisible">
-              <base-input v-model="filter.name" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['notes']?.isVisible">
-              <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['is_archived']?.isVisible">
-              <base-choosen
+            <th v-if="columns['created_at']?.isVisible">
+              <!-- <base-input v-model="filter.date" placeholder="Search..." :readonly="isLoading" border="none" paddingless /> -->
+              <base-date-range-picker
+                v-model:date_from="filter.created_at_from"
+                v-model:date_to="filter.created_at_to"
                 placeholder="Search..."
-                title="Is Archived"
-                v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
+                :readonly="isLoading"
                 border="none"
                 paddingless
               />
+            </th>
+            <th v-if="columns['operation_id']?.isVisible">
+              <base-input v-model="filter.operation_id" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['actor_type']?.isVisible">
+              <base-input v-model="filter.actor_type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['actor_id']?.isVisible">
+              <base-input v-model="filter.actor_id" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['actor_name']?.isVisible">
+              <base-input v-model="filter.actor_name" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['action']?.isVisible">
+              <base-input v-model="filter.action" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['module']?.isVisible">
+              <base-input v-model="filter.module" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['entity_type']?.isVisible">
+              <base-input v-model="filter.entity_type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['entity_id']?.isVisible">
+              <base-input v-model="filter.entity_id" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['entity_ref']?.isVisible">
+              <base-input v-model="filter.entity_ref" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['user_reason']?.isVisible">
+              <base-input v-model="filter.user_reason" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
           </tr>
         </thead>
@@ -332,8 +338,8 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
             </td>
           </tr>
 
-          <!-- Show no data found message if no roles and query params exist -->
-          <tr v-if="!isLoading && roles?.length === 0 && route.query">
+          <!-- Show no data found message if no auditLogs and query params exist -->
+          <tr v-if="!isLoading && auditLogs?.data?.length === 0 && route.query">
             <td :colspan="countVisibleColumns + 1">
               <div class="w-full flex-col p-10 items-center justify-center gap-2 text-center">
                 <p class="text-xl">Data Not Found</p>
@@ -344,58 +350,41 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
             </td>
           </tr>
 
-          <!-- Render rows of role data when available -->
-          <template v-if="!isLoading && roles && roles.length > 0">
-            <tr v-for="(role, index) in roles" :key="index">
-              <td>
-                <!-- Row action menu -->
-                <base-popover placement="bottom" ref="rowMenuRef">
-                  <base-button @click="rowMenuRef[index].toggle()">
-                    <base-icon class="text-md!" icon="i-fa7-solid:ellipsis-vertical" />
-                  </base-button>
-                  <template #content>
-                    <base-card class="p-0! gap-0! -mt-2" shadow>
-                      <div class="flex flex-col">
-                        <router-link :to="`/master/roles/${role._id}`">
-                          <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
-                            <base-icon icon="i-fa7-light-book-open-cover" />
-                            <p class="flex-1">View</p>
-                          </base-button>
-                        </router-link>
-                        <base-divider orientation="vertical" class="my-0!" />
-                        <router-link v-if="authStore.hasPermission('roles:update')" :to="`/master/roles/${role._id}/edit`">
-                          <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
-                            <base-icon icon="i-fa7-light-file-pen" />
-                            <p class="flex-1">Edit</p>
-                          </base-button>
-                        </router-link>
-                        <base-divider orientation="vertical" class="my-0!" />
-                        <base-button v-if="authStore.hasPermission('roles:delete')" @click="onDeleteModal(role, index)" variant="text" color="danger" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
-                          <base-icon icon="i-fa7-light-trash-xmark" />
-                          <p class="flex-1">Delete</p>
-                        </base-button>
-                      </div>
-                    </base-card>
-                  </template>
-                </base-popover>
+          <!-- Render rows of auditLog data when available -->
+          <template v-if="!isLoading && auditLogs?.data && auditLogs?.data.length > 0">
+            <tr v-for="(auditLog, index) in auditLogs?.data" :key="index">
+              <!-- AuditLog fields rendered conditionally based on column visibility -->
+              <td v-if="columns['created_at']?.isVisible" class="whitespace-nowrap">{{ formatDate(auditLog.created_at) }}</td>
+              <td v-if="columns['operation_id']?.isVisible">
+                <router-link :to="`/administrator/audit-logs/${auditLog.operation_id}`" class="text-blue-600">
+                  {{ auditLog.operation_id?.substring(0, 13) }}...
+                </router-link>
               </td>
-
-              <!-- Role fields rendered conditionally based on column visibility -->
-              <td v-if="columns['code']?.isVisible">
-                <router-link :to="`/master/roles/${role._id}`" class="text-blue">{{ role.code }}</router-link>
+              <td v-if="columns['actor_type']?.isVisible">{{ auditLog.actor_type }}</td>
+              <td v-if="columns['actor_id']?.isVisible">
+                <a target="_blank" :href="`/master/users/${auditLog.actor_id}`" class="text-blue-600">
+                  {{ auditLog.actor_id }}
+                </a>
               </td>
-              <td v-if="columns['name']?.isVisible">
-                <router-link :to="`/master/roles/${role._id}`" class="text-blue">{{ role.name }}</router-link>
+              <td v-if="columns['actor_name']?.isVisible">
+                <a target="_blank" :href="`/master/users/${auditLog.actor_id}`" class="text-blue-600">
+                  {{ auditLog.actor_name }}
+                </a>
               </td>
-              <td v-if="columns['notes']?.isVisible">{{ role.notes }}</td>
-              <td v-if="columns['is_archived']?.isVisible">
-                <base-badge v-if="role.is_archived" variant="filled" color="danger" class="font-bold">
-                  <base-icon icon="i-fa7-solid:box-archive" /> ARCHIVED
-                </base-badge>
-                <base-badge v-else variant="filled" color="success" class="font-bold">
-                  <base-icon icon="i-fa7-solid:box-check" /> ACTIVE
-                </base-badge>
+              <td v-if="columns['action']?.isVisible">{{ auditLog.action }}</td>
+              <td v-if="columns['module']?.isVisible">{{ auditLog.module }}</td>
+              <td v-if="columns['entity_type']?.isVisible">{{ auditLog.entity_type }}</td>
+              <td v-if="columns['entity_id']?.isVisible">
+                <a target="_blank" :href="getEntityLink({ entity_type: auditLog.entity_type, entity_id: auditLog.entity_id })" class="text-blue-600">
+                  {{ auditLog.entity_id }}
+                </a>
               </td>
+              <td v-if="columns['entity_ref']?.isVisible">
+                <a target="_blank" :href="getEntityLink({ entity_type: auditLog.entity_type, entity_id: auditLog.entity_id })" class="text-blue-600">
+                  {{ auditLog.entity_ref }}
+                </a>
+              </td>
+              <td v-if="columns['user_reason']?.isVisible">{{ auditLog.user_reason }}</td>
             </tr>
           </template>
         </tbody>
@@ -410,9 +399,6 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
         @update:model-value="onPageUpdate()"
       />
     </div>
-
-    <!-- Delete confirmation modal -->
-    <modal-delete ref="deleteModalRef" @deleted="onDeleted" />
   </base-card>
 
   <!-- Table Setting modal -->
