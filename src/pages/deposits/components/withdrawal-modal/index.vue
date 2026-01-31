@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 
 import BaseConfirmActionModal from '@/components/base-confirm-action-modal.vue';
+import { deleteWithdrawalDepositApi } from '@/composables/api/deposits/delete-withdrawal.api';
 import { withdrawalDepositApi } from '@/composables/api/deposits/withdrawal.api';
 import { useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
 import { toast } from '@/toast';
@@ -65,7 +66,33 @@ const onReceive = async () => {
       bank_id: bankId.value,
       bank_account_uuid: bankAccountUuid.value,
     });
-    toast('Receive interest success', { color: 'success' });
+    toast('Withdrawal success', { color: 'success' });
+    emit('received');
+    reset();
+    confirmActionModalRef.value.toggleModal(false);
+  } catch (error) {
+    const errorResponse = handleError(error);
+    errors.value = errorResponse.errors!;
+    if (errorResponse.message) {
+      toast(errorResponse.message, {
+        lists: errorResponse.lists,
+        color: 'danger',
+      });
+    }
+  } finally {
+    // stop loading state
+    isReceiving.value = false;
+  }
+};
+
+const onDelete = async () => {
+  // prevent calling twice use loading state
+  if (isReceiving.value) return;
+  isReceiving.value = true;
+
+  try {
+    await deleteWithdrawalDepositApi(_id.value as string);
+    toast('Delete withdrawal success', { color: 'success' });
     emit('received');
     reset();
     confirmActionModalRef.value.toggleModal(false);
@@ -101,6 +128,7 @@ const reset = () => {
   bankAccountUuid.value = undefined;
   receivedDate.value = undefined;
   receivedAmount.value = undefined;
+  remainingAmount.value = undefined;
 };
 
 defineExpose({
@@ -112,7 +140,7 @@ defineExpose({
 <template>
   <base-confirm-action-modal
     ref="confirmActionModalRef"
-    title="Withdraw Interest"
+    title="Withdrawal Deposito"
   >
     <div class="flex flex-col gap-4">
       <base-datepicker layout="v" label="Maturity Date" :model-value="maturityDate" disabled />
@@ -136,6 +164,7 @@ defineExpose({
     </div>
     <template #action>
       <base-button variant="filled" color="primary" @click="onReceive">Confirm</base-button>
+      <base-button variant="filled" color="danger" @click="onDelete">Delete</base-button>
       <base-button variant="filled" color="secondary" @click="confirmActionModalRef.toggleModal(false)">Close</base-button>
     </template>
   </base-confirm-action-modal>

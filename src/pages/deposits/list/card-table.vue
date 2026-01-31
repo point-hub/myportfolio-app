@@ -56,6 +56,9 @@ const {
     'interest.bank.name': { label: 'Bank Interest - Name', isVisible: true, isSelectable: true },
     'interest.bank.account.account_number': { label: 'Bank Interest - Account Number', isVisible: true, isSelectable: true },
     'interest.bank.account.account_name': { label: 'Bank Interest - Account Name', isVisible: true, isSelectable: true },
+    'withdrawal.received_date': { label: 'Withdrawal - Received Date', isVisible: true, isSelectable: true },
+    'withdrawal.received_amount': { label: 'Withdrawal - Received Amount', isVisible: true, isSelectable: true },
+    'withdrawal.remaining_amount': { label: 'Withdrawal - Remaining Amount', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },
@@ -103,6 +106,11 @@ const {
     'interest.tax_amount': '',
     'interest.net_amount': '',
     'withdrawal.status': '',
+    'withdrawal.received_date': '',
+    'withdrawal.received_date_from': '',
+    'withdrawal.received_date_to': '',
+    'withdrawal.received_amount': '',
+    'withdrawal.remaining_amount': '',
     notes: '',
     is_archived: 'false',
   },
@@ -128,6 +136,9 @@ const {
     'interest.tax_amount': 0,
     'interest.net_amount': 0,
     'withdrawal.status': 0,
+    'withdrawal.received_date': 0,
+    'withdrawal.received_amount': 0,
+    'withdrawal.remaining_amount': 0,
     notes: 0,
     is_archived: 0,
   },
@@ -440,7 +451,6 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               <base-input v-model="filter['placement.term']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['placement.maturity_date']?.isVisible">
-              <!-- <base-input v-model="filter['placement.maturity_date']" placeholder="Search..." :readonly="isLoading" border="none" paddingless /> -->
               <base-date-range-picker
                 v-model:date_from="filter['placement.maturity_date_from']"
                 v-model:date_to="filter['placement.maturity_date_to']"
@@ -491,6 +501,22 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
             </th>
             <th v-if="columns['interest.bank.account.account_number']?.isVisible">
               <base-input v-model="filter['interest.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.received_date']?.isVisible">
+              <base-date-range-picker
+                v-model:date_from="filter['withdrawal.received_date_from']"
+                v-model:date_to="filter['withdrawal.received_date_to']"
+                placeholder="Search..."
+                :readonly="isLoading"
+                border="none"
+                paddingless
+              />
+            </th>
+            <th v-if="columns['withdrawal.received_amount']?.isVisible">
+              <base-input v-model="filter['withdrawal.received_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.remaining_amount']?.isVisible">
+              <base-input v-model="filter['withdrawal.remaining_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['notes']?.isVisible">
               <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -601,15 +627,18 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                 <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-dollar" /> Active
                 </base-badge>
+                <base-badge v-else-if="deposit.status === 'completed' && deposit.withdrawal?.received_date" variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Withdrawn
+                </base-badge>
                 <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
               <td v-if="columns['withdrawal.status']?.isVisible">
-                <base-badge v-if="deposit.withdrawal?.remaining_amount && deposit.withdrawal?.remaining_amount > 0" variant="filled" color="danger" class="font-bold w-32 uppercase">
+                <base-badge v-if="deposit.withdrawal?.received_date && deposit.withdrawal?.remaining_amount && deposit.withdrawal?.remaining_amount > 0" variant="filled" color="danger" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-open" /> Outstanding
                 </base-badge>
-                <base-badge v-else-if="deposit.withdrawal?.remaining_amount === 0" variant="filled" color="success" class="font-bold w-32 uppercase">
+                <base-badge v-else-if="deposit.withdrawal?.received_date && deposit.withdrawal?.remaining_amount === 0" variant="filled" color="success" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
@@ -627,7 +656,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               <td v-if="columns['placement.date']?.isVisible">{{ deposit.placement?.date }}</td>
               <td v-if="columns['placement.term']?.isVisible">{{ deposit.placement?.term }}</td>
               <td v-if="columns['placement.maturity_date']?.isVisible">{{ deposit.placement?.maturity_date }}</td>
-              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount) }}</td>
+              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount, 2) }}</td>
               <td v-if="columns['placement.bank.name']?.isVisible">{{ deposit.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ deposit.source?.bank?.name }}</td>
@@ -635,14 +664,17 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               <td v-if="columns['source.bank.account.account_number']?.isVisible">{{ deposit.source?.bank?.account?.account_number }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ deposit.interest?.payment_method }}</td>
-              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate) }}</td>
-              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount) }}</td>
-              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate) }}</td>
-              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount) }}</td>
-              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount) }}</td>
+              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate, 2) }}</td>
+              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount, 2) }}</td>
+              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate, 2) }}</td>
+              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount, 2) }}</td>
+              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount, 2) }}</td>
               <td v-if="columns['interest.bank.name']?.isVisible">{{ deposit.interest?.bank?.name }}</td>
               <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ deposit.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['interest.bank.account.account_number']?.isVisible">{{ deposit.interest?.bank?.account?.account_number }}</td>
+              <td v-if="columns['withdrawal.received_date']?.isVisible">{{ deposit.withdrawal?.received_date }}</td>
+              <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.received_amount, 2) }}</td>
+              <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.remaining_amount, 2) }}</td>
               <td v-if="columns['notes']?.isVisible">{{ deposit.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="deposit.is_archived" variant="filled" color="danger" class="font-bold">
