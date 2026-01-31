@@ -68,7 +68,7 @@ export interface IResponse {
   }[]
   notes?: string | null | undefined
   is_archived?: boolean
-  status?: 'draft' | 'active' | 'completed'
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
   created_at?: Date
   created_by_id?: string
   created_by?: IAuthUser

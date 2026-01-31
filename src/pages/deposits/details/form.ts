@@ -123,7 +123,7 @@ export interface IForm {
   }
   notes?: string | undefined | null
   is_archived?: boolean
-  status?: 'draft' | 'active' | 'completed'
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
 }
 
 export function useForm() {

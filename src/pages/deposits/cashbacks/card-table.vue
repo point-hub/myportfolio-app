@@ -174,7 +174,8 @@ const receivedOptions = ref([{ label: 'Received', value: 'true' }, { label: 'Unp
 const statusOptions = ref([
   { label: 'Draft', value: 'draft' },
   { label: 'Active', value: 'active' },
-  { label: 'Completed', value: 'completed' },
+  { label: 'Withdrawn', value: 'withdrawn' },
+  { label: 'Renewed', value: 'renewed' },
 ]);
 
 /**
@@ -631,8 +632,11 @@ watch(sort, async () => {
                   <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
                     <base-icon icon="i-fa7-solid:box-dollar" /> Active
                   </base-badge>
-                  <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
-                    <base-icon icon="i-fa7-solid:box-check" /> Completed
+                  <base-badge v-else-if="deposit.status === 'withdrawn'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-check" /> Withdrawn
+                  </base-badge>
+                  <base-badge v-else-if="deposit.status === 'renewed'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-check" /> Renewed
                   </base-badge>
                 </td>
                 <td v-if="columns['cashback_schedule.status']?.isVisible" class="text-center">
