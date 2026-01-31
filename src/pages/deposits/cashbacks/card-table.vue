@@ -31,6 +31,7 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
+    'status': { label: 'Status', isVisible: true, isSelectable: false },
     'cashback_schedule.status': { label: 'Payment Status', isVisible: true, isSelectable: false },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
     'cashback_schedule.payment_date': { label: 'Payment Date', isVisible: true, isSelectable: false },
@@ -79,6 +80,7 @@ const {
 } = useTableFilter({
   initialFilter: {
     all: '',
+    status: '',
     form_number: '',
     'owner.name': '',
     'cashback_schedule.status': '',
@@ -117,6 +119,7 @@ const {
     is_archived: 'false',
   },
   initialSortKeys: {
+    status: 0,
     form_number: 0,
     'owner.name': 0,
     'cashback_schedule.status': 0,
@@ -168,6 +171,11 @@ const isInitialSetup = ref(true);
 const isLoading = ref(false);
 const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
 const receivedOptions = ref([{ label: 'Received', value: 'true' }, { label: 'Unpaid', value: 'false' }]);
+const statusOptions = ref([
+  { label: 'Draft', value: 'draft' },
+  { label: 'Active', value: 'active' },
+  { label: 'Completed', value: 'completed' },
+]);
 
 /**
  * References for dynamic UI components like row menus and delete modal.
@@ -369,6 +377,16 @@ watch(sort, async () => {
             <th class="w-1"></th>
 
             <!-- Render filter inputs for visible columns -->
+            <th v-if="columns['status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Status"
+                v-model:options="statusOptions"
+                v-model:selectedValue="filter.status"
+                border="none"
+                paddingless
+              />
+            </th>
             <th v-if="columns['cashback_schedule.status']?.isVisible">
               <base-choosen
                 placeholder="Search..."
@@ -606,21 +624,33 @@ watch(sort, async () => {
                   </base-popover>
                 </td>
                 <!-- Deposit fields rendered conditionally based on column visibility -->
-                <td v-if="columns['cashback_schedule.status']?.isVisible">
+                <td v-if="columns['status']?.isVisible" class="text-center">
+                  <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-open" /> Draft
+                  </base-badge>
+                  <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-dollar" /> Active
+                  </base-badge>
+                  <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-check" /> Completed
+                  </base-badge>
+                </td>
+                <td v-if="columns['cashback_schedule.status']?.isVisible" class="text-center">
                   <base-button
                     @click="receiveCashbackModalRef.toggleModal({
                       _id: deposit._id,
                       payment_date: deposit.cashback_schedule?.payment_date,
                       amount: deposit.cashback_schedule?.amount,
                     })"
-                    v-if="!deposit.cashback_schedule?.received_date"
+                    v-if="!deposit.cashback_schedule?.received_date && deposit.status !== 'draft'"
                     variant="filled"
                     color="primary"
+                    class="font-bold w-32"
                   >
                     <base-icon icon="i-fa7-solid:money-from-bracket"></base-icon> Receive
                   </base-button>
-                  <base-badge v-else variant="filled" color="success">
-                    RECEIVED
+                  <base-badge v-else-if="deposit.cashback_schedule?.received_date && deposit.status !== 'draft'" variant="filled" color="success" class="font-bold w-32">
+                    <base-icon icon="i-fa7-solid:box-check" /> RECEIVED
                   </base-badge>
                 </td>
                 <td v-if="columns['placement.bilyet_number']?.isVisible">{{ deposit.placement?.bilyet_number }}</td>
