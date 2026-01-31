@@ -22,21 +22,10 @@ const { options: bankOptions, searchBank } = useSelectableBankAccounts();
 
 const cashbackPaymentDate = ref();
 const cashbackRate = ref();
+const cashbackAmount = ref();
 
-const cashbackAmount = computed<number>({
-  get() {
-    const amount = data.value.placement.amount;
-    const rate = cashbackRate.value;
-
-    if (!amount || !rate) return 0;
-
-    return amount * (rate / 100);
-  },
-  set(value: number) {
-    const amount = data.value.placement.amount;
-    if (!amount) return;
-    cashbackRate.value = (value / amount) * 100;
-  },
+watch(() => cashbackRate.value, () => {
+  cashbackAmount.value = (cashbackRate.value / 100) * (data.value.placement.amount ?? 0);
 });
 
 const totalScheduledCashback = computed(() =>

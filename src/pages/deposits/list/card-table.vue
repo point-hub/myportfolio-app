@@ -32,11 +32,11 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    status: { label: 'Status', isVisible: true, isSelectable: false },
-    form_number: { label: 'Form Number', isVisible: true, isSelectable: false },
+    status: { label: 'Status', isVisible: true, isSelectable: true },
+    form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
-    'owner.name': { label: 'Owner', isVisible: true, isSelectable: false },
-    'group.name': { label: 'Group', isVisible: true, isSelectable: false },
+    'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
+    'group.name': { label: 'Group', isVisible: true, isSelectable: true },
     'placement.base_date': { label: 'Base Date', isVisible: true, isSelectable: true },
     'placement.date': { label: 'Placement Date', isVisible: true, isSelectable: true },
     'placement.term': { label: 'Term', isVisible: true, isSelectable: true },
