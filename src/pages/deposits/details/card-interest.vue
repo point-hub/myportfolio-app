@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 
 import { useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
+import { formatDate } from '@/utils/date';
 import { formatNumber, roundNumber } from '@/utils/number';
 
 import { type IForm } from './form';
@@ -140,7 +141,7 @@ const { getLabel } = useSelectableBankAccounts();
           </td>
           <td class="text-right">{{ formatNumber((interestSchedule?.amount ?? 0) - (interestSchedule.received_amount ?? 0) - (interestSchedule.received_additional_payment_amount ?? 0), 2) }}</td>
           <td class="text-right">{{ interestSchedule.created_by?.username }}</td>
-          <td class="text-right">{{ interestSchedule.created_at }}</td>
+          <td class="text-right">{{ formatDate(interestSchedule.created_at) }}</td>
         </tr>
         <tr class="font-bold">
           <td class="text-right"></td>

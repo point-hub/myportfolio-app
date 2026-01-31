@@ -1,4 +1,19 @@
-export function formatDate(isoDate: string | Date | undefined, options?: {
+export function formatDate(isoDate: string | Date | undefined) {
+  if (!isoDate) {
+    return '';
+  }
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const date = new Date(isoDate);
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+
+  return `${year}-${month}-${day}`;
+}
+
+export function formatDatetime(isoDate: string | Date | undefined, options?: {
   boundary?: 'start-of-day' | 'end-of-day'
 }) {
   if (!isoDate) {
