@@ -78,7 +78,6 @@ export interface IForm {
   notes?: string | null | undefined
   update_reason?: string
   is_archived?: boolean
-  is_draft?: boolean
 }
 
 export type IFormError = Partial<

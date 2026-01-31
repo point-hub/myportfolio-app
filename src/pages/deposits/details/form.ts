@@ -106,7 +106,6 @@ export interface IForm {
   }[]
   notes?: string | undefined | null
   is_archived?: boolean
-  is_draft?: boolean
 }
 
 export function useForm() {

@@ -70,9 +70,16 @@ export interface IDepositData {
     bank?: IBankData
     created_by?: IAuthUser
   }[]
+  withdrawal?: {
+    received_date?: string
+    received_amount?: number
+    bank?: IBankData
+    created_by?: IAuthUser
+  }
   notes?: string | null | undefined
   is_archived: boolean
   is_draft: boolean
+  status: 'draft' | 'active' | 'completed'
   created_at: Date
   created_by_id: string
 }

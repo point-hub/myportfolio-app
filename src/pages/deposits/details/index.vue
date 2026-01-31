@@ -40,7 +40,6 @@ onMounted(async () => {
       form.data.cashback_schedule = response.cashback_schedule ?? [];
       form.data.notes = response.notes;
       form.data.is_archived = response.is_archived;
-      form.data.is_draft = response.is_draft;
     }
   } catch (error) {
     const errorResponse = handleError(error);

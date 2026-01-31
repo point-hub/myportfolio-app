@@ -15,6 +15,7 @@ import { handleError } from '@/utils/api';
 import { formatNumber } from '@/utils/number';
 
 import ModalDelete from '../components/delete-modal/index.vue';
+import WithdrawalModal from '../components/withdrawal-modal/index.vue';
 
 /**
  * Setup table columns and visibility state using the useTableSetting composable.
@@ -31,6 +32,7 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
+    status: { label: 'Status', isVisible: true, isSelectable: false },
     form_number: { label: 'Form Number', isVisible: true, isSelectable: false },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
     'owner.name': { label: 'Owner', isVisible: true, isSelectable: false },
@@ -55,7 +57,6 @@ const {
     'interest.bank.account.account_name': { label: 'Bank Interest - Account Name', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
-    is_draft: { label: 'Is Draft', isVisible: true, isSelectable: true },
   },
 });
 
@@ -73,6 +74,7 @@ const {
 } = useTableFilter({
   initialFilter: {
     all: '',
+    status: '',
     form_number: '',
     'owner.name': '',
     'group.name': '',
@@ -101,9 +103,9 @@ const {
     'interest.net_amount': '',
     notes: '',
     is_archived: 'false',
-    is_draft: '',
   },
   initialSortKeys: {
+    status: 0,
     form_number: 0,
     'owner.name': 0,
     'group.name': 0,
@@ -125,7 +127,6 @@ const {
     'interest.net_amount': 0,
     notes: 0,
     is_archived: 0,
-    is_draft: 0,
   },
 });
 
@@ -147,12 +148,18 @@ const deposits = ref<IDepositData[]>();
 const isInitialSetup = ref(true);
 const isLoading = ref(false);
 const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
+const statusOptions = ref([
+  { label: 'Draft', value: 'draft' },
+  { label: 'Active', value: 'active' },
+  { label: 'Completed', value: 'completed' },
+]);
 
 /**
  * References for dynamic UI components like row menus and delete modal.
  */
 const rowMenuRef = ref();
 const deleteModalRef = ref();
+const withdrawalModalRef = ref();
 
 /**
  * Function triggered when pagination page changes.
@@ -246,6 +253,10 @@ const onDeleted = async () => {
   await getDeposits();
 };
 
+const onWithdrawalReceived = async () => {
+  await getDeposits();
+};
+
 /**
  * Lifecycle hook: runs when component is mounted.
  * Applies query params to state and fetches initial data.
@@ -317,6 +328,14 @@ watch(sort, async () => {
     await resetPageAndFetch();
   }
 });
+
+const getWithdrawalAmount = (deposit: IDepositData) => {
+  if (deposit.interest?.is_rollover) {
+    return Number(deposit.placement?.amount ?? 0) + Number(deposit.interest?.net_amount ?? 0);
+  } else {
+    return deposit.placement?.amount;
+  }
+};
 </script>
 
 <template>
@@ -365,6 +384,16 @@ watch(sort, async () => {
             <th class="w-1"></th>
 
             <!-- Render filter inputs for visible columns -->
+            <th v-if="columns['status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Status"
+                v-model:options="statusOptions"
+                v-model:selectedValue="filter.status"
+                border="none"
+                paddingless
+              />
+            </th>
             <th v-if="columns['form_number']?.isVisible">
               <base-input v-model="filter.form_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -459,16 +488,6 @@ watch(sort, async () => {
                 paddingless
               />
             </th>
-            <th v-if="columns['is_draft']?.isVisible">
-              <base-choosen
-                placeholder="Search..."
-                title="Is Draft"
-                v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_draft"
-                border="none"
-                paddingless
-              />
-            </th>
           </tr>
         </thead>
 
@@ -496,7 +515,7 @@ watch(sort, async () => {
 
           <!-- Render rows of deposit data when available -->
           <template v-if="!isLoading && deposits && deposits.length > 0">
-            <tr v-for="(deposit, index) in deposits" :key="index" :class="{'bg-red-50 dark:bg-red-800': deposit.is_draft}">
+            <tr v-for="(deposit, index) in deposits" :key="index" :class="{'bg-red-50 dark:bg-red-800': deposit.status === 'draft'}">
               <td>
                 <!-- Row action menu -->
                 <base-popover placement="bottom" ref="rowMenuRef">
@@ -520,6 +539,27 @@ watch(sort, async () => {
                           </base-button>
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
+                        <base-button
+                          v-if="authStore.hasPermission('deposits:update')"
+                          variant="text"
+                          color="info"
+                          class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
+                          @click="() => {
+                            withdrawalModalRef.toggleModal({
+                              _id: deposit._id,
+                              payment_date: deposit.placement?.maturity_date,
+                              amount: getWithdrawalAmount(deposit),
+                              bank_id: deposit.source?.bank?._id,
+                              bank_account_uuid: deposit.source?.bank?.account?.uuid,
+                              received_date: deposit.withdrawal?.received_date,
+                              received_amount: deposit.withdrawal?.received_amount,
+                            })
+                            rowMenuRef[index].toggle()
+                          }"
+                        >
+                          <base-icon icon="i-fa7-light-money-from-bracket" />
+                          <p class="flex-1">Withdraw</p>
+                        </base-button>
                         <base-button v-if="authStore.hasPermission('deposits:delete')" @click="onDeleteModal(deposit, index)" variant="text" color="danger" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                           <base-icon icon="i-fa7-light-trash-xmark" />
                           <p class="flex-1">Delete</p>
@@ -531,6 +571,17 @@ watch(sort, async () => {
               </td>
 
               <!-- Deposit fields rendered conditionally based on column visibility -->
+              <td v-if="columns['status']?.isVisible">
+                <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold">
+                  <base-icon icon="i-fa7-solid:box-open" /> Draft
+                </base-badge>
+                <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold">
+                  <base-icon icon="i-fa7-solid:box-dollar" /> Active
+                </base-badge>
+                <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold">
+                  <base-icon icon="i-fa7-solid:box-check" /> Completed
+                </base-badge>
+              </td>
               <td v-if="columns['form_number']?.isVisible">
                 <router-link :to="`/deposits/${deposit._id}`" class="text-blue">{{ deposit.form_number }}</router-link>
               </td>
@@ -567,11 +618,6 @@ watch(sort, async () => {
                   <base-icon icon="i-fa7-solid:box-archive" /> ARCHIVED
                 </base-badge>
               </td>
-              <td v-if="columns['is_draft']?.isVisible">
-                <base-badge v-if="deposit.is_draft" variant="filled" color="danger" class="font-bold">
-                  <base-icon icon="i-fa7-solid:box-archive" /> DRAFT
-                </base-badge>
-              </td>
             </tr>
           </template>
         </tbody>
@@ -589,6 +635,7 @@ watch(sort, async () => {
 
     <!-- Delete confirmation modal -->
     <modal-delete ref="deleteModalRef" @deleted="onDeleted" />
+    <withdrawal-modal ref="withdrawalModalRef" @received="onWithdrawalReceived" />
   </base-card>
 
   <!-- Table Setting modal -->
