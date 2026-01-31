@@ -80,8 +80,8 @@ const onReceive = async () => {
       remaining_amount: Number(amount.value) - Number(receivedAmount.value) - Number(receivedAdditionalPaymentAmount.value),
       bank_id: bankId.value,
       bank_account_uuid: bankAccountUuid.value,
-      additional_bank_id: bankId.value,
-      additional_bank_account_uuid: bankAccountUuid.value,
+      additional_bank_id: additionalBankId.value,
+      additional_bank_account_uuid: additionalBankAccountUuid.value,
     });
     toast('Receive interest success', { color: 'success' });
     emit('received');
