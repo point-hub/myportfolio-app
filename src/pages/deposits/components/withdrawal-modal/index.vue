@@ -18,7 +18,7 @@ const receivedAmount = ref();
 const bankId = ref();
 const bankAccountUuid = ref();
 
-const errors = ref<{ [key: string]: string[]; }>({
+const errors = ref<{ [key: string]: undefined | string[]; }>({
   received_date: [],
   received_amount: [],
   bank_id: [],
@@ -72,7 +72,10 @@ const onReceive = async () => {
     confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
-    errors.value = errorResponse.errors!;
+    errors.value.received_date = errorResponse?.errors?.received_date;
+    errors.value.received_amount = errorResponse?.errors?.received_amount;
+    errors.value.bank_id = errorResponse?.errors?.bank_id;
+    errors.value.bank_account_uuid = errorResponse?.errors?.bank_account_uuid;
     if (errorResponse.message) {
       toast(errorResponse.message, {
         lists: errorResponse.lists,
