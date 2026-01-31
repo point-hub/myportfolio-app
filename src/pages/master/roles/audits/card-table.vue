@@ -31,8 +31,6 @@ const {
 
 /**
  * Setup filtering, sorting, and pagination state using the useTableFilter composable.
- * - initial filters for all, name, age, gender are empty
- * - initial sort keys all set to 0 (no sort)
  */
 const {
   filter,

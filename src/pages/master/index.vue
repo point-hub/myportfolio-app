@@ -30,6 +30,9 @@ onMounted(() => {
   if (authStore.hasPermissions(['banks:module'])) {
     menus.value.push({ name: 'Banks', path: '/master/banks', icon: 'i-fa7-solid:building-columns' });
   }
+  if (authStore.hasPermissions(['brokers:module'])) {
+    menus.value.push({ name: 'Brokers', path: '/master/brokers', icon: 'i-fa7-solid:user-group-crown' });
+  }
   if (authStore.hasPermissions(['roles:module'])) {
     menus.value.push({ name: 'Issuers', path: '/master/issuers', icon: 'i-fa7-solid:building-magnifying-glass' });
   }

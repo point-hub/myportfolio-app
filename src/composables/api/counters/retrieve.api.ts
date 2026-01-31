@@ -9,10 +9,11 @@ interface IResponse {
   created_at: string
 }
 
-export const retrieveCounterApi = async (name: string): Promise<IResponse> => {
+export const retrieveCounterApi = async (name: string, date?: Date): Promise<IResponse> => {
   const response = await apiRequest.get('/v1/counters/by-name', {
     params: {
       name,
+      date,
     },
   });
 

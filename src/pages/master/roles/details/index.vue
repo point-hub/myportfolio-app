@@ -7,7 +7,7 @@ import { findRoleApi } from '@/composables/api/master/roles/find-by-id.api';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
 
-import StatusBanner from '../../../../components/status-banner.vue';
+import StatusBanner from '@/components/status-banner.vue';
 import CardActions from '../components/card-actions.vue';
 import CardBreadcrumbs from './card-breadcrumbs.vue';
 import CardForm from './card-form.vue';

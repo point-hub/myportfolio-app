@@ -20,6 +20,7 @@ const onConfirm = async () => {
 
   try {
     emit('confirmed');
+    confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.message) {

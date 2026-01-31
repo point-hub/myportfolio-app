@@ -1,0 +1,416 @@
+<script setup lang="ts">
+import { watchDebounced } from '@vueuse/core';
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+import TableSettingModal from '@/components/table-setting-modal.vue';
+import { getBrokersApi, type IBrokerData } from '@/composables/api/master/brokers/get.api';
+import { useQueryParams } from '@/composables/query-params';
+import { useTableFilter } from '@/composables/table-filter';
+import { useTableSetting } from '@/composables/table-setting';
+import { useAuthStore } from '@/stores/auth.store';
+import { toast } from '@/toast';
+import { handleError } from '@/utils/api';
+
+/**
+ * Setup table columns and visibility state using the useTableSetting composable.
+ */
+const {
+  isOpen,
+  open,
+  close,
+  columns,
+  visibleColumns,
+  countVisibleColumns,
+  pageSize,
+  pageSizeOptions,
+  resetTableSetting,
+} = useTableSetting({
+  columns: {
+    code: { label: 'Code', isVisible: false, isSelectable: false },
+    name: { label: 'Name', isVisible: true, isSelectable: false },
+    branch: { label: 'Branch', isVisible: false, isSelectable: true },
+    address: { label: 'Address', isVisible: false, isSelectable: true },
+    phone: { label: 'Phone', isVisible: false, isSelectable: true },
+    notes: { label: 'Notes', isVisible: false, isSelectable: true },
+    is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
+  },
+});
+
+/**
+ * Setup filtering, sorting, and pagination state using the useTableFilter composable.
+ */
+const {
+  filter,
+  resetFilter,
+  sort,
+  sortObjectToString,
+  toggleSort,
+  pagination,
+  resetPagination,
+} = useTableFilter({
+  initialFilter: {
+    all: '',
+    code: '',
+    name: '',
+    branch: '',
+    address: '',
+    phone: '',
+    notes: '',
+    is_archived: 'false',
+  },
+  initialSortKeys: {
+    code: 0,
+    name: 0,
+    branch: 0,
+    address: 0,
+    phone: 0,
+    notes: 0,
+    is_archived: 0,
+  },
+});
+
+/**
+ * Utilities for updating query parameters in the URL.
+ */
+const { updateQueryParams, applyQueryParams } = useQueryParams();
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
+
+/**
+ * Reactive references for:
+ * - brokers data retrieved from API
+ * - loading state
+ * - control flags to prevent unnecessary watcher triggers
+ */
+const brokers = ref<IBrokerData[]>();
+const isInitialSetup = ref(true);
+const isLoading = ref(false);
+const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
+
+/**
+ * References for dynamic UI components like row menus and delete modal.
+ */
+const rowMenuRef = ref();
+
+/**
+ * Function triggered when pagination page changes.
+ * Fetches new data for the updated page and updates query params.
+ */
+const onPageUpdate = async () => {
+  if (!isInitialSetup.value) {
+    await getBrokers(pagination.page);
+    await updateQueryParams({ 'page': pagination.page.toString() });
+  }
+};
+
+/**
+ * Reset pagination to first page and fetch data accordingly.
+ */
+const resetPageAndFetch = async () => {
+  pagination.page = 1;
+  await updateQueryParams({ page: 1 });
+  await getBrokers();
+};
+
+/**
+ * Fetch data from API based on current filters, sorting, and pagination.
+ * Manages loading state and error handling with user notifications.
+ * @param page - Current page number to fetch (default 1)
+ */
+const getBrokers = async (page = 1) => {
+  try {
+    isLoading.value = true;
+    const response = await getBrokersApi({
+      search: filter,
+      sort: sortObjectToString(sort),
+      page,
+      page_size: pagination.page_size,
+    });
+    brokers.value = response.data;
+    Object.assign(pagination, response.pagination);
+  } catch (error) {
+    const errorResponse = handleError(error);
+    if (errorResponse.message) {
+      toast(errorResponse.message, {
+        lists: errorResponse.lists,
+        color: 'danger',
+      });
+    }
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/**
+ * Handler to reset all filters, sorting, pagination, and table settings.
+ * Clears URL query parameters and fetches default data.
+ */
+const onResetFilter = async () => {
+  isInitialSetup.value = true;
+
+  // Clear all query params from URL
+  await router.push({ query: undefined });
+
+  // Reset pagination, table settings, filter, and sort states
+  resetPagination(pageSize.value.size);
+  resetTableSetting();
+  resetFilter();
+
+  // Fetch data without any filters applied
+  await getBrokers();
+
+  setTimeout(() => { isInitialSetup.value = false; }, 1000);
+};
+
+/**
+ * Lifecycle hook: runs when component is mounted.
+ * Applies query params to state and fetches initial data.
+ */
+onMounted(async () => {
+  isInitialSetup.value = true;
+
+  // Set initial page size from table setting
+  pagination.page_size = pageSize.value.size;
+
+  // Apply query params from route to filter, sort, pagination, columns
+  applyQueryParams({
+    query: route.query,
+    filter,
+    sort,
+    pagination,
+    pageSize,
+    pageSizeOptions,
+    columns,
+  });
+
+  // Fetch initial data
+  await getBrokers(pagination.page);
+
+  setTimeout(() => { isInitialSetup.value = false; }, 1000);
+});
+
+/**
+ * Watcher for filter changes with debounce to reduce API calls.
+ * Resets page to 1 and fetches data on filter change.
+ * Skips if flagged to prevent API calls on initial setup or manual resets.
+ */
+watchDebounced(filter, async () => {
+  if (!isInitialSetup.value) {
+    await updateQueryParams({ search: filter });
+    await resetPageAndFetch();
+  }
+}, { debounce: 500, maxWait: 1000 });
+
+/**
+ * Watcher for page size changes.
+ * Updates pagination and query params, then fetches data.
+ */
+watch(pageSize, async () => {
+  if (!isInitialSetup.value) {
+    pagination.page_size = pageSize.value.size;
+    await updateQueryParams({ 'page-size': pagination.page_size.toString() });
+    await resetPageAndFetch();
+  }
+});
+
+/**
+ * Watcher for visible columns changes.
+ * Updates query params to reflect visible columns.
+ */
+watch(visibleColumns, async () => {
+  if (!isInitialSetup.value) {
+    await updateQueryParams({ 'columns': visibleColumns.value });
+  }
+});
+
+/**
+ * Watcher for sort state changes.
+ * Updates query params and fetches data accordingly.
+ */
+watch(sort, async () => {
+  if (!isInitialSetup.value) {
+    await updateQueryParams({ sort: sortObjectToString(sort) });
+    await resetPageAndFetch();
+  }
+});
+</script>
+
+<template>
+  <base-card title="Brokers">
+    <div class="flex flex-col lg:flex-row gap-2 items-center justify-between mb-8">
+      <div class="flex-1 w-full">
+        <base-input v-model="filter.all" placeholder="Search..." border="full" :readonly="isLoading">
+          <template #prefix>
+            <base-icon icon="i-fa7-solid-magnifying-glass" />
+          </template>
+        </base-input>
+      </div>
+      <div class="flex gap-1">
+        <router-link v-if="authStore.hasPermission('brokers:create')" to="/master/brokers/create">
+          <base-button color="primary" shape="sharp" class="font-bold">
+            <base-icon class="i-lucide:square-plus" /> CREATE
+          </base-button>
+        </router-link>
+        <base-button color="info" @click="open()" :disabled="isLoading" class="font-bold">
+          <base-icon class="i-ph:sliders-horizontal-bold" />
+        </base-button>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <base-table>
+        <thead>
+          <tr>
+            <th class="w-1"></th>
+            <!-- Render visible column headers with sortable buttons -->
+            <template v-for="(column, key) in columns">
+              <th :key="key" v-if="columns[key]?.isVisible">
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                  <base-button size="xs" class="p-0!" @click="toggleSort(key)">
+                    <base-icon v-if="sort[key] === 0" icon="i-solar:square-sort-vertical-outline" />
+                    <base-icon v-if="sort[key] === 1" icon="i-heroicons-solid:sort-ascending" />
+                    <base-icon v-if="sort[key] === -1" icon="i-heroicons-solid:sort-descending" />
+                  </base-button>
+                  <span>{{ column.label }}</span>
+                </div>
+              </th>
+            </template>
+          </tr>
+
+          <tr class="bg-slate-100 dark:bg-slate-700">
+            <th class="w-1"></th>
+
+            <!-- Render filter inputs for visible columns -->
+            <th v-if="columns['code']?.isVisible">
+              <base-input v-model="filter.code" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['name']?.isVisible">
+              <base-input v-model="filter.name" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['branch']?.isVisible">
+              <base-input v-model="filter.branch" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['address']?.isVisible">
+              <base-input v-model="filter.address" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['phone']?.isVisible">
+              <base-input v-model="filter.phone" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['notes']?.isVisible">
+              <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['is_archived']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Is Archived"
+                v-model:options="archivedOptions"
+                v-model:selectedValue="filter.is_archived"
+                border="none"
+                paddingless
+              />
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Loading state with loader spanning all columns -->
+          <tr v-if="isLoading">
+            <td :colspan="countVisibleColumns + 1">
+              <p class="w-full h-32 flex items-center justify-center gap-2 text-center text-xl">
+                <base-loader type="classic" sample="2" />
+              </p>
+            </td>
+          </tr>
+
+          <!-- Show no data found message if no brokers and query params exist -->
+          <tr v-if="!isLoading && brokers?.length === 0 && route.query">
+            <td :colspan="countVisibleColumns + 1">
+              <div class="w-full flex-col p-10 items-center justify-center gap-2 text-center">
+                <p class="text-xl">Data Not Found</p>
+                <base-button @click="onResetFilter" variant="filled" color="primary" size="xs" shape="pill" class="my-2">
+                  Reset Filter
+                </base-button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Render rows of broker data when available -->
+          <template v-if="!isLoading && brokers && brokers.length > 0">
+            <tr v-for="(broker, index) in brokers" :key="index">
+              <td>
+                <!-- Row action menu -->
+                <base-popover placement="bottom" ref="rowMenuRef">
+                  <base-button @click="rowMenuRef[index].toggle()">
+                    <base-icon class="text-md!" icon="i-fa7-solid:ellipsis-vertical" />
+                  </base-button>
+                  <template #content>
+                    <base-card class="p-0! gap-0! -mt-2" shadow>
+                      <div class="flex flex-col">
+                        <router-link :to="`/master/brokers/${broker._id}`">
+                          <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
+                            <base-icon icon="i-fa7-light-book-open-cover" />
+                            <p class="flex-1">View</p>
+                          </base-button>
+                        </router-link>
+                        <base-divider orientation="vertical" class="my-0!" />
+                        <router-link v-if="authStore.hasPermission('brokers:update')" :to="`/master/brokers/${broker._id}/edit`">
+                          <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
+                            <base-icon icon="i-fa7-light-file-pen" />
+                            <p class="flex-1">Edit</p>
+                          </base-button>
+                        </router-link>
+                      </div>
+                    </base-card>
+                  </template>
+                </base-popover>
+              </td>
+
+              <!-- Broker fields rendered conditionally based on column visibility -->
+              <td v-if="columns['code']?.isVisible">
+                <router-link :to="`/master/brokers/${broker._id}`" class="text-blue">{{ broker.code }}</router-link>
+              </td>
+              <td v-if="columns['name']?.isVisible">
+                <router-link :to="`/master/brokers/${broker._id}`" class="text-blue">{{ broker.name }}</router-link>
+              </td>
+              <td v-if="columns['branch']?.isVisible">{{ broker.branch }}</td>
+              <td v-if="columns['address']?.isVisible">{{ broker.address }}</td>
+              <td v-if="columns['phone']?.isVisible">{{ broker.phone }}</td>
+              <td v-if="columns['notes']?.isVisible">{{ broker.notes }}</td>
+              <td v-if="columns['is_archived']?.isVisible">
+                <base-badge v-if="broker.is_archived" variant="filled" color="danger" class="font-bold">
+                  <base-icon icon="i-fa7-solid:box-archive" /> ARCHIVED
+                </base-badge>
+                <base-badge v-else variant="filled" color="success" class="font-bold">
+                  <base-icon icon="i-fa7-solid:box-check" /> ACTIVE
+                </base-badge>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </base-table>
+
+      <!-- Pagination component with two-way binding to pagination.page -->
+      <base-pagination
+        v-if="!isLoading"
+        v-model="pagination.page"
+        :page-size="pagination.page_size"
+        :total-document="pagination.total_document"
+        @update:model-value="onPageUpdate()"
+      />
+    </div>
+  </base-card>
+
+  <!-- Table Setting modal -->
+  <table-setting-modal
+    :is-open="isOpen"
+    :columns="columns"
+    :page-size="pageSize"
+    :page-size-options="pageSizeOptions"
+    @update:close="close"
+    @update:pageSize="val => { pageSize = val }"
+  />
+</template>
+
+<style scoped lang="postcss"></style>

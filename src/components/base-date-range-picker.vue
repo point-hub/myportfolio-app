@@ -165,6 +165,12 @@ const setLastYear = () => {
   d.setFullYear(d.getFullYear() - 1);
   applyRange(startOfYear(d), endOfYear(d));
 };
+
+const onClear = () => {
+  dateFrom.value = '';
+  dateTo.value = '';
+  onClose();
+};
 </script>
 
 <template>
@@ -246,6 +252,9 @@ const setLastYear = () => {
         </base-button>
         <base-button color="info" variant="filled" class="font-bold" @click="setThisYear">
           This Year
+        </base-button>
+        <base-button color="danger" variant="filled" class="font-bold" @click="onClear">
+          Clear
         </base-button>
       </div>
     </div>

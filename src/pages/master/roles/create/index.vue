@@ -16,7 +16,7 @@ const form = useForm();
 
 const isSaving = ref(false);
 
-const save = async () => {
+const onSave = async () => {
   try {
     isSaving.value = true;
     const response = await createRoleApi(form.data);
@@ -51,7 +51,7 @@ const save = async () => {
     <card-permissions v-model:data="form.data" v-model:is-saving="isSaving" />
     <card-internal-notes v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
     <div class="flex gap-2">
-      <base-button class="flex-1" :is-loading="isSaving" color="primary" @click="save">Save</base-button>
+      <base-button class="flex-1" :is-loading="isSaving" color="primary" @click="onSave">Save</base-button>
     </div>
   </div>
 </template>

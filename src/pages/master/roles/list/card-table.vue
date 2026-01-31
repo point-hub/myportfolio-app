@@ -29,17 +29,15 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    code: { label: 'Code', isVisible: true, isSelectable: false },
+    code: { label: 'Code', isVisible: false, isSelectable: false },
     name: { label: 'Name', isVisible: true, isSelectable: false },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
-    is_archived: { label: 'Is Archived', isVisible: true, isSelectable: true },
+    is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },
 });
 
 /**
  * Setup filtering, sorting, and pagination state using the useTableFilter composable.
- * - initial filters for all, name, age, gender are empty
- * - initial sort keys all set to 0 (no sort)
  */
 const {
   filter,
