@@ -32,6 +32,11 @@ export default {
       meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:update'] },
     },
     {
+      path: ':id/extend',
+      component: () => import('./extend/index.vue'),
+      meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:update'] },
+    },
+    {
       path: ':id/histories',
       component: () => import('./histories/index.vue'),
       meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:read'] },

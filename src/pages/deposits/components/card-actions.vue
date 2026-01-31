@@ -8,8 +8,9 @@ import type { IForm } from '../details/form';
 import ArchiveModal from './archive-modal/index.vue';
 import DeleteModal from './delete-modal/index.vue';
 import RestoreModal from './restore-modal/index.vue';
+import WithdrawalModal from './withdrawal-modal/index.vue';
 
-const emit = defineEmits(['archived', 'restored']);
+const emit = defineEmits(['archived', 'restored', 'received']);
 
 const authStore = useAuthStore();
 const route = useRoute();
@@ -69,12 +70,26 @@ const onDeleteModal = () => {
 const onDeleted = async () => {
   await router.push('/deposits');
 };
+
+const withdrawalModalRef = ref();
+const onReceived = () => {
+  emit('received');
+};
+
+const getWithdrawalAmount = (deposit: IForm) => {
+  if (deposit.interest?.is_rollover) {
+    return Number(deposit.placement?.amount ?? 0) + Number(deposit.interest?.net_amount ?? 0);
+  } else {
+    return deposit.placement?.amount;
+  }
+};
 </script>
 
 <template>
   <archive-modal ref="archiveModalRef" @archived="onArchived" />
   <restore-modal ref="restoreModalRef" @restored="onRestored" />
   <delete-modal ref="deleteModalRef" @deleted="onDeleted" />
+  <withdrawal-modal ref="withdrawalModalRef" @received="onReceived" />
 
   <base-card class="py-3! gap-0!">
     <div class="flex gap-2 overflow-auto scrollbar-hidden">
@@ -88,6 +103,31 @@ const onDeleted = async () => {
           <base-icon icon="i-fa7-solid:file-pen" /> EDIT
         </base-button>
       </router-link>
+      <router-link v-if="authStore.hasPermission('deposits:update') && deposit?._id && deposit.status === 'active'" :to="`/deposits/${route.params.id}/extend`">
+        <base-button variant="filled" color="primary" size="sm" class="font-bold">
+          <base-icon icon="i-fa7-solid:file-pen" /> EXTEND
+        </base-button>
+      </router-link>
+      <base-button
+        v-if="authStore.hasPermission('deposits:update') && deposit?.status === 'active'"
+        variant="filled"
+        color="primary"
+        size="sm"
+        class="font-bold"
+        @click="() => {
+          withdrawalModalRef.toggleModal({
+            _id: deposit?._id,
+            payment_date: deposit?.placement?.maturity_date,
+            amount: getWithdrawalAmount(deposit!),
+            bank_id: deposit?.source?.bank?._id,
+            bank_account_uuid: deposit?.source?.bank?.account?.uuid,
+            received_date: deposit?.withdrawal?.received_date,
+            received_amount: deposit?.withdrawal?.received_amount,
+          })
+        }"
+      >
+        <base-icon icon="i-fa7-solid:money-from-bracket" /> WITHDRAW
+      </base-button>
       <!-- <router-link v-if="authStore.hasPermission('deposits:read')" :to="`/deposits/${route.params.id}/histories`">
         <base-button variant="filled" color="primary" size="sm" class="font-bold">
           <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> HISTORIES

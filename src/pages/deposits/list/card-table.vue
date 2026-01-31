@@ -538,9 +538,15 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                             <p class="flex-1">Edit</p>
                           </base-button>
                         </router-link>
+                        <router-link v-if="authStore.hasPermission('deposits:update') && deposit.status === 'active'" :to="`/deposits/${deposit._id}/extend`">
+                          <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
+                            <base-icon icon="i-fa7-light-file-pen" />
+                            <p class="flex-1">Extend</p>
+                          </base-button>
+                        </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
                         <base-button
-                          v-if="authStore.hasPermission('deposits:update') && deposit.status !== 'completed'"
+                          v-if="authStore.hasPermission('deposits:update') && deposit.status === 'active'"
                           variant="text"
                           color="info"
                           class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
@@ -572,13 +578,13 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
 
               <!-- Deposit fields rendered conditionally based on column visibility -->
               <td v-if="columns['status']?.isVisible">
-                <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold">
+                <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-open" /> Draft
                 </base-badge>
-                <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold">
+                <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-dollar" /> Active
                 </base-badge>
-                <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold">
+                <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>

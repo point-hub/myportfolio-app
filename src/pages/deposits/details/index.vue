@@ -62,12 +62,44 @@ const onArchived = async () => {
 const onRestored = async () => {
   form.data.is_archived = false;
 };
+
+const onReceived = async () => {
+  try {
+    isLoading.value = true;
+    const response = await findDepositApi(route.params.id as string);
+    if (response) {
+      form.data._id = response._id;
+      form.data.form_number = response.form_number;
+      form.data.group = response.group;
+      form.data.owner = response.owner;
+      form.data.placement = response.placement;
+      form.data.source = response.source;
+      form.data.interest = response.interest;
+      form.data.interest_schedule = response.interest_schedule ?? [];
+      form.data.cashback = response.cashback;
+      form.data.cashback_schedule = response.cashback_schedule ?? [];
+      form.data.notes = response.notes;
+      form.data.is_archived = response.is_archived;
+      form.data.status = response.status;
+    }
+  } catch (error) {
+    const errorResponse = handleError(error);
+    if (errorResponse.message) {
+      toast(errorResponse.message, {
+        lists: errorResponse.lists,
+        color: 'danger',
+      });
+    }
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
 
 <template>
   <app-container :is-loading="isLoading">
     <card-breadcrumbs />
-    <card-actions v-model:data="form.data" @restored="onRestored" @archived="onArchived" />
+    <card-actions v-model:data="form.data" @restored="onRestored" @archived="onArchived" @received="onReceived"/>
 
     <status-banner v-if="form.data.is_archived" status-type="danger" message="This data has been archived." />
 

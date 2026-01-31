@@ -1,17 +1,18 @@
 import { reactive } from 'vue';
 
-import type { IAuthUser } from '@/stores/auth.store';
-
 export interface IForm {
   _id?: string
   form_number?: string
+  owner_id?: string
   owner?: {
     name?: string
   }
+  group_id?: string
   group?: {
     name?: string
   }
-  placement?: {
+  placement: {
+    bank_id?: string
     bank?: {
       name?: string
     }
@@ -22,24 +23,26 @@ export interface IForm {
     maturity_date?: string
     amount?: number
   }
-  source?: {
+  source: {
+    bank_id?: string
+    bank_account_uuid?: string
     bank?: {
-      _id?: string
       name?: string
       account?: {
-        uuid?: string
         account_name?: string
         account_number?: string
       }
     }
   }
-  interest?: {
+  interest: {
     payment_method?: string
     rate?: number
     gross_amount?: number
     tax_rate?: number
     tax_amount?: number
     net_amount?: number
+    bank_id?: string
+    bank_account_uuid?: string
     bank?: {
       name?: string
       account?: {
@@ -49,31 +52,15 @@ export interface IForm {
     }
     is_rollover?: boolean
   }
-  interest_schedule?: {
+  interest_schedule: {
     term?: number
     payment_date?: string
     amount?: number
     received_date?: string
-    received_amount?: number
-    received_additional_payment_date?: string
-    received_additional_payment_amount?: number
-    bank?: {
-      name?: string
-      account?: {
-        account_name?: string
-        account_number?: string
-      }
-    }
-    additional_bank?: {
-      name?: string
-      account?: {
-        account_name?: string
-        account_number?: string
-      }
-    }
-    created_by?: IAuthUser
   }[]
-  cashback?: {
+  cashback: {
+    bank_id?: string
+    bank_account_uuid?: string
     bank?: {
       name?: string
       account?: {
@@ -87,59 +74,60 @@ export interface IForm {
     rate?: number
     amount?: number
     received_date?: string
-    received_amount?: number
-    received_additional_payment_date?: string
-    received_additional_payment_amount?: number
-    bank?: {
-      name?: string
-      account?: {
-        account_name?: string
-        account_number?: string
-      }
-    }
-    additional_bank?: {
-      name?: string
-      account?: {
-        account_name?: string
-        account_number?: string
-      }
-    }
-    created_by?: IAuthUser
   }[]
-  withdrawal: {
-    received_date?: string
-    received_amount?: number
-    bank?: {
-      name?: string
-      account?: {
-        account_name?: string
-        account_number?: string
-      }
-    }
-    created_by?: IAuthUser
-  }
-  notes?: string | undefined | null
+  notes?: string | null | undefined
+  update_reason?: string
   is_archived?: boolean
-  status?: 'draft' | 'active' | 'completed'
 }
+
+export type IFormError = Partial<
+  Record<
+    | 'form_number'
+    | 'owner_id'
+    | 'group_id'
+    | 'placement.bilyet_number'
+    | 'placement.base_date'
+    | 'placement.date'
+    | 'placement.term'
+    | 'placement.maturity_date'
+    | 'placement.bank_id'
+    | 'placement.amount'
+    | 'source.bank_id'
+    | 'interest.payment_method'
+    | 'interest.rate'
+    | 'interest.gross_amount'
+    | 'interest.tax_rate'
+    | 'interest.tax_amount'
+    | 'interest.net_amount'
+    | 'interest.bank_id'
+    | 'interest.is_rollover'
+    | 'cashback.bank_id'
+    | `cashback_schedule.${number}.payment_date`
+    | `cashback_schedule.${number}.rate`
+    | `cashback_schedule.${number}.amount`
+    | 'notes'
+    | 'update_reason',
+    string[]
+  >
+>;
 
 export function useForm() {
   const defaultForm: IForm = {
-    _id: undefined,
     form_number: undefined,
-    owner: undefined,
-    group: undefined,
+    owner_id: undefined,
+    group_id: undefined,
     placement: {
       bilyet_number: undefined,
       base_date: undefined,
       date: undefined,
       term: undefined,
       maturity_date: undefined,
-      bank: undefined,
+      bank_id: undefined,
       amount: undefined,
     },
     source: {
-      bank: undefined,
+      bank_id: undefined,
+      bank_account_uuid: undefined,
     },
     interest: {
       payment_method: undefined,
@@ -148,31 +136,29 @@ export function useForm() {
       tax_rate: undefined,
       tax_amount: undefined,
       net_amount: undefined,
-      bank: undefined,
+      bank_id: undefined,
+      bank_account_uuid: undefined,
       is_rollover: false,
     },
     interest_schedule: [],
     cashback: {
-      bank: undefined,
+      bank_id: undefined,
+      bank_account_uuid: undefined,
     },
     cashback_schedule: [],
-    withdrawal: {
-      received_date: undefined,
-      received_amount: undefined,
-      bank: {
-        name: undefined,
-        account: {
-          account_name: undefined,
-          account_number: undefined,
-        },
-      },
-      created_by: undefined,
-    },
     notes: undefined,
-    status: undefined,
+    update_reason: undefined,
   };
 
-  const data = reactive<IForm>(defaultForm);
+  const defaultFormError: IFormError = {};
 
-  return { data };
+  const data = reactive<IForm>(defaultForm);
+  const errors = reactive<IFormError>(defaultFormError);
+
+  const reset = () => {
+    Object.assign(data, defaultForm);
+    Object.assign(errors, defaultFormError);
+  };
+
+  return { data, errors, reset };
 }
