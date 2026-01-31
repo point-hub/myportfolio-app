@@ -78,7 +78,6 @@ export interface IDepositData {
   }
   notes?: string | null | undefined
   is_archived: boolean
-  is_draft: boolean
   status: 'draft' | 'active' | 'completed'
   created_at: Date
   created_by_id: string

@@ -31,7 +31,7 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    'cashback_schedule.status': { label: 'Status', isVisible: true, isSelectable: false },
+    'cashback_schedule.status': { label: 'Payment Status', isVisible: true, isSelectable: false },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
     'cashback_schedule.payment_date': { label: 'Payment Date', isVisible: true, isSelectable: false },
     'cashback_schedule.received_date': { label: 'Received Date', isVisible: true, isSelectable: false },
@@ -540,7 +540,7 @@ watch(sort, async () => {
           <!-- Render rows of deposit data when available -->
           <template v-if="!isLoading && deposits && deposits.length > 0">
             <template v-for="(deposit, index) in deposits" :key="index">
-              <tr>
+              <tr :class="{'bg-red-50 dark:bg-red-800': deposit.status === 'draft'}">
                 <td>
                   <!-- Row action menu -->
                   <base-popover placement="bottom" ref="rowMenuRef">
@@ -606,7 +606,7 @@ watch(sort, async () => {
                   </base-popover>
                 </td>
                 <!-- Deposit fields rendered conditionally based on column visibility -->
-                <td v-if="columns['cashback_schedule.status']?.isVisible" class="text-center">
+                <td v-if="columns['cashback_schedule.status']?.isVisible">
                   <base-button
                     @click="receiveCashbackModalRef.toggleModal({
                       _id: deposit._id,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-type StatusType = 'info' | 'warning' | 'danger';
+type StatusType = 'info' | 'warning' | 'danger' | 'success';
 
 const props = defineProps<{
   message: string;
@@ -20,9 +20,16 @@ const config = computed(() => {
   case 'warning':
     return {
       cardBg: 'yellow',
-      textColor: 'text-yellow-800',
-      iconBg: 'bg-yellow-800',
+      textColor: 'text-yellow-200',
+      iconBg: 'bg-yellow-200',
       icon: 'i-fa7-solid:warning',
+    };
+  case 'success':
+    return {
+      cardBg: 'green',
+      textColor: 'text-green-200',
+      iconBg: 'bg-green-200',
+      icon: 'i-fa7-solid:check',
     };
   default:
     return {

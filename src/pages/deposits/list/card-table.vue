@@ -540,7 +540,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
                         <base-button
-                          v-if="authStore.hasPermission('deposits:update')"
+                          v-if="authStore.hasPermission('deposits:update') && deposit.status !== 'completed'"
                           variant="text"
                           color="info"
                           class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"

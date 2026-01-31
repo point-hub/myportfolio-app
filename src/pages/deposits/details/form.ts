@@ -106,6 +106,7 @@ export interface IForm {
   }[]
   notes?: string | undefined | null
   is_archived?: boolean
+  status?: 'draft' | 'active' | 'completed'
 }
 
 export function useForm() {
@@ -142,6 +143,7 @@ export function useForm() {
     },
     cashback_schedule: [],
     notes: undefined,
+    status: undefined,
   };
 
   const data = reactive<IForm>(defaultForm);
