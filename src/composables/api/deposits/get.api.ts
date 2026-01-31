@@ -73,6 +73,7 @@ export interface IDepositData {
   withdrawal?: {
     received_date?: string
     received_amount?: number
+    remaining_amount?: number
     bank?: IBankData
     created_by?: IAuthUser
   }

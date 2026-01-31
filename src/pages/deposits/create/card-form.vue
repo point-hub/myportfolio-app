@@ -34,7 +34,7 @@ onMounted(async () => {
 <template>
   <base-card title="Deposits">
     <div class="flex flex-col gap-4 my-5">
-      <base-input layout="horizontal" label="Form Number" required v-model="data.form_number" :errors="errors.form_number" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Form Number" required v-model="data.form_number" :errors="errors.form_number" disabled />
       <base-select
         label="Owner"
         required

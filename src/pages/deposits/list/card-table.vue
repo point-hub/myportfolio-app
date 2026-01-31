@@ -33,6 +33,7 @@ const {
 } = useTableSetting({
   columns: {
     status: { label: 'Status', isVisible: true, isSelectable: true },
+    'withdrawal.status': { label: 'Payment Status', isVisible: true, isSelectable: true },
     form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
     'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
@@ -101,6 +102,7 @@ const {
     'interest.tax_rate': '',
     'interest.tax_amount': '',
     'interest.net_amount': '',
+    'withdrawal.status': '',
     notes: '',
     is_archived: 'false',
   },
@@ -125,6 +127,7 @@ const {
     'interest.tax_rate': 0,
     'interest.tax_amount': 0,
     'interest.net_amount': 0,
+    'withdrawal.status': 0,
     notes: 0,
     is_archived: 0,
   },
@@ -151,6 +154,10 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
 const statusOptions = ref([
   { label: 'Draft', value: 'draft' },
   { label: 'Active', value: 'active' },
+  { label: 'Completed', value: 'completed' },
+]);
+const withdrawalStatusOptions = ref([
+  { label: 'Outstanding', value: 'outstanding' },
   { label: 'Completed', value: 'completed' },
 ]);
 
@@ -394,6 +401,16 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                 paddingless
               />
             </th>
+            <th v-if="columns['withdrawal.status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Received Status"
+                v-model:options="withdrawalStatusOptions"
+                v-model:selectedValue="filter['withdrawal.status']"
+                border="none"
+                paddingless
+              />
+            </th>
             <th v-if="columns['form_number']?.isVisible">
               <base-input v-model="filter.form_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -546,7 +563,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
                         <base-button
-                          v-if="authStore.hasPermission('deposits:update') && deposit.status === 'active'"
+                          v-if="authStore.hasPermission('deposits:update') && deposit.status !== 'draft'"
                           variant="text"
                           color="info"
                           class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
@@ -585,6 +602,14 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                   <base-icon icon="i-fa7-solid:box-dollar" /> Active
                 </base-badge>
                 <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Completed
+                </base-badge>
+              </td>
+              <td v-if="columns['withdrawal.status']?.isVisible">
+                <base-badge v-if="deposit.withdrawal?.remaining_amount && deposit.withdrawal?.remaining_amount > 0" variant="filled" color="danger" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-open" /> Outstanding
+                </base-badge>
+                <base-badge v-else-if="deposit.withdrawal?.remaining_amount === 0" variant="filled" color="success" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
