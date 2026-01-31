@@ -642,14 +642,14 @@ watch(sort, async () => {
                       payment_date: deposit.cashback_schedule?.payment_date,
                       amount: deposit.cashback_schedule?.amount,
                     })"
-                    v-if="!deposit.cashback_schedule?.received_date && deposit.status !== 'draft'"
+                    v-if="deposit.cashback_schedule?.received_amount === 0 && deposit.status !== 'draft'"
                     variant="filled"
                     color="primary"
                     class="font-bold w-32"
                   >
                     <base-icon icon="i-fa7-solid:money-from-bracket"></base-icon> Receive
                   </base-button>
-                  <base-badge v-else-if="deposit.cashback_schedule?.received_date && deposit.status !== 'draft'" variant="filled" color="success" class="font-bold w-32">
+                  <base-badge v-else-if="(deposit.cashback_schedule?.received_amount ?? 0) > 0 && deposit.status !== 'draft'" variant="filled" color="success" class="font-bold w-32">
                     <base-icon icon="i-fa7-solid:box-check" /> RECEIVED
                   </base-badge>
                 </td>

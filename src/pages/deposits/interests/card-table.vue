@@ -625,13 +625,13 @@ watch(sort, async () => {
                 </td>
                 <!-- Deposit fields rendered conditionally based on column visibility -->
                 <td v-if="columns['status']?.isVisible">
-                  <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold w-32 font-bold">
+                  <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold w-32 uppercase">
                     <base-icon icon="i-fa7-solid:box-open" /> Draft
                   </base-badge>
-                  <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 font-bold">
+                  <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
                     <base-icon icon="i-fa7-solid:box-dollar" /> Active
                   </base-badge>
-                  <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 font-bold">
+                  <base-badge v-else-if="deposit.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
                     <base-icon icon="i-fa7-solid:box-check" /> Completed
                   </base-badge>
                 </td>
@@ -642,14 +642,14 @@ watch(sort, async () => {
                       payment_date: deposit.interest_schedule?.payment_date,
                       amount: deposit.interest_schedule?.amount,
                     })"
-                    v-if="!deposit.interest_schedule?.received_date && deposit.status !== 'draft'"
+                    v-if="(!deposit.interest_schedule?.received_amount || deposit.interest_schedule?.received_amount === 0) && deposit.status !== 'draft'"
                     variant="filled"
                     color="primary"
                     class="w-32 font-bold"
                   >
                     <base-icon icon="i-fa7-solid:money-from-bracket"></base-icon> Receive
                   </base-button>
-                  <base-badge v-else-if="deposit.interest_schedule?.received_date && deposit.status !== 'draft'" variant="filled" color="success" class="w-32 font-bold">
+                  <base-badge v-else-if="deposit.interest_schedule?.received_date && (deposit.interest_schedule?.received_amount ?? 0) > 0 && deposit.status !== 'draft'" variant="filled" color="success" class="w-32 font-bold">
                     <base-icon icon="i-fa7-solid:box-check" /> RECEIVED
                   </base-badge>
                 </td>

@@ -107,6 +107,7 @@ const { getLabel } = useSelectableBankAccounts();
           <th class="w-1">Bank</th>
           <th class="text-right w-1">Remaining</th>
           <th class="text-right whitespace-nowrap w-1">Created By</th>
+          <th class="text-right whitespace-nowrap w-1">Created At</th>
           <th class="w-1"></th>
         </tr>
       </thead>
@@ -139,6 +140,7 @@ const { getLabel } = useSelectableBankAccounts();
           </td>
           <td class="text-right">{{ formatNumber((interestSchedule?.amount ?? 0) - (interestSchedule.received_amount ?? 0) - (interestSchedule.received_additional_payment_amount ?? 0), 2) }}</td>
           <td class="text-right">{{ interestSchedule.created_by?.username }}</td>
+          <td class="text-right">{{ interestSchedule.created_at }}</td>
         </tr>
         <tr class="font-bold">
           <td class="text-right"></td>

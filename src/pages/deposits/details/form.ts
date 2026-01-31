@@ -72,6 +72,7 @@ export interface IForm {
       }
     }
     created_by?: IAuthUser
+    created_at?: string
   }[]
   cashback?: {
     bank?: {
@@ -105,6 +106,7 @@ export interface IForm {
       }
     }
     created_by?: IAuthUser
+    created_at?: string
   }[]
   withdrawal: {
     received_date?: string
@@ -117,6 +119,7 @@ export interface IForm {
       }
     }
     created_by?: IAuthUser
+    created_at?: string
   }
   notes?: string | undefined | null
   is_archived?: boolean
