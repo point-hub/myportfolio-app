@@ -70,7 +70,7 @@ const onSubmit = async () => {
 
     emit('success', form.data.reason);
     form.reset();
-    toggleModal(false);
+    // toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if(errorResponse.message === 'Invalid Credentials') {
@@ -129,8 +129,10 @@ defineExpose({
           />
         </div>
         <div class="flex gap-2">
-          <base-button color="danger" @click="onSubmit()" :disabled="isLoading">{{ confirmText }}</base-button>
-          <base-button color="secondary" @click="toggleModal(false)">{{ cancelText }}</base-button>
+          <slot name="action">
+            <base-button color="danger" @click="onSubmit()" :disabled="isLoading">{{ confirmText }}</base-button>
+            <base-button color="secondary" @click="toggleModal(false)">{{ cancelText }}</base-button>
+          </slot>
         </div>
       </div>
     </div>

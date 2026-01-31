@@ -18,14 +18,14 @@
   "dependencies": {
     "@ably/chat": "^1.1.1",
     "@point-hub/js-utils": "^0.0.6",
-    "@point-hub/papp": "^0.1.12",
+    "@point-hub/papp": "^0.1.20",
     "@point-hub/vue-cookie": "^0.2.2",
     "ably": "^2.17.0",
     "axios": "^1.13.4",
     "pinia": "^3.0.4",
     "ua-parser-js": "^2.0.8",
     "vue": "^3.5.27",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^24.0.0",
@@ -33,7 +33,7 @@
     "@point-hub/preset-papp-icon": "^0.0.12",
     "@tsconfig/node20": "^20.1.8",
     "@types/jsdom": "^27.0.0",
-    "@types/node": "^25.0.10",
+    "@types/node": "^25.1.0",
     "@types/qs": "^6.14.0",
     "@unocss/preset-wind4": "^66.6.0",
     "@unocss/transformer-directives": "^66.6.0",

@@ -9,6 +9,7 @@ import router from '@/router';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
 
+import CardAccounts from './card-accounts.vue';
 import CardBreadcrumbs from './card-breadcrumbs.vue';
 import CardForm from './card-form.vue';
 import CardInternalNotes from './card-internal-notes.vue';
@@ -31,8 +32,7 @@ onMounted(async () => {
       form.data.branch = response.branch;
       form.data.address = response.address;
       form.data.phone = response.phone;
-      form.data.account_number = response.account_number;
-      form.data.account_name = response.account_name;
+      form.data.accounts = response.accounts;
       form.data.notes = response.notes;
     }
   } catch (error) {
@@ -59,15 +59,7 @@ const update = async () => {
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.errors) {
-      form.errors.code = errorResponse.errors.code || [];
-      form.errors.name = errorResponse.errors.name || [];
-      form.errors.branch = errorResponse.errors.branch || [];
-      form.errors.address = errorResponse.errors.address || [];
-      form.errors.phone = errorResponse.errors.phone || [];
-      form.errors.account_number = errorResponse.errors.account_number || [];
-      form.errors.account_name = errorResponse.errors.account_name || [];
-      form.errors.notes = errorResponse.errors.notes || [];
-      form.errors.update_reason = errorResponse.errors.update_reason || [];
+      form.errors = errorResponse.errors;
     }
     if (errorResponse.message) {
       toast(errorResponse.message, {
@@ -86,6 +78,7 @@ const update = async () => {
     <card-breadcrumbs />
 
     <card-form v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
+    <card-accounts v-model:data="form.data" />
     <card-internal-notes v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
     <card-reason v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
     <div class="flex gap-2">

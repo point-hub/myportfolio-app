@@ -31,6 +31,7 @@ const onDelete = async (reason: string) => {
     await deleteOwnerApi(_id.value as string, reason);
     toast(`Delete Owner "${label.value}" success`, { color: 'success' });
     emit('deleted');
+    confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.message) {

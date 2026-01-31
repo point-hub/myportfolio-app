@@ -12,8 +12,6 @@ import { useAuthStore } from '@/stores/auth.store';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
 
-import ModalDelete from '../components/delete-modal/index.vue';
-
 /**
  * Setup table columns and visibility state using the useTableSetting composable.
  */
@@ -29,13 +27,11 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    code: { label: 'Code', isVisible: true, isSelectable: false },
+    code: { label: 'Code', isVisible: false, isSelectable: false },
     name: { label: 'Name', isVisible: true, isSelectable: false },
     branch: { label: 'Branch', isVisible: false, isSelectable: true },
     address: { label: 'Address', isVisible: false, isSelectable: true },
     phone: { label: 'Phone', isVisible: false, isSelectable: true },
-    account_number: { label: 'Account Number', isVisible: true, isSelectable: true },
-    account_name: { label: 'Account Name', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },
@@ -60,8 +56,6 @@ const {
     branch: '',
     address: '',
     phone: '',
-    account_number: '',
-    account_name: '',
     notes: '',
     is_archived: 'false',
   },
@@ -71,8 +65,6 @@ const {
     branch: 0,
     address: 0,
     phone: 0,
-    account_number: 0,
-    account_name: 0,
     notes: 0,
     is_archived: 0,
   },
@@ -101,7 +93,6 @@ const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', val
  * References for dynamic UI components like row menus and delete modal.
  */
 const rowMenuRef = ref();
-const deleteModalRef = ref();
 
 /**
  * Function triggered when pagination page changes.
@@ -171,28 +162,6 @@ const onResetFilter = async () => {
   await getBanks();
 
   setTimeout(() => { isInitialSetup.value = false; }, 1000);
-};
-
-/**
- * Opens the delete confirmation modal for a specific bank.
- * Also closes the row menu popover.
- * @param bank - The data row to delete
- * @param index - Index of the row for UI references
- */
-const onDeleteModal = (bank: IBankData, index: number) => {
-  rowMenuRef.value[index].toggle(false);
-  deleteModalRef.value.toggleModal({
-    _id: bank._id,
-    label: `${bank.name}`,
-  });
-};
-
-/**
- * Handler called after a successful deletion.
- * Refreshes the data list.
- */
-const onDeleted = async () => {
-  await getBanks();
 };
 
 /**
@@ -329,12 +298,6 @@ watch(sort, async () => {
             <th v-if="columns['phone']?.isVisible">
               <base-input v-model="filter.phone" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['account_number']?.isVisible">
-              <base-input v-model="filter.account_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['account_name']?.isVisible">
-              <base-input v-model="filter.account_name" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['notes']?.isVisible">
               <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -398,11 +361,6 @@ watch(sort, async () => {
                             <p class="flex-1">Edit</p>
                           </base-button>
                         </router-link>
-                        <base-divider orientation="vertical" class="my-0!" />
-                        <base-button v-if="authStore.hasPermission('banks:delete')" @click="onDeleteModal(bank, index)" variant="text" color="danger" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
-                          <base-icon icon="i-fa7-light-trash-xmark" />
-                          <p class="flex-1">Delete</p>
-                        </base-button>
                       </div>
                     </base-card>
                   </template>
@@ -419,8 +377,6 @@ watch(sort, async () => {
               <td v-if="columns['branch']?.isVisible">{{ bank.branch }}</td>
               <td v-if="columns['address']?.isVisible">{{ bank.address }}</td>
               <td v-if="columns['phone']?.isVisible">{{ bank.phone }}</td>
-              <td v-if="columns['account_number']?.isVisible">{{ bank.account_number }}</td>
-              <td v-if="columns['account_name']?.isVisible">{{ bank.account_name }}</td>
               <td v-if="columns['notes']?.isVisible">{{ bank.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="bank.is_archived" variant="filled" color="danger" class="font-bold">
@@ -444,9 +400,6 @@ watch(sort, async () => {
         @update:model-value="onPageUpdate()"
       />
     </div>
-
-    <!-- Delete confirmation modal -->
-    <modal-delete ref="deleteModalRef" @deleted="onDeleted" />
   </base-card>
 
   <!-- Table Setting modal -->

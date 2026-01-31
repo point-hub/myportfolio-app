@@ -3,12 +3,13 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import AppContainer from '@/components/app-container.vue';
+import StatusBanner from '@/components/status-banner.vue';
 import { findBankApi } from '@/composables/api/master/banks/find-by-id.api';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
 
-import StatusBanner from '../../../../components/status-banner.vue';
 import CardActions from '../components/card-actions.vue';
+import CardAccounts from './card-accounts.vue';
 import CardBreadcrumbs from './card-breadcrumbs.vue';
 import CardForm from './card-form.vue';
 import CardInternalNotes from './card-internal-notes.vue';
@@ -30,8 +31,7 @@ onMounted(async () => {
       form.data.branch = response.branch;
       form.data.address = response.address;
       form.data.phone = response.phone;
-      form.data.account_number = response.account_number;
-      form.data.account_name = response.account_name;
+      form.data.accounts = response.accounts;
       form.data.notes = response.notes;
       form.data.is_archived = response.is_archived;
     }
@@ -70,6 +70,7 @@ const onRestored = async () => {
     </base-card>
     <template v-else>
       <card-form v-model:data="form.data" />
+      <card-accounts v-model:data="form.data" />
       <card-internal-notes v-model:data="form.data" />
     </template>
   </app-container>

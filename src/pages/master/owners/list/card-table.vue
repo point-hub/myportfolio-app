@@ -29,7 +29,7 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    code: { label: 'Code', isVisible: true, isSelectable: false },
+    code: { label: 'Code', isVisible: false, isSelectable: false },
     name: { label: 'Name', isVisible: true, isSelectable: false },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },

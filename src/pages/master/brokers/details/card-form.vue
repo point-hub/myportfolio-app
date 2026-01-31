@@ -8,8 +8,6 @@ const data = defineModel<IForm>('data', {
     branch: undefined,
     address: undefined,
     phone: undefined,
-    account_number: undefined,
-    account_name: undefined,
     notes: undefined,
   }),
 });
@@ -23,8 +21,6 @@ const data = defineModel<IForm>('data', {
       <base-input layout="horizontal" label="Branch" readonly v-model="data.branch" border="full" />
       <base-input layout="horizontal" label="Address" readonly v-model="data.address" border="full" />
       <base-input layout="horizontal" label="Phone" readonly v-model="data.phone" border="full" />
-      <base-input layout="horizontal" label="Account Number" readonly v-model="data.account_number" border="full" />
-      <base-input layout="horizontal" label="Account Name" readonly v-model="data.account_name" border="full" />
     </div>
   </base-card>
 </template>

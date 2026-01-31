@@ -7,27 +7,27 @@ export interface IForm {
   branch?: string
   address?: string
   phone?: string
-  account_number?: string
-  account_name?: string
+  accounts?: {
+    account_number?: string
+    account_name?: string
+  }[]
   notes?: string
   is_archived?: boolean
 }
 
 export function useForm() {
-  const defaultForm: IForm = {
-    _id: undefined,
+  const createDefaultForm = (): IForm => ({
     code: undefined,
     name: undefined,
     branch: undefined,
     address: undefined,
     phone: undefined,
-    account_number: undefined,
-    account_name: undefined,
+    accounts: [],
     notes: undefined,
     is_archived: undefined,
-  };
+  });
 
-  const data = reactive<IForm>(defaultForm);
+  const data = reactive<IForm>(createDefaultForm());
 
   return { data };
 }

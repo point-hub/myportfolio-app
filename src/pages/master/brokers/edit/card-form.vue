@@ -8,8 +8,6 @@ const data = defineModel<IForm>('data', {
     branch: undefined,
     address: undefined,
     phone: undefined,
-    account_number: undefined,
-    account_name: undefined,
   }),
 });
 const errors = defineModel<IFormError>('errors', {
@@ -19,8 +17,6 @@ const errors = defineModel<IFormError>('errors', {
     branch: [],
     address: [],
     phone: [],
-    account_number: [],
-    account_name: [],
   }),
 });
 const isSaving = defineModel('is-saving', { default: false });
@@ -34,8 +30,6 @@ const isSaving = defineModel('is-saving', { default: false });
       <base-input layout="horizontal" label="Branch" v-model="data.branch" :errors="errors.branch" :disabled="isSaving" />
       <base-input layout="horizontal" label="Address" v-model="data.address" :errors="errors.address" :disabled="isSaving" />
       <base-input layout="horizontal" label="Phone" v-model="data.phone" :errors="errors.phone" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Account Number" required v-model="data.account_number" :errors="errors.account_number" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Account Name" required v-model="data.account_name" :errors="errors.account_name" :disabled="isSaving" />
     </div>
   </base-card>
 </template>

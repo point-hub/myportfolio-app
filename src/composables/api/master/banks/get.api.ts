@@ -8,8 +8,10 @@ export interface IBankData {
   branch: string
   address: string
   phone: string
-  account_number: string
-  account_name: string
+  accounts: {
+    account_number: string
+    account_name: string
+  }[]
   notes: string
   is_archived: string
   created_at: Date
@@ -21,17 +23,7 @@ export interface IResponse {
   pagination: IPagination
 }
 
-// Use a shared controller that can be replaced
-let controller: AbortController | null = null;
-
-export const getBanksApi = async (query?: IQuery): Promise<IResponse> => {
-  // Abort the previous request if it exists
-  if (controller) {
-    controller.abort();
-  }
-
-  // Create a new AbortController for this request
-  controller = new AbortController();
+export const getBanksApi = async (query?: IQuery, controller: AbortController | null = null): Promise<IResponse> => {
   const response = await apiRequest.get('/v1/master/banks', {
     params: {
       search: query?.search,
@@ -39,7 +31,7 @@ export const getBanksApi = async (query?: IQuery): Promise<IResponse> => {
       page_size: query?.page_size || 10,
       sort: query?.sort || '-_id',
     },
-    signal: controller.signal,
+    signal: controller?.signal,
   });
 
   return response.data;

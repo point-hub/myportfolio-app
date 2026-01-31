@@ -33,6 +33,7 @@ const onArchive = async (reason: string) => {
     });
     toast(`Archive Issuer "${label.value}" success`, { color: 'success' });
     emit('archived');
+    confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.message) {

@@ -33,6 +33,7 @@ const onRestore = async (reason: string) => {
     });
     toast(`Restore Issuer "${label.value}" success`, { color: 'success' });
     emit('restored');
+    confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.message) {

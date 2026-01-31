@@ -31,6 +31,7 @@ const onDelete = async (reason: string) => {
     await deleteBrokerApi(_id.value as string, reason);
     toast(`Delete Broker "${label.value}" success`, { color: 'success' });
     emit('deleted');
+    confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.message) {

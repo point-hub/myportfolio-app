@@ -298,7 +298,6 @@ watch(sort, async () => {
           <tr class="bg-slate-100 dark:bg-slate-700">
             <!-- Render filter inputs for visible columns -->
             <th v-if="columns['created_at']?.isVisible">
-              <!-- <base-input v-model="filter.date" placeholder="Search..." :readonly="isLoading" border="none" paddingless /> -->
               <base-date-range-picker
                 v-model:date_from="filter.created_at_from"
                 v-model:date_to="filter.created_at_to"

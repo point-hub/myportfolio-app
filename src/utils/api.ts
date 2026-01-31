@@ -35,7 +35,7 @@ instance.defaults.headers.common['Cache-Control'] = 'no-cache';
 // ----------------------------------------------------
 instance.interceptors.request.use((config) => {
   if (import.meta.env.DEV) {
-    console.log('Request:', config.url, config);
+    // console.log('Request:', config.url, config);
   }
   const userAgent = new UAParser().getResult();
   config.headers = config.headers ?? {};
@@ -87,7 +87,9 @@ const processQueue = (error: unknown, token: string | null = null) => {
 // ----------------------------------------------------
 // Response Interceptor (Handles 401)
 // ----------------------------------------------------
-instance.interceptors.response.use((response) => response, async (error) => {
+instance.interceptors.response.use((response) => {
+  return response;
+}, async (error) => {
   const authStore = useAuthStore();
   const originalRequest = error.config;
 

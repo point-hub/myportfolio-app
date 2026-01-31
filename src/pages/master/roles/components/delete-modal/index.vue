@@ -31,6 +31,7 @@ const onDelete = async (reason: string) => {
     await deleteRoleApi(_id.value as string, reason);
     toast(`Delete Role "${label.value}" success`, { color: 'success' });
     emit('deleted');
+    confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
     if (errorResponse.message) {
