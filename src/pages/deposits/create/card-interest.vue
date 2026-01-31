@@ -95,7 +95,7 @@ const totalScheduledAmount = computed(() => {
     const amount = item.amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total);
+  return roundNumber(total, 2);
 });
 
 const totalScheduledTerm = computed(() => {

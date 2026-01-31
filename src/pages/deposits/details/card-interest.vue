@@ -29,7 +29,7 @@ const totalScheduledAmount = computed(() => {
     const amount = item.amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total);
+  return roundNumber(total, 2);
 });
 
 const totalScheduledReceivedAmount = computed(() => {
@@ -39,7 +39,7 @@ const totalScheduledReceivedAmount = computed(() => {
     const amount = item.received_amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total);
+  return roundNumber(total, 2);
 });
 
 const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
@@ -49,7 +49,7 @@ const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
     const amount = item.received_additional_payment_amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total);
+  return roundNumber(total, 2);
 });
 
 const totalScheduledTerm = computed(() => {

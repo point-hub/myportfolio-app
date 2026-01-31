@@ -73,6 +73,7 @@ export interface IForm {
     payment_date?: string
     rate?: number
     amount?: number
+    received_date?: string
   }[]
   notes?: string | null | undefined
   update_reason?: string

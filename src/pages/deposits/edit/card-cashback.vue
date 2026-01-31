@@ -113,6 +113,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
           <th>Payment Date</th>
           <th class="text-right w-1">Rate</th>
           <th class="text-right w-1">Amount</th>
+          <th class="text-right whitespace-nowrap w-1">Received Date</th>
           <th class="w-1"></th>
         </tr>
       </thead>
@@ -121,6 +122,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
           <td>{{ cashbackSchedule.payment_date }}</td>
           <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 2) }}</td>
           <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 2) }}</td>
+          <td class="text-right whitespace-nowrap">{{ cashbackSchedule.received_date }}</td>
           <td>
             <base-button @click="onDeleteCashback(index)" variant="filled" color="danger">
               <base-icon class="i-fa7-regular:circle-x" />

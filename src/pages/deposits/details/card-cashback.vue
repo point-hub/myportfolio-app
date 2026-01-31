@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
-import { formatNumber } from '@/utils/number';
+import { formatNumber, roundNumber } from '@/utils/number';
 
 import { type IForm } from './form';
 
@@ -16,17 +16,40 @@ const data = defineModel<IForm>('data', {
       amount: undefined,
       received_date: undefined,
       received_amount: undefined,
+      received_additonal_date: undefined,
+      received_additonal_amount: undefined,
       bank: undefined,
+      additional_bank: undefined,
     },
   }),
 });
 
-const totalScheduledCashback = computed(() =>
+const totalScheduledAmount = computed(() =>
   data.value.cashback_schedule.reduce(
     (sum, item) => sum + (item.amount ?? 0),
     0,
   ),
 );
+
+const totalScheduledReceivedAmount = computed(() => {
+  if (!data.value.cashback_schedule?.length) return 0;
+
+  const total = data.value.cashback_schedule.reduce((sum, item) => {
+    const amount = item.received_amount ?? 0;
+    return sum + amount;
+  }, 0);
+  return roundNumber(total, 2);
+});
+
+const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
+  if (!data.value.cashback_schedule?.length) return 0;
+
+  const total = data.value.cashback_schedule.reduce((sum, item) => {
+    const amount = item.received_additional_payment_amount ?? 0;
+    return sum + amount;
+  }, 0);
+  return roundNumber(total, 2);
+});
 
 const { getLabel } = useSelectableBankAccounts();
 </script>
@@ -53,7 +76,8 @@ const { getLabel } = useSelectableBankAccounts();
       <thead>
         <tr>
           <th colspan="3"></th>
-          <th colspan="3" class="border-x border-slate-200 text-center">Received</th>
+          <th colspan="3" class="border-x border-slate-200 bg-slate-50 dark:bg-slate-700 dark:text-white text-center">Received</th>
+          <th colspan="3" class="border-x border-slate-200 bg-slate-50 dark:bg-slate-700 dark:text-white text-center">Received Additional Payment</th>
           <th class="w-1"></th>
         </tr>
         <tr>
@@ -63,6 +87,10 @@ const { getLabel } = useSelectableBankAccounts();
           <th class="text-right w-1">Date</th>
           <th class="text-right w-1">Amount</th>
           <th class="text-right w-1">Bank</th>
+          <th class="text-right w-1">Date</th>
+          <th class="text-right w-1">Amount</th>
+          <th class="text-right w-1">Bank</th>
+          <th class="text-right w-1">Remaining</th>
           <th class="text-right whitespace-nowrap w-1">Created By</th>
           <th class="w-1"></th>
         </tr>
@@ -72,16 +100,42 @@ const { getLabel } = useSelectableBankAccounts();
           <td>{{ cashbackSchedule.payment_date }}</td>
           <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 2) }}</td>
           <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 2) }}</td>
-          <td></td>
+          <td class="text-right whitespace-nowrap">{{ cashbackSchedule?.received_date }}</td>
+          <td class="text-right">{{ formatNumber(cashbackSchedule.received_amount ?? 0, 2) }}</td>
+          <td class="whitespace-nowrap">
+            {{
+              getLabel({
+                bank_name: cashbackSchedule.bank?.name,
+                bank_account_name: cashbackSchedule.bank?.account?.account_name,
+                bank_account_number: cashbackSchedule.bank?.account?.account_number,
+              })
+            }}
+          </td>
+          <td class="text-right whitespace-nowrap">{{ cashbackSchedule?.received_additional_payment_date }}</td>
+          <td class="text-right">{{ formatNumber(cashbackSchedule.received_additional_payment_amount ?? 0, 2) }}</td>
+          <td class="whitespace-nowrap">
+            {{
+              getLabel({
+                bank_name: cashbackSchedule.additional_bank?.name,
+                bank_account_name: cashbackSchedule.additional_bank?.account?.account_name,
+                bank_account_number: cashbackSchedule.additional_bank?.account?.account_number,
+              })
+            }}
+          </td>
+          <td class="text-right">{{ formatNumber((cashbackSchedule?.amount ?? 0) - (cashbackSchedule.received_amount ?? 0) - (cashbackSchedule.received_additional_payment_amount ?? 0), 2) }}</td>
+          <td class="text-right">{{ cashbackSchedule.created_by?.username }}</td>
           <td></td>
         </tr>
         <tr class="font-bold">
           <td colspan="2" class="text-right"></td>
-          <td class="text-right">{{ formatNumber(totalScheduledCashback, 2) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount, 2) }}</td>
           <td></td>
-          <td class="text-right">{{ formatNumber(totalScheduledCashback, 2) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledReceivedAmount, 2) }}</td>
           <td></td>
           <td></td>
+          <td class="text-right">{{ formatNumber(totalScheduledReceivedAdditionalPaymentAmount, 2) }}</td>
+          <td></td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount - totalScheduledReceivedAmount - totalScheduledReceivedAdditionalPaymentAmount, 2) }}</td>
           <td></td>
         </tr>
       </tbody>

@@ -86,7 +86,16 @@ export interface IForm {
     amount?: number
     received_date?: string
     received_amount?: number
+    received_additional_payment_date?: string
+    received_additional_payment_amount?: number
     bank?: {
+      name?: string
+      account?: {
+        account_name?: string
+        account_number?: string
+      }
+    }
+    additional_bank?: {
       name?: string
       account?: {
         account_name?: string
