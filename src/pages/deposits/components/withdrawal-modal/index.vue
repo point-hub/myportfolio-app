@@ -122,13 +122,12 @@ watch(() => [bankAccountUuid.value, bankOptions.value], () => {
 });
 
 const reset = () => {
-  maturityDate.value = undefined;
-  amount.value = undefined;
-  bankId.value = undefined;
-  bankAccountUuid.value = undefined;
-  receivedDate.value = undefined;
-  receivedAmount.value = undefined;
-  remainingAmount.value = undefined;
+  maturityDate.value = null;
+  amount.value = null;
+  bankId.value = null;
+  bankAccountUuid.value = null;
+  receivedDate.value = null;
+  receivedAmount.value = null;
 };
 
 defineExpose({
