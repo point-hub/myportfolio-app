@@ -197,15 +197,15 @@ onMounted(async () => {
               </div>
             </div>
 
-            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.savings">
-              <p class="uppercase font-bold lg:w-48">Savings</p>
-              <div v-for="action in availablePermissions.savings" :key="action">
+            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.bonds">
+              <p class="uppercase font-bold lg:w-48">Bonds</p>
+              <div v-for="action in availablePermissions.bonds" :key="action">
                 <base-checkbox
                   class="uppercase"
                   :text="action"
                   :disabled="isSaving"
-                  :model-value="hasPermission('savings', action)"
-                  @update:model-value="(v: boolean) => togglePermission('savings', action, v)"
+                  :model-value="hasPermission('bonds', action)"
+                  @update:model-value="(v: boolean) => togglePermission('bonds', action, v)"
                 />
               </div>
             </div>
@@ -223,6 +223,19 @@ onMounted(async () => {
               </div>
             </div>
 
+            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.savings">
+              <p class="uppercase font-bold lg:w-48">Savings</p>
+              <div v-for="action in availablePermissions.savings" :key="action">
+                <base-checkbox
+                  class="uppercase"
+                  :text="action"
+                  :disabled="isSaving"
+                  :model-value="hasPermission('savings', action)"
+                  @update:model-value="(v: boolean) => togglePermission('savings', action, v)"
+                />
+              </div>
+            </div>
+
             <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.insurances">
               <p class="uppercase font-bold lg:w-48">Insurances</p>
               <div v-for="action in availablePermissions.insurances" :key="action">
@@ -232,19 +245,6 @@ onMounted(async () => {
                   :disabled="isSaving"
                   :model-value="hasPermission('insurances', action)"
                   @update:model-value="(v: boolean) => togglePermission('insurances', action, v)"
-                />
-              </div>
-            </div>
-
-            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.bonds">
-              <p class="uppercase font-bold lg:w-48">Bonds</p>
-              <div v-for="action in availablePermissions.bonds" :key="action">
-                <base-checkbox
-                  class="uppercase"
-                  :text="action"
-                  :disabled="isSaving"
-                  :model-value="hasPermission('bonds', action)"
-                  @update:model-value="(v: boolean) => togglePermission('bonds', action, v)"
                 />
               </div>
             </div>

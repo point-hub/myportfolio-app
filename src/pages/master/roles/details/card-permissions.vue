@@ -150,14 +150,14 @@ onMounted(async () => {
               </div>
             </div>
 
-            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.savings">
-              <p class="uppercase font-bold lg:w-48">Savings</p>
-              <div v-for="action in availablePermissions.savings" :key="action">
+            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.bonds">
+              <p class="uppercase font-bold lg:w-48">Bonds</p>
+              <div v-for="action in availablePermissions.bonds" :key="action">
                 <base-checkbox
                   class="uppercase"
                   :text="action"
                   disabled
-                  :model-value="hasPermission('savings', action)"
+                  :model-value="hasPermission('bonds', action)"
                 />
               </div>
             </div>
@@ -170,6 +170,18 @@ onMounted(async () => {
                   :text="action"
                   disabled
                   :model-value="hasPermission('deposits', action)"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.savings">
+              <p class="uppercase font-bold lg:w-48">Savings</p>
+              <div v-for="action in availablePermissions.savings" :key="action">
+                <base-checkbox
+                  class="uppercase"
+                  :text="action"
+                  disabled
+                  :model-value="hasPermission('savings', action)"
                 />
               </div>
             </div>
