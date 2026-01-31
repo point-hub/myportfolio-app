@@ -236,15 +236,15 @@ onMounted(async () => {
               </div>
             </div>
 
-            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.bods">
+            <div class="flex flex-col lg:flex-row lg:gap-8" v-if="availablePermissions.bonds">
               <p class="uppercase font-bold lg:w-48">Bonds</p>
-              <div v-for="action in availablePermissions.bods" :key="action">
+              <div v-for="action in availablePermissions.bonds" :key="action">
                 <base-checkbox
                   class="uppercase"
                   :text="action"
                   :disabled="isSaving"
-                  :model-value="hasPermission('bods', action)"
-                  @update:model-value="(v: boolean) => togglePermission('bods', action, v)"
+                  :model-value="hasPermission('bonds', action)"
+                  @update:model-value="(v: boolean) => togglePermission('bonds', action, v)"
                 />
               </div>
             </div>
