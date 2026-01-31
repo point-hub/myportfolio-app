@@ -109,7 +109,7 @@ const getWithdrawalAmount = (deposit: IForm) => {
         </base-button>
       </router-link>
       <base-button
-        v-if="authStore.hasPermission('deposits:update') && deposit?.status === 'active'"
+        v-if="authStore.hasPermission('deposits:update') && deposit?.status !== 'draft'"
         variant="filled"
         color="primary"
         size="sm"
