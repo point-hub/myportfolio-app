@@ -7,8 +7,11 @@ export interface IResponse {
   branch: string
   address: string
   phone: string
-  account_number: string
-  account_name: string
+  accounts: {
+    uuid: string
+    account_number: string
+    account_name: string
+  }[]
   notes: string
   is_archived: boolean
   created_at: Date

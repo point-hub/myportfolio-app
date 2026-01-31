@@ -105,7 +105,8 @@ export type IFormError = Partial<
     | `cashback_schedule.${number}.payment_date`
     | `cashback_schedule.${number}.rate`
     | `cashback_schedule.${number}.amount`
-    | 'notes',
+    | 'notes'
+    | 'update_reason',
     string[]
   >
 >;
