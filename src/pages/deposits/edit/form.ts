@@ -76,8 +76,9 @@ export interface IForm {
     received_date?: string
   }[]
   notes?: string | null | undefined
-  update_reason?: string
   is_archived?: boolean
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
+  update_reason?: string
 }
 
 export type IFormError = Partial<
@@ -147,6 +148,7 @@ export function useForm() {
     },
     cashback_schedule: [],
     notes: undefined,
+    status: undefined,
     update_reason: undefined,
   };
 

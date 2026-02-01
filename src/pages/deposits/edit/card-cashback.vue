@@ -73,7 +73,6 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
       <div class="flex flex-col gap-4">
         <base-select
           label="Bank Recipient"
-          required
           v-model:selectedValue="data.cashback.bank_account_uuid"
           v-model:search="searchBank"
           :options="bankOptions"
@@ -113,7 +112,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
           <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 2) }}</td>
           <td class="text-right whitespace-nowrap">{{ cashbackSchedule.received_date }}</td>
           <td>
-            <base-button @click="onDeleteCashback(index)" variant="filled" color="danger">
+            <base-button v-if="!cashbackSchedule.received_date" @click="onDeleteCashback(index)" variant="filled" color="danger">
               <base-icon class="i-fa7-regular:circle-x" />
             </base-button>
           </td>

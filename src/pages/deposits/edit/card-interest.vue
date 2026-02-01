@@ -215,7 +215,7 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
           <td class="text-right whitespace-nowrap">{{ formatNumber(interestSchedule.amount, 2) }}</td>
           <td class="text-right whitespace-nowrap">{{ interestSchedule.received_date }}</td>
           <td>
-            <base-button v-if="(index + 1) === data.interest_schedule.length" @click="onDeleteSchedule(index)" variant="filled" color="danger" :disabled="isSaving">
+            <base-button v-if="(index + 1) === data.interest_schedule.length && !interestSchedule.received_date" @click="onDeleteSchedule(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />
             </base-button>
           </td>

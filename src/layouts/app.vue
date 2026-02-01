@@ -10,7 +10,7 @@ import {
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import AppHeaderNotifications from '@/components/app-header-notifications.vue';
+// import AppHeaderNotifications from '@/components/app-header-notifications.vue';
 import { useAblyChannel } from '@/composables/ably-channel';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -118,7 +118,7 @@ onMounted(() => {
         />
       </template>
       <template #right-header>
-        <app-header-notifications />
+        <!-- <app-header-notifications /> -->
         <base-divider class="h-10" orientation="horizontal" />
         <header-menu v-model:is-open="isHeaderMenuOpen" :organization="account.organization" :username="account.username" :avatar="account.avatar">
           <header-menu-account :organization="account.organization" :username="account.username" :avatar="account.avatar" />

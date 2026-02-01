@@ -27,6 +27,10 @@ const errors = ref<{ [key: string]: string[]; }>({
   received_amount: [],
   bank_id: [],
   bank_account_uuid: [],
+  additional_received_date: [],
+  additional_received_amount: [],
+  additional_bank_id: [],
+  additional_bank_account_uuid: [],
 });
 const emit = defineEmits(['received']);
 
@@ -130,6 +134,13 @@ const reset = () => {
   receivedAdditionalPaymentAmount.value = undefined;
   additionalBankId.value = undefined;
   additionalBankAccountUuid.value = undefined;
+
+  errors.value = {
+    received_date: [],
+    received_amount: [],
+    bank_id: [],
+    bank_account_uuid: [],
+  };
 };
 
 const isAddAdditionalPayment = ref(false);
@@ -172,13 +183,13 @@ defineExpose({
         v-if="isAddAdditionalPayment || receivedAdditionalPaymentDate"
         v-model:selectedValue="additionalBankAccountUuid"
         v-model:search="searchAdditionalBank"
-        :errors="errors.bank_account_uuid"
+        :errors="errors.additional_bank_account_uuid"
         :options="additionalBankOptions"
         :disabled="isReceiving || readonly"
         placeholder="Select"
       />
-      <base-datepicker v-if="isAddAdditionalPayment || receivedAdditionalPaymentDate" layout="v" label="Received Additional Payment Date" v-model="receivedAdditionalPaymentDate" :errors="errors.received_date" :disabled="isReceiving || readonly" />
-      <base-input-number v-if="isAddAdditionalPayment || receivedAdditionalPaymentDate" layout="v" label="Received Additional Payment Amount" align="left" v-model="receivedAdditionalPaymentAmount" :errors="errors.received_amount" :disabled="isReceiving || readonly" decimal-length="2" />
+      <base-datepicker v-if="isAddAdditionalPayment || receivedAdditionalPaymentDate" layout="v" label="Received Additional Payment Date" v-model="receivedAdditionalPaymentDate" :errors="errors.additional_received_date" :disabled="isReceiving || readonly" />
+      <base-input-number v-if="isAddAdditionalPayment || receivedAdditionalPaymentDate" layout="v" label="Received Additional Payment Amount" align="left" v-model="receivedAdditionalPaymentAmount" :errors="errors.additional_received_amount" :disabled="isReceiving || readonly" decimal-length="2" />
       <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" />
     </div>
     <template #action>
