@@ -50,6 +50,7 @@ export interface ISavingData {
     is_rollover?: boolean
   }
   interest_schedule?: {
+    uuid?: string
     term?: number
     payment_date?: string
     amount?: number
@@ -65,6 +66,7 @@ export interface ISavingData {
     bank?: IBankData
   }
   cashback_schedule?: {
+    uuid?: string
     payment_date?: string
     rate?: number
     amount?: number

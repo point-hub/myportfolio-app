@@ -576,6 +576,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveInterestModalRef.toggleModal({
                                 _id: deposit._id,
+                                uuid: deposit.interest_schedule?.uuid,
                                 payment_date: deposit.interest_schedule?.payment_date,
                                 amount: deposit.interest_schedule?.amount,
                                 bank_id: deposit.interest_schedule?.bank?._id,
@@ -603,6 +604,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveInterestModalRef.toggleModal({
                                 _id: deposit._id,
+                                uuid: deposit.interest_schedule?.uuid,
                                 payment_date: deposit.interest_schedule?.payment_date,
                                 amount: deposit.interest_schedule?.amount,
                                 bank_id: deposit.interest_schedule?.bank?._id,
@@ -644,8 +646,11 @@ watch(sort, async () => {
                   <base-button
                     @click="receiveInterestModalRef.toggleModal({
                       _id: deposit._id,
+                      uuid: deposit.interest_schedule?.uuid,
                       payment_date: deposit.interest_schedule?.payment_date,
                       amount: deposit.interest_schedule?.amount,
+                      bank_id: deposit.interest?.bank?._id,
+                      bank_account_uuid: deposit.interest?.bank?.account?.uuid,
                     })"
                     v-if="authStore.hasPermission('deposits:receive-interest')
                       && (!deposit.interest_schedule?.received_amount || deposit.interest_schedule?.received_amount === 0)

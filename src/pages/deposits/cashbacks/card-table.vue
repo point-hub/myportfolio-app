@@ -576,6 +576,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveCashbackModalRef.toggleModal({
                                 _id: deposit._id,
+                                uuid: deposit.cashback_schedule?.uuid,
                                 payment_date: deposit.cashback_schedule?.payment_date,
                                 amount: deposit.cashback_schedule?.amount,
                                 bank_id: deposit.cashback_schedule?.bank?._id,
@@ -603,6 +604,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveCashbackModalRef.toggleModal({
                                 _id: deposit._id,
+                                uuid: deposit.cashback_schedule?.uuid,
                                 payment_date: deposit.cashback_schedule?.payment_date,
                                 amount: deposit.cashback_schedule?.amount,
                                 bank_id: deposit.cashback_schedule?.bank?._id,
@@ -644,8 +646,11 @@ watch(sort, async () => {
                   <base-button
                     @click="receiveCashbackModalRef.toggleModal({
                       _id: deposit._id,
+                      uuid: deposit.cashback_schedule?.uuid,
                       payment_date: deposit.cashback_schedule?.payment_date,
                       amount: deposit.cashback_schedule?.amount,
+                      bank_id: deposit.cashback?.bank?._id,
+                      bank_account_uuid: deposit.cashback?.bank?.account?.uuid,
                     })"
                     v-if="authStore.hasPermission('deposits:receive-cashback')
                       && (!deposit.cashback_schedule?.received_amount || deposit.cashback_schedule?.received_amount === 0)

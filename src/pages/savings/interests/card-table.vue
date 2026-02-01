@@ -576,6 +576,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveInterestModalRef.toggleModal({
                                 _id: saving._id,
+                                uuid: saving.interest_schedule?.uuid,
                                 payment_date: saving.interest_schedule?.payment_date,
                                 amount: saving.interest_schedule?.amount,
                                 bank_id: saving.interest_schedule?.bank?._id,
@@ -603,6 +604,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveInterestModalRef.toggleModal({
                                 _id: saving._id,
+                                uuid: saving.interest_schedule?.uuid,
                                 payment_date: saving.interest_schedule?.payment_date,
                                 amount: saving.interest_schedule?.amount,
                                 bank_id: saving.interest_schedule?.bank?._id,
@@ -644,8 +646,11 @@ watch(sort, async () => {
                   <base-button
                     @click="receiveInterestModalRef.toggleModal({
                       _id: saving._id,
+                      uuid: saving.interest_schedule?.uuid,
                       payment_date: saving.interest_schedule?.payment_date,
                       amount: saving.interest_schedule?.amount,
+                      bank_id: saving.interest?.bank?._id,
+                      bank_account_uuid: saving.interest?.bank?.account?.uuid,
                     })"
                     v-if="authStore.hasPermission('savings:receive-interest')
                       && (!saving.interest_schedule?.received_amount || saving.interest_schedule?.received_amount === 0)

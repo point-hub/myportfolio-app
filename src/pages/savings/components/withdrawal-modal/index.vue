@@ -100,7 +100,9 @@ const onDelete = async () => {
     confirmActionModalRef.value.toggleModal(false);
   } catch (error) {
     const errorResponse = handleError(error);
-    errors.value = errorResponse.errors!;
+    if(errorResponse.errors) {
+      errors.value = errorResponse.errors;
+    }
     if (errorResponse.message) {
       toast(errorResponse.message, {
         lists: errorResponse.lists,

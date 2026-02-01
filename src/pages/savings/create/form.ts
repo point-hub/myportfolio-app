@@ -80,10 +80,10 @@ export type IFormError = Partial<
 export function useForm() {
   const defaultForm: IForm = {
     form_number: undefined,
-    type: 'on-call',
     owner_id: undefined,
     group_id: undefined,
     placement: {
+      type: 'on-call',
       account_number: undefined,
       base_date: 365,
       date: undefined,

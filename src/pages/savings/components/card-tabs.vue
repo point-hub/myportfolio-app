@@ -17,7 +17,7 @@ const isSavingCashbacks = computed(() => route.path === '/savings/cashbacks');
     <div class="flex gap-2 overflow-auto scrollbar-hidden">
       <router-link v-if="authStore.hasPermission('savings:module')" :to="`/savings`">
         <base-button variant="filled" :color="isSavings ? 'primary' : 'info'" size="sm" class="font-bold">
-          <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST DEPOSITS
+          <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST SAVINGS
         </base-button>
       </router-link>
       <router-link v-if="authStore.hasPermission('savings:module')" :to="`/savings/interests`">
