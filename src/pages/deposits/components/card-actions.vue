@@ -103,13 +103,13 @@ const getWithdrawalAmount = (deposit: IForm) => {
           <base-icon icon="i-fa7-solid:file-pen" /> EDIT
         </base-button>
       </router-link>
-      <router-link v-if="authStore.hasPermission('deposits:update') && deposit?._id && deposit.status === 'active'" :to="`/deposits/${route.params.id}/extend`">
+      <router-link v-if="authStore.hasPermission('deposits:renew') && deposit?._id && deposit.status === 'active'" :to="`/deposits/${route.params.id}/extend`">
         <base-button variant="filled" color="primary" size="sm" class="font-bold">
           <base-icon icon="i-fa7-solid:file-pen" /> EXTEND
         </base-button>
       </router-link>
       <base-button
-        v-if="authStore.hasPermission('deposits:update') && deposit?.status !== 'draft'"
+        v-if="authStore.hasPermission('deposits:withdraw') && (deposit?.status === 'active' || deposit?.status === 'withdrawn')"
         variant="filled"
         color="primary"
         size="sm"

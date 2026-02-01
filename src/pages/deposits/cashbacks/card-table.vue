@@ -596,6 +596,7 @@ watch(sort, async () => {
                           </base-button>
                           <base-divider orientation="vertical" class="my-0!" />
                           <base-button
+                            v-if="authStore.hasPermission('deposits:receive-cashback')"
                             variant="text"
                             color="info"
                             class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
@@ -646,7 +647,9 @@ watch(sort, async () => {
                       payment_date: deposit.cashback_schedule?.payment_date,
                       amount: deposit.cashback_schedule?.amount,
                     })"
-                    v-if="deposit.cashback_schedule?.received_amount === 0 && deposit.status !== 'draft'"
+                    v-if="authStore.hasPermission('deposits:receive-cashback')
+                      && (!deposit.cashback_schedule?.received_amount || deposit.cashback_schedule?.received_amount === 0)
+                      && (deposit.status === 'active' || deposit.status === 'withdrawn')"
                     variant="filled"
                     color="primary"
                     class="font-bold w-32"

@@ -582,7 +582,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                             <p class="flex-1">Edit</p>
                           </base-button>
                         </router-link>
-                        <router-link v-if="authStore.hasPermission('deposits:update') && deposit.status === 'active'" :to="`/deposits/${deposit._id}/extend`">
+                        <router-link v-if="authStore.hasPermission('deposits:renew') && deposit.status === 'active'" :to="`/deposits/${deposit._id}/extend`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-file-pen" />
                             <p class="flex-1">Extend</p>
@@ -590,7 +590,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
                         <base-button
-                          v-if="authStore.hasPermission('deposits:update') && deposit.status !== 'draft'"
+                          v-if="authStore.hasPermission('deposits:withdraw') && (deposit.status === 'active' || deposit.status === 'withdrawn')"
                           variant="text"
                           color="info"
                           class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
