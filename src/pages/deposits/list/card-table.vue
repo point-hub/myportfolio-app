@@ -78,6 +78,8 @@ const {
 } = useTableFilter({
   initialFilter: {
     all: '',
+    due_choosen: 'due',
+    due_within: '3',
     status: '',
     form_number: '',
     'owner.name': '',
@@ -171,6 +173,10 @@ const statusOptions = ref([
 const withdrawalStatusOptions = ref([
   { label: 'Outstanding', value: 'outstanding' },
   { label: 'Completed', value: 'completed' },
+]);
+const dueOptions = ref([
+  { label: 'Due within', value: 'due' },
+  { label: 'Overdue within', value: 'overdue' },
 ]);
 
 /**
@@ -380,6 +386,22 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
     </div>
 
     <div class="flex flex-col gap-4">
+      <div class="flex flex-col">
+        <p class="font-bold">Filter Due</p>
+        <div class="flex gap-2">
+          <div>
+            <base-choosen
+              placeholder="Filter"
+              title="Status"
+              v-model:options="dueOptions"
+              v-model:selectedValue="filter.due_choosen"
+            />
+          </div>
+          <base-input placeholder="" v-model="filter.due_within">
+            <template #suffix>Days</template>
+          </base-input>
+        </div>
+      </div>
       <base-table>
         <thead>
           <tr>
