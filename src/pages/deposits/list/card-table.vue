@@ -639,7 +639,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                 <base-badge v-if="deposit.withdrawal?.received_date && deposit.withdrawal?.remaining_amount && deposit.withdrawal?.remaining_amount > 0" variant="filled" color="danger" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-open" /> Outstanding
                 </base-badge>
-                <base-badge v-else-if="deposit.withdrawal?.received_date && deposit.withdrawal?.remaining_amount === 0" variant="filled" color="success" class="font-bold w-32 uppercase">
+                <base-badge v-else-if="deposit.withdrawal?.received_date && deposit.withdrawal?.remaining_amount && deposit.withdrawal?.remaining_amount <= 0" variant="filled" color="success" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
