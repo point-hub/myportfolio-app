@@ -57,6 +57,7 @@ export interface IDepositData {
     received_amount?: number
     bank?: IBankData
     created_by?: IAuthUser
+    created_at?: string
   }[]
   cashback?: {
     bank?: IBankData
@@ -69,6 +70,7 @@ export interface IDepositData {
     received_amount?: number
     bank?: IBankData
     created_by?: IAuthUser
+    created_at?: string
   }[]
   withdrawal?: {
     received_date?: string
@@ -76,6 +78,7 @@ export interface IDepositData {
     remaining_amount?: number
     bank?: IBankData
     created_by?: IAuthUser
+    created_at?: string
   }
   notes?: string | null | undefined
   is_archived: boolean

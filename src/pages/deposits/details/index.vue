@@ -14,8 +14,10 @@ import CardCashback from './card-cashback.vue';
 import CardForm from './card-form.vue';
 import CardInterest from './card-interest.vue';
 import CardInternalNotes from './card-internal-notes.vue';
+import CardMetadata from './card-metadata.vue';
 import CardPlacement from './card-placement.vue';
 import CardSource from './card-source.vue';
+import CardWithdrawal from './card-withdrawal.vue';
 import { useForm } from './form';
 
 const route = useRoute();
@@ -39,8 +41,11 @@ onMounted(async () => {
       form.data.cashback = response.cashback;
       form.data.cashback_schedule = response.cashback_schedule ?? [];
       form.data.notes = response.notes;
+      form.data.withdrawal = response.withdrawal;
       form.data.is_archived = response.is_archived;
       form.data.status = response.status;
+      form.data.created_by = response.created_by;
+      form.data.created_at = response.created_at;
     }
   } catch (error) {
     const errorResponse = handleError(error);
@@ -79,8 +84,11 @@ const onReceived = async () => {
       form.data.cashback = response.cashback;
       form.data.cashback_schedule = response.cashback_schedule ?? [];
       form.data.notes = response.notes;
+      form.data.withdrawal = response.withdrawal;
       form.data.is_archived = response.is_archived;
       form.data.status = response.status;
+      form.data.created_at = response.created_at;
+      form.data.created_by = response.created_by;
     }
   } catch (error) {
     const errorResponse = handleError(error);
@@ -115,7 +123,9 @@ const onReceived = async () => {
       <card-source v-model:data="form.data" />
       <card-interest v-model:data="form.data" />
       <card-cashback v-model:data="form.data" />
+      <card-withdrawal v-model:data="form.data" />
       <card-internal-notes v-model:data="form.data" />
+      <card-metadata v-model:data="form.data" />
     </template>
   </app-container>
 </template>

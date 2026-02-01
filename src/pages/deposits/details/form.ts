@@ -108,9 +108,11 @@ export interface IForm {
     created_by?: IAuthUser
     created_at?: string
   }[]
-  withdrawal: {
+  withdrawal?: {
     received_date?: string
+    amount?: number
     received_amount?: number
+    remaining_amount?: number
     bank?: {
       name?: string
       account?: {
@@ -124,6 +126,8 @@ export interface IForm {
   notes?: string | undefined | null
   is_archived?: boolean
   status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
+  created_by?: IAuthUser
+  created_at?: string
 }
 
 export function useForm() {
@@ -173,6 +177,8 @@ export function useForm() {
     },
     notes: undefined,
     status: undefined,
+    created_by: undefined,
+    created_at: undefined,
   };
 
   const data = reactive<IForm>(defaultForm);
