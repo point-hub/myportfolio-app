@@ -17,7 +17,7 @@ const isInsuranceCashbacks = computed(() => route.path === '/insurances/cashback
     <div class="flex gap-2 overflow-auto scrollbar-hidden">
       <router-link v-if="authStore.hasPermission('insurances:module')" :to="`/insurances`">
         <base-button variant="filled" :color="isInsurances ? 'primary' : 'info'" size="sm" class="font-bold">
-          <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST DEPOSITS
+          <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST INSURANCES
         </base-button>
       </router-link>
       <router-link v-if="authStore.hasPermission('insurances:module')" :to="`/insurances/interests`">

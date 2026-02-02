@@ -12,6 +12,11 @@ export default {
       meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:create'] },
     },
     {
+      path: 'dashboard',
+      component: () => import('./dashboard/index.vue'),
+      meta: { requiresAuth: true, permissions: ['deposits:module'] },
+    },
+    {
       path: 'interests',
       component: () => import('./interests/index.vue'),
       meta: { requiresAuth: true, permissions: ['deposits:module'] },
