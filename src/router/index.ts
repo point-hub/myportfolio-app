@@ -7,6 +7,7 @@ import routesAuth from '@/pages/auth/routes';
 import routesDeposit from '@/pages/deposits/routes';
 import routesInsurance from '@/pages/insurances/routes';
 import routesMaster from '@/pages/master/routes';
+import routesPaymentStock from '@/pages/payment-stocks/routes';
 import routesSaving from '@/pages/savings/routes';
 import routesStock from '@/pages/stocks/routes';
 import { useAuthStore } from '@/stores/auth.store';
@@ -35,6 +36,7 @@ const router = createRouter({
             routesDeposit,
             routesInsurance,
             routesSaving,
+            routesPaymentStock,
             routesStock,
             routesAdministrator,
           ],

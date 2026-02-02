@@ -3,11 +3,9 @@ import { watchEffect } from 'vue';
 
 import { useSelectableIssuers } from '@/composables/selectable/issuers';
 
-import { type IForm, type IFormError } from './form';
+import { type IForm } from './form';
 
 const data = defineModel<IForm>('data');
-const errors = defineModel<IFormError>('errors');
-const isSaving = defineModel('is-saving', { default: false });
 
 const { options: issuerOptions, searchIssuer } = useSelectableIssuers();
 
@@ -50,17 +48,16 @@ watchEffect(() => {
               v-model:selectedValue="buying.issuer_id"
               v-model:search="searchIssuer"
               :options="issuerOptions"
-              :errors="errors?.[`buying_list.${index}.issuer_id`]"
-              :disabled="isSaving"
+              disabled
               placeholder="Select"
               border="none"
               paddingless
             />
           </td>
-          <td><base-input-number v-model="buying.lots" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.lots" disabled decimal-length="2" border="none" paddingless /></td>
           <td><base-input-number :model-value="buying.shares" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="buying.price" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="buying.total" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.price" disabled decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.total" disabled decimal-length="2" border="none" paddingless /></td>
         </tr>
       </tbody>
     </base-table>

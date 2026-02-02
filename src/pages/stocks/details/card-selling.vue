@@ -3,11 +3,9 @@ import { watchEffect } from 'vue';
 
 import { useSelectableIssuers } from '@/composables/selectable/issuers';
 
-import { type IForm, type IFormError } from './form';
+import { type IForm } from './form';
 
 const data = defineModel<IForm>('data');
-const errors = defineModel<IFormError>('errors');
-const isSaving = defineModel('is-saving', { default: false });
 
 const { options: issuerOptions, searchIssuer } = useSelectableIssuers();
 
@@ -29,7 +27,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <base-card title="buy">
+  <base-card title="sell">
     <base-table class="min-h-48">
       <thead>
         <tr>
@@ -50,17 +48,16 @@ watchEffect(() => {
               v-model:selectedValue="selling.issuer_id"
               v-model:search="searchIssuer"
               :options="issuerOptions"
-              :errors="errors?.[`selling_list.${index}.issuer_id`]"
-              :disabled="isSaving"
+              disabled
               placeholder="Select"
               border="none"
               paddingless
             />
           </td>
-          <td><base-input-number v-model="selling.lots" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="selling.lots" disabled decimal-length="2" border="none" paddingless /></td>
           <td><base-input-number :model-value="selling.shares" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="selling.price" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="selling.total" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="selling.price" disabled decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="selling.total" disabled decimal-length="2" border="none" paddingless /></td>
         </tr>
       </tbody>
     </base-table>

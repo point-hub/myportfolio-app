@@ -41,6 +41,7 @@ watchEffect(() => {
   });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onDelete = (index: number) => {
   data.value?.selling_list?.splice(index, 1);
 };
@@ -81,9 +82,9 @@ const onDelete = (index: number) => {
           <td><base-input-number v-model="selling.price" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
           <td><base-input-number v-model="selling.total" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
           <td>
-            <base-button @click="onDelete(index)" variant="filled" color="danger" :disabled="isSaving">
+            <!-- <base-button @click="onDelete(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />
-            </base-button>
+            </base-button> -->
           </td>
         </tr>
       </tbody>
