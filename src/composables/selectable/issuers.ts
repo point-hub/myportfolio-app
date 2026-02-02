@@ -15,7 +15,18 @@ export function useSelectableIssuers() {
     })),
   );
 
+  // Use a shared controller that can be replaced
+  let controller: AbortController | null = null;
+
   const getIssuers = async (search?: string) => {
+    // Abort the previous request if it exists
+    if (controller) {
+      controller.abort();
+    }
+
+    // Create a new AbortController for this request
+    controller = new AbortController();
+
     isLoading.value = true;
     const response = await getIssuersApi({
       search: {

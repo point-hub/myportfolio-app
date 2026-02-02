@@ -21,17 +21,7 @@ export interface IResponse {
   pagination: IPagination
 }
 
-// Use a shared controller that can be replaced
-let controller: AbortController | null = null;
-
-export const getBrokersApi = async (query?: IQuery): Promise<IResponse> => {
-  // Abort the previous request if it exists
-  if (controller) {
-    controller.abort();
-  }
-
-  // Create a new AbortController for this request
-  controller = new AbortController();
+export const getBrokersApi = async (query?: IQuery, controller: AbortController | null = null): Promise<IResponse> => {
   const response = await apiRequest.get('/v1/master/brokers', {
     params: {
       search: query?.search,
@@ -39,7 +29,7 @@ export const getBrokersApi = async (query?: IQuery): Promise<IResponse> => {
       page_size: query?.page_size || 10,
       sort: query?.sort || '-_id',
     },
-    signal: controller.signal,
+    signal: controller?.signal,
   });
 
   return response.data;
