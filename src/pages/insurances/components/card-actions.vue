@@ -103,7 +103,7 @@ const getWithdrawalAmount = (insurance: IForm) => {
           <base-icon icon="i-fa7-solid:file-pen" /> EDIT
         </base-button>
       </router-link>
-      <router-link v-if="authStore.hasPermission('insurances:renew') && insurance?._id && insurance.status === 'active'" :to="`/insurances/${route.params.id}/extend`">
+      <router-link v-if="authStore.hasPermission('insurances:renew') && (insurance?.status === 'active' || (insurance?.status === 'withdrawn') && insurance?.withdrawal?.remaining_amount && insurance?.withdrawal?.remaining_amount > 0)" :to="`/insurances/${insurance?._id}/extend`">
         <base-button variant="filled" color="primary" size="sm" class="font-bold">
           <base-icon icon="i-fa7-solid:file-pen" /> EXTEND
         </base-button>

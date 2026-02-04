@@ -47,6 +47,9 @@ onMounted(async () => {
       form.data.notes = response.notes;
       form.data.is_archived = response.is_archived;
 
+      if (response.status === 'withdrawn') {
+        form.data.placement.amount! -= response.withdrawal?.received_amount ?? 0;
+      }
       if (form.data.interest.is_rollover) {
         form.data.placement.amount! += form.data.interest.net_amount ?? 0;
       }
