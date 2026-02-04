@@ -163,7 +163,7 @@ defineExpose({
       <base-datepicker layout="v" label="Received Date" required v-model="receivedDate" :errors="errors.received_date" :disabled="isReceiving" />
       <base-input-number layout="v" label="Received Amount" required align="left" v-model="receivedAmount" :errors="errors.received_amount" :disabled="isReceiving" decimal-length="2" />
       <hr class="border-slate-300 dark:border-slate-600"  />
-      <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" />
+      <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" allow-negative />
     </div>
     <template #action>
       <base-button variant="filled" color="primary" @click="onReceive">Confirm</base-button>

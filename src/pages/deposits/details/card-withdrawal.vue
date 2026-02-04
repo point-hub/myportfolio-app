@@ -28,7 +28,7 @@ const { getLabel } = useSelectableBankAccounts();
       />
       <base-input-number layout="h" align="left" label="Amount" disabled :model-value="data.withdrawal.amount" />
       <base-input-number layout="h" align="left" label="Received Amount" disabled :model-value="data.withdrawal.received_amount" />
-      <base-input-number layout="h" align="left" label="Remaining Amount" disabled :model-value="data.withdrawal.remaining_amount" />
+      <base-input-number layout="h" align="left" label="Remaining Amount" disabled :model-value="data.withdrawal.remaining_amount" allow-negative />
     </div>
   </base-card>
 </template>
