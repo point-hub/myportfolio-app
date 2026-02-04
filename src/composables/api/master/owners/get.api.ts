@@ -5,10 +5,10 @@ export interface IOwnerData {
   _id: string
   code: string
   name: string
-  notes: string
-  is_archived: string
-  created_at: Date
-  created_by_id: string
+  notes?: string
+  is_archived?: string
+  created_at?: Date
+  created_by_id?: string
 }
 
 export interface IResponse {

@@ -9,7 +9,7 @@ const route = useRoute();
 
 const isStocks = computed(() => route.path === '/stocks');
 const isStockPaymnet = computed(() => route.path === '/payment-stocks');
-const isStockDividend = computed(() => route.path === '/payment-dividends');
+const isStockDividend = computed(() => route.path === '/dividend-stocks');
 </script>
 
 <template>
