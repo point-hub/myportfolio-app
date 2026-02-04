@@ -143,7 +143,7 @@ defineExpose({
 <template>
   <base-confirm-action-modal
     ref="confirmActionModalRef"
-    title="Withdrawal Insuranceo"
+    title="Withdrawal Insurance"
   >
     <div class="flex flex-col gap-4">
       <base-datepicker layout="v" label="Maturity Date" :model-value="maturityDate" disabled />
@@ -153,7 +153,7 @@ defineExpose({
         layout="v"
         label="Bank"
         required
-        v-model:selectedValue="bankAccountUuid"
+        v-model="bankAccountUuid"
         v-model:search="searchBank"
         :errors="errors.bank_account_uuid"
         :options="bankOptions"

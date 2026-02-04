@@ -85,7 +85,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
         <base-select
           label="Bank Recipient"
           required
-          v-model:selectedValue="data.cashback.bank_account_uuid"
+          v-model="data.cashback.bank_account_uuid"
           v-model:search="searchBank"
           :options="bankOptions"
           :errors="errors?.[`cashback.bank_id`]"

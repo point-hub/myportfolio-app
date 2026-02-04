@@ -162,7 +162,7 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
       <base-select
         label="Payment Method"
         required
-        v-model:selectedValue="data.interest.payment_method"
+        v-model="data.interest.payment_method"
         :options="paymentMethodOptions"
         :errors="errors['interest.payment_method']"
         :disabled="isSaving"
@@ -176,7 +176,7 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
       <base-select
         label="Bank Recipient"
         required
-        v-model:selectedValue="data.interest.bank_account_uuid"
+        v-model="data.interest.bank_account_uuid"
         v-model:search="searchBank"
         :options="bankOptions"
         :errors="errors['interest.bank_id']"

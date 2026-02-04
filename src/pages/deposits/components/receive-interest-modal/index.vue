@@ -201,7 +201,7 @@ defineExpose({
         layout="v"
         label="Bank"
         required
-        v-model:selectedValue="data.bank_account_uuid"
+        v-model="data.bank_account_uuid"
         v-model:search="searchBank"
         :errors="errors.bank_account_uuid"
         :options="bankOptions"
@@ -215,7 +215,7 @@ defineExpose({
         layout="v"
         label="Bank (Additional Payment)"
         v-if="isAddAdditionalPayment"
-        v-model:selectedValue="data.additional_bank_account_uuid"
+        v-model="data.additional_bank_account_uuid"
         v-model:search="searchAdditionalBank"
         :errors="errors.additional_bank_account_uuid"
         :options="additionalBankOptions"

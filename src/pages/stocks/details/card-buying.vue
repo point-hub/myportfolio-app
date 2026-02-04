@@ -45,7 +45,7 @@ watchEffect(() => {
           <td>
             <base-choosen
               title="Issuer"
-              v-model:selectedValue="buying.issuer_id"
+              v-model="buying.issuer_id"
               v-model:search="searchIssuer"
               :options="issuerOptions"
               disabled

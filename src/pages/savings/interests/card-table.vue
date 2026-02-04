@@ -383,7 +383,7 @@ watch(sort, async () => {
                 placeholder="Search..."
                 title="Status"
                 v-model:options="statusOptions"
-                v-model:selectedValue="filter.status"
+                v-model="filter.status"
                 border="none"
                 paddingless
               />
@@ -393,7 +393,7 @@ watch(sort, async () => {
                 placeholder="Search..."
                 title="Received Status"
                 v-model:options="receivedOptions"
-                v-model:selectedValue="filter['interest_schedule.status']"
+                v-model="filter['interest_schedule.status']"
                 border="none"
                 paddingless
               />
@@ -526,7 +526,7 @@ watch(sort, async () => {
                 placeholder="Search..."
                 title="Is Archived"
                 v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
+                v-model="filter.is_archived"
                 border="none"
                 paddingless
               />

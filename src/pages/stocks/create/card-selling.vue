@@ -63,7 +63,7 @@ const onDelete = (index: number) => {
           <td>
             <base-choosen
               title="Issuer"
-              v-model:selectedValue="selling.issuer_id"
+              v-model="selling.issuer_id"
               v-model:search="searchIssuer"
               :options="issuerOptions"
               :errors="errors?.[`selling_list.${index}.issuer_id`]"

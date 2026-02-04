@@ -306,7 +306,7 @@ watch(sort, async () => {
                 placeholder="Search..."
                 title="Is Archived"
                 v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
+                v-model="filter.is_archived"
                 border="none"
                 paddingless
               />

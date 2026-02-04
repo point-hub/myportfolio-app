@@ -408,7 +408,7 @@ const getWithdrawalAmount = (saving: ISavingData) => {
                 placeholder="Search..."
                 title="Status"
                 v-model:options="statusOptions"
-                v-model:selectedValue="filter.status"
+                v-model="filter.status"
                 border="none"
                 paddingless
               />
@@ -418,7 +418,7 @@ const getWithdrawalAmount = (saving: ISavingData) => {
                 placeholder="Search..."
                 title="Received Status"
                 v-model:options="withdrawalStatusOptions"
-                v-model:selectedValue="filter['withdrawal.status']"
+                v-model="filter['withdrawal.status']"
                 border="none"
                 paddingless
               />
@@ -527,7 +527,7 @@ const getWithdrawalAmount = (saving: ISavingData) => {
                 placeholder="Search..."
                 title="Is Archived"
                 v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
+                v-model="filter.is_archived"
                 border="none"
                 paddingless
               />

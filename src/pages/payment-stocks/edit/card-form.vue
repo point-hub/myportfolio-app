@@ -36,7 +36,7 @@ onMounted(async () => {
       <base-select
         label="Broker"
         required
-        v-model:selectedValue="data.broker_id"
+        v-model="data.broker_id"
         v-model:search="searchBroker"
         :options="brokerOptions"
         :errors="errors.broker_id"

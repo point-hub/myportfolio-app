@@ -37,7 +37,7 @@ const { options: groupOptions, searchOwner: searchGroup } = useSelectableOwners(
       <base-select
         label="Owner"
         required
-        v-model:selectedValue="data.owner_id"
+        v-model="data.owner_id"
         :selectedLabel="data.owner?.name"
         v-model:search="searchOwner"
         :options="ownerOptions"
@@ -48,7 +48,7 @@ const { options: groupOptions, searchOwner: searchGroup } = useSelectableOwners(
       <base-select
         label="Group"
         required
-        v-model:selectedValue="data.group_id"
+        v-model="data.group_id"
         v-model:search="searchGroup"
         :options="groupOptions"
         :errors="errors.group_id"

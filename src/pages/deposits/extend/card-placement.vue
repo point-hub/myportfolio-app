@@ -54,7 +54,7 @@ watchEffect(() => {
       <base-select
         label="Bank"
         required
-        v-model:selectedValue="data.placement.bank_id"
+        v-model="data.placement.bank_id"
         v-model:search="searchBank"
         :options="options"
         :errors="errors['placement.bank_id']"

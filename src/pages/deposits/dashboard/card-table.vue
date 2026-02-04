@@ -394,7 +394,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               placeholder="Filter"
               title="Status"
               v-model:options="dueOptions"
-              v-model:selectedValue="filter.due_choosen"
+              v-model="filter.due_choosen"
             />
           </div>
           <base-input placeholder="" v-model="filter.due_within">
@@ -430,7 +430,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                 placeholder="Search..."
                 title="Status"
                 v-model:options="statusOptions"
-                v-model:selectedValue="filter.status"
+                v-model="filter.status"
                 border="none"
                 paddingless
               />
@@ -440,7 +440,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                 placeholder="Search..."
                 title="Received Status"
                 v-model:options="withdrawalStatusOptions"
-                v-model:selectedValue="filter['withdrawal.status']"
+                v-model="filter['withdrawal.status']"
                 border="none"
                 paddingless
               />
@@ -549,7 +549,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                 placeholder="Search..."
                 title="Is Archived"
                 v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
+                v-model="filter.is_archived"
                 border="none"
                 paddingless
               />

@@ -84,7 +84,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
       <div class="flex flex-col gap-4">
         <base-select
           label="Bank Recipient"
-          v-model:selectedValue="data.cashback.bank_account_uuid"
+          v-model="data.cashback.bank_account_uuid"
           v-model:search="searchBank"
           :options="bankOptions"
           :errors="errors?.[`cashback.bank_id`]"

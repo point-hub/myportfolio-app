@@ -30,10 +30,12 @@ export function useSelectableStocks() {
 
     // extra options first (so API can overwrite if same id)
     for (const opt of extraOptions.value) {
+      if (!opt.value) continue;
       map.set(opt.value, opt);
     }
 
     for (const opt of apiOptions) {
+      if (!opt.value) continue;
       map.set(opt.value, opt);
     }
 

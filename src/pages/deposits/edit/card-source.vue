@@ -35,7 +35,7 @@ watch(() => [data.value.source.bank_account_uuid, bankOptions.value], () => {
       <base-select
         label="Bank"
         required
-        v-model:selectedValue="data.source.bank_account_uuid"
+        v-model="data.source.bank_account_uuid"
         v-model:search="searchBank"
         :options="bankOptions"
         :errors="errors['source.bank_id']"

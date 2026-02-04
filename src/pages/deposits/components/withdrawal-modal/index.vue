@@ -153,7 +153,7 @@ defineExpose({
         layout="v"
         label="Bank"
         required
-        v-model:selectedValue="bankAccountUuid"
+        v-model="bankAccountUuid"
         v-model:search="searchBank"
         :errors="errors.bank_account_uuid"
         :options="bankOptions"

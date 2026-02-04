@@ -60,7 +60,7 @@ watchEffect(() => {
       <base-select
         label="Type"
         required
-        v-model:selectedValue="data.placement.type"
+        v-model="data.placement.type"
         :options="typeOptions"
         :errors="errors['placement.type']"
         :disabled="isSaving"
@@ -69,7 +69,7 @@ watchEffect(() => {
       <base-select
         label="Bank"
         required
-        v-model:selectedValue="data.placement.bank_id"
+        v-model="data.placement.bank_id"
         v-model:search="searchBank"
         :options="options"
         :errors="errors['placement.bank_id']"

@@ -76,7 +76,7 @@ const onSelectTransaction = (option: IStockOption, transaction: ITransaction) =>
           <td>
             <base-choosen
               title="Transaction Number"
-              v-model:selectedValue="transaction.stock_id"
+              v-model="transaction.stock_id"
               @selected="onSelectTransaction($event, transaction)"
               v-model:search="searchStock"
               :options="stockOptions"
