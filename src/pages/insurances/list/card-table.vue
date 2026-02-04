@@ -582,7 +582,7 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
                             <p class="flex-1">Edit</p>
                           </base-button>
                         </router-link>
-                        <router-link v-if="authStore.hasPermission('insurances:renew') && (insurance.status === 'active' || (insurance.status === 'withdrawn') && insurance.withdrawal?.remaining_amount && insurance.withdrawal?.remaining_amount > 0)" :to="`/insurances/${insurance._id}/extend`">
+                        <router-link v-if="authStore.hasPermission('insurances:renew') && (insurance?.status === 'active' && (!insurance?.withdrawal?.remaining_amount || insurance.withdrawal.remaining_amount > 0))" :to="`/insurances/${insurance?._id}/extend`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-file-pen" />
                             <p class="flex-1">Extend</p>
