@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, watchEffect } from 'vue';
+import { watchEffect } from 'vue';
 
 import { type IStockOption,useSelectableStocks } from '@/composables/selectable/stocks';
 import { formatNumber } from '@/utils/number';
@@ -10,7 +10,7 @@ const data = defineModel<IForm>('data');
 const errors = defineModel<IFormError>('errors');
 const isSaving = defineModel('is-saving', { default: false });
 
-const { options: stockOptions, searchStock, addOption } = useSelectableStocks();
+const { options: stockOptions, searchStock } = useSelectableStocks();
 
 const onAdd = () => {
   data.value?.transactions?.push({
@@ -37,45 +37,24 @@ const onDelete = (index: number) => {
   data.value?.transactions?.splice(index, 1);
 };
 
-const onSelectTransaction = (option: IStockOption, transaction: ITransaction) => {
-  if (!data.value) return;
-
-  const isDuplicate = data.value.transactions?.some(t =>
-    t !== transaction && t.stock_id === option.value,
-  );
-
-  if (isDuplicate) {
-    transaction.stock_id = undefined;
-    transaction.stock = undefined;
-    transaction.date = undefined;
-    transaction.amount = undefined;
-    return;
-  }
-
-  transaction.transaction_number = option.transaction_number;
-  transaction.date = option.date;
-  transaction.amount = option.amount;
+const onSelected = (selected: IStockOption,  transaction: ITransaction) => {
+  transaction.transaction_number = selected.transaction_number;
+  transaction.date = selected.date;
+  transaction.amount = selected.amount;
 };
 
-watch(
-  () => data.value?.transactions,
-  (transactions) => {
-    if (!transactions?.length) return;
-
-    transactions.forEach(transaction => {
-      if (!transaction.stock_id) return;
-
-      addOption({
-        label: transaction.transaction_number ?? '',
-        value: transaction.stock_id,
-        transaction_number: transaction.transaction_number ?? '',
-        date: transaction.date ?? '',
-        amount: transaction.amount ?? 0,
-      });
-    });
-  },
-  { immediate: true, deep: true },
-);
+const resolveOption = (value: string, transaction: ITransaction): IStockOption | undefined => {
+  if (transaction.stock?._id === value) {
+    return {
+      label: transaction.stock.transaction_number ?? '',
+      value: transaction.stock._id,
+      transaction_number: transaction.stock.transaction_number ?? '',
+      date: transaction.stock.transaction_date ?? '',
+      amount: transaction.stock.proceed_amount ?? 0,
+    };
+  }
+  return undefined;
+};
 </script>
 
 <template>
@@ -97,8 +76,9 @@ watch(
             <base-choosen
               title="Transaction Number"
               v-model="transaction.stock_id"
-              @selected="onSelectTransaction($event, transaction)"
               v-model:search="searchStock"
+              @select="(selected: IStockOption) => onSelected(selected, transaction)"
+              :resolve-option="(value: string) => resolveOption(value, transaction)"
               :options="stockOptions"
               :errors="errors?.[`transactions.${index}.stock_id`]"
               :disabled="isSaving"

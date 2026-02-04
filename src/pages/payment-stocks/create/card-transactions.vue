@@ -37,24 +37,10 @@ const onDelete = (index: number) => {
   data.value?.transactions?.splice(index, 1);
 };
 
-const onSelectTransaction = (option: IStockOption, transaction: ITransaction) => {
-  if (!data.value) return;
-
-  const isDuplicate = data.value.transactions?.some(t =>
-    t !== transaction && t.stock_id === option.value,
-  );
-
-  if (isDuplicate) {
-    transaction.stock_id = undefined;
-    transaction.stock = undefined;
-    transaction.date = undefined;
-    transaction.amount = undefined;
-    return;
-  }
-
-  transaction.transaction_number = option.transaction_number;
-  transaction.date = option.date;
-  transaction.amount = option.amount;
+const onSelected = (selected: IStockOption,  transaction: ITransaction) => {
+  transaction.transaction_number = selected.transaction_number;
+  transaction.date = selected.date;
+  transaction.amount = selected.amount;
 };
 </script>
 
@@ -77,8 +63,8 @@ const onSelectTransaction = (option: IStockOption, transaction: ITransaction) =>
             <base-choosen
               title="Transaction Number"
               v-model="transaction.stock_id"
-              @selected="onSelectTransaction($event, transaction)"
               v-model:search="searchStock"
+              @select="(selected: IStockOption) => onSelected(selected, transaction)"
               :options="stockOptions"
               :errors="errors?.[`transactions.${index}.stock_id`]"
               :disabled="isSaving"

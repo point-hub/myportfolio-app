@@ -2,7 +2,6 @@
 import { onMounted } from 'vue';
 
 import { retrieveCounterApi } from '@/composables/api/counters/retrieve.api';
-import { useSelectableBrokers } from '@/composables/selectable/brokers';
 
 import { type IForm, type IFormError } from './form';
 
@@ -20,7 +19,6 @@ const errors = defineModel<IFormError>('errors', {
     broker_id: [],
   }),
 });
-const { options: brokerOptions, searchBroker } = useSelectableBrokers();
 
 onMounted(async () => {
   const counter = await retrieveCounterApi('payment_stocks', new Date());
@@ -31,18 +29,9 @@ onMounted(async () => {
 <template>
   <base-card title="Payment Stocks">
     <div class="flex flex-col gap-4 my-5">
-      <base-input layout="horizontal" label="Form Number" required v-model="data.form_number" :errors="errors.form_number" disabled />
-      <base-select
-        label="Broker"
-        required
-        v-model="data.broker_id"
-        v-model:search="searchBroker"
-        :options="brokerOptions"
-        :errors="errors.broker_id"
-        disabled
-        placeholder="Select"
-      />
-      <base-datepicker layout="h" label="Payment Date" required v-model="data.payment_date" :errors="errors['payment_date']" disabled />
+      <base-input layout="horizontal" label="Form Number" :model-value="data.form_number" disabled />
+      <base-input layout="horizontal" label="Broker" :model-value="data.broker?.name ?? ''" disabled />
+      <base-datepicker layout="h" label="Payment Date" :model-value="data.payment_date" :errors="errors['payment_date']" disabled />
     </div>
   </base-card>
 </template>
