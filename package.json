@@ -18,7 +18,7 @@
   "dependencies": {
     "@ably/chat": "^1.1.1",
     "@point-hub/js-utils": "^0.0.6",
-    "@point-hub/papp": "^0.2.1",
+    "@point-hub/papp": "^0.2.2",
     "@point-hub/vue-cookie": "^0.2.2",
     "ably": "^2.17.1",
     "axios": "^1.13.4",
@@ -31,7 +31,7 @@
     "@badeball/cypress-cucumber-preprocessor": "^24.0.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "@point-hub/preset-papp-icon": "^0.0.12",
-    "@tsconfig/node20": "^20.1.8",
+    "@tsconfig/node20": "^20.1.9",
     "@types/jsdom": "^27.0.0",
     "@types/node": "^25.2.0",
     "@types/qs": "^6.14.0",
