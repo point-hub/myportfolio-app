@@ -42,11 +42,11 @@ watchEffect(() => {
 
   data.value.selling_proceed
     = (data.value.selling_total ?? 0)
-    + (data.value.selling_brokerage_fee ?? 0)
-    + (data.value.selling_vat ?? 0)
-    + (data.value.selling_levy ?? 0)
-    + (data.value.selling_kpei ?? 0)
-    + (data.value.selling_stamp ?? 0);
+    - (data.value.selling_brokerage_fee ?? 0)
+    - (data.value.selling_vat ?? 0)
+    - (data.value.selling_levy ?? 0)
+    - (data.value.selling_kpei ?? 0)
+    - (data.value.selling_stamp ?? 0);
 
   data.value.proceed_amount = data.value.buying_proceed - data.value.selling_proceed;
 });
