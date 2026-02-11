@@ -5,13 +5,14 @@ import { useRoute, useRouter } from 'vue-router';
 
 import BaseDateRangePicker from '@/components/base-date-range-picker.vue';
 import TableSettingModal from '@/components/table-setting-modal.vue';
-import { getBondsApi, type IBondData } from '@/composables/api/bonds/get.api';
+import { getCouponsBondsApi, type IBondData } from '@/composables/api/bonds/get-coupons.api';
 import { useQueryParams } from '@/composables/query-params';
 import { useTableFilter } from '@/composables/table-filter';
 import { useTableSetting } from '@/composables/table-setting';
 import { useAuthStore } from '@/stores/auth.store';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
+import { formatDate } from '@/utils/date';
 import { formatNumber } from '@/utils/number';
 
 import ModalDelete from '../components/delete-modal/index.vue';
@@ -32,30 +33,14 @@ const {
 } = useTableSetting({
   columns: {
     status: { label: 'Status', isVisible: true, isSelectable: true },
+    coupon_status: { label: 'Coupon Status', isVisible: true, isSelectable: true },
     'type': { label: 'Type of Bond', isVisible: true, isSelectable: true },
     form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
     'product': { label: 'Product', isVisible: true, isSelectable: true },
-    'series': { label: 'Series', isVisible: true, isSelectable: true },
-    'year_issued': { label: 'Year Issued', isVisible: true, isSelectable: true },
-    'coupon_rate': { label: 'Coupon Rate', isVisible: true, isSelectable: true },
-    'bank_source.account.account_number': { label: 'Source of Fund - Account Number', isVisible: true, isSelectable: true },
-    'bank_source.account.account_name': { label: 'Source of Fund - Account Name', isVisible: true, isSelectable: true },
-    'bank_placement.name': { label: 'Bank', isVisible: true, isSelectable: true },
-    'bank_placement.account.account_number': { label: 'Bank - Account Number', isVisible: true, isSelectable: true },
-    'bank_placement.account.account_name': { label: 'Bank - Account Name', isVisible: true, isSelectable: true },
     'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
-    'base_date': { label: 'Base Date', isVisible: true, isSelectable: true },
-    'transaction_date': { label: 'Transaction Date', isVisible: true, isSelectable: true },
-    'settlement_date': { label: 'Settlement Date', isVisible: true, isSelectable: true },
-    'maturity_date': { label: 'Maturity Date', isVisible: true, isSelectable: true },
-    'transaction_number': { label: 'Transaction Number', isVisible: true, isSelectable: true },
-    'price': { label: 'Price', isVisible: true, isSelectable: true },
-    'principal_amount': { label: 'Principal Amount', isVisible: true, isSelectable: true },
-    'remaining_amount': { label: 'Remaining Amount', isVisible: true, isSelectable: true },
-    'proceed_amount': { label: 'Proceed', isVisible: true, isSelectable: true },
-    'accrued_interest': { label: 'Accrued Interest', isVisible: true, isSelectable: true },
-    'total_proceed': { label: 'Total Proceed', isVisible: true, isSelectable: true },
     'coupon_tenor': { label: 'Coupon Tenor', isVisible: true, isSelectable: true },
+    'received_coupons.date': { label: 'Coupon Due', isVisible: true, isSelectable: true },
+    'coupon_rate': { label: 'Coupon Rate', isVisible: true, isSelectable: true },
     'coupon_gross_amount': { label: 'Gross Coupon', isVisible: true, isSelectable: true },
     'coupon_tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
     'coupon_tax_amount': { label: 'Amount of Tax', isVisible: true, isSelectable: true },
@@ -80,30 +65,16 @@ const {
   initialFilter: {
     all: '',
     status: '',
+    'coupon_status': '',
     'type': '',
     form_number: '',
     'product': '',
-    'series': '',
-    'year_issued': '',
-    'coupon_rate': '',
-    'bank_source.account.account_number': '',
-    'bank_source.account.account_name': '',
-    'bank_placement.name': '',
-    'bank_placement.account.account_number': '',
-    'bank_placement.account.account_name': '',
     'owner.name': '',
-    'base_date': '',
-    'transaction_date': '',
-    'settlement_date': '',
-    'maturity_date': '',
-    'transaction_number': '',
-    'price': '',
-    'principal_amount': '',
-    'remaining_amount': '',
-    'proceed_amount': '',
-    'accrued_interest': '',
-    'total_proceed': '',
     'coupon_tenor': '',
+    'received_coupons.date': '',
+    'received_coupons.date_from': formatDate(new Date(), { isStartOfMonth: true }),
+    'received_coupons.date_to': formatDate(new Date(), { isEndOfMonth: true }),
+    'coupon_rate': '',
     'coupon_gross_amount': '',
     'coupon_tax_rate': '',
     'coupon_tax_amount': '',
@@ -113,30 +84,14 @@ const {
   },
   initialSortKeys: {
     status: 0,
+    'coupon_status': 0,
     'type': 0,
     form_number: 0,
     'product': 0,
-    'series': 0,
-    'year_issued': 0,
     'coupon_rate': 0,
-    'bank_source.account.account_number': 0,
-    'bank_source.account.account_name': 0,
-    'bank_placement.name': 0,
-    'bank_placement.account.account_number': 0,
-    'bank_placement.account.account_name': 0,
     'owner.name': 0,
-    'base_date': 0,
-    'transaction_date': 0,
-    'settlement_date': 0,
-    'maturity_date': 0,
-    'transaction_number': 0,
-    'price': 0,
-    'principal_amount': 0,
-    'remaining_amount': 0,
-    'proceed_amount': 0,
-    'accrued_interest': 0,
-    'total_proceed': 0,
     'coupon_tenor': 0,
+    'received_coupons.date': 0,
     'coupon_gross_amount': 0,
     'coupon_tax_rate': 0,
     'coupon_tax_amount': 0,
@@ -168,6 +123,10 @@ const statusOptions = ref([
   { label: 'Draft', value: 'draft' },
   { label: 'Active', value: 'active' },
   { label: 'Paid', value: 'paid' },
+]);
+const couponStatusOptions = ref([
+  { label: 'Pending', value: 'pending' },
+  { label: 'Completed', value: 'completed' },
 ]);
 
 /**
@@ -204,7 +163,7 @@ const resetPageAndFetch = async () => {
 const getBonds = async (page = 1) => {
   try {
     isLoading.value = true;
-    const response = await getBondsApi({
+    const response = await getCouponsBondsApi({
       search: filter,
       sort: sortObjectToString(sort),
       page,
@@ -257,6 +216,7 @@ const onDeleteModal = (bond: IBondData, index: number) => {
   deleteModalRef.value.toggleModal({
     _id: bond._id,
     label: `${bond.form_number}`,
+    uuid: bond.received_coupons?.uuid,
   });
 };
 
@@ -342,7 +302,7 @@ watch(sort, async () => {
 </script>
 
 <template>
-  <base-card title="Bonds">
+  <base-card title="Coupon Bonds">
     <div class="flex flex-col lg:flex-row gap-2 items-center justify-between mb-8">
       <div class="flex-1 w-full">
         <base-input v-model="filter.all" placeholder="Search..." border="full" :readonly="isLoading">
@@ -352,11 +312,6 @@ watch(sort, async () => {
         </base-input>
       </div>
       <div class="flex gap-1">
-        <router-link v-if="authStore.hasPermission('bonds:create')" to="/bonds/create">
-          <base-button color="primary" shape="sharp" class="font-bold">
-            <base-icon class="i-lucide:square-plus" /> CREATE
-          </base-button>
-        </router-link>
         <base-button color="info" @click="open()" :disabled="isLoading" class="font-bold">
           <base-icon class="i-ph:sliders-horizontal-bold" />
         </base-button>
@@ -387,9 +342,6 @@ watch(sort, async () => {
             <th class="w-1"></th>
 
             <!-- Render filter inputs for visible columns -->
-            <th v-if="columns['type']?.isVisible">
-              <base-input v-model="filter.type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['status']?.isVisible">
               <base-choosen
                 placeholder="Search..."
@@ -400,98 +352,43 @@ watch(sort, async () => {
                 paddingless
               />
             </th>
+            <th v-if="columns['coupon_status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Status"
+                v-model:options="couponStatusOptions"
+                v-model="filter.coupon_status"
+                border="none"
+                paddingless
+              />
+            </th>
+            <th v-if="columns['type']?.isVisible">
+              <base-input v-model="filter.type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['form_number']?.isVisible">
               <base-input v-model="filter.form_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['product']?.isVisible">
               <base-input v-model="filter['product']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['series']?.isVisible">
-              <base-input v-model="filter['series']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['year_issued']?.isVisible">
-              <base-input v-model="filter['year_issued']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['coupon_rate']?.isVisible">
-              <base-input v-model="filter['coupon_rate']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['bank_source.account.account_number']?.isVisible">
-              <base-input v-model="filter['bank_source.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['bank_source.account.account_name']?.isVisible">
-              <base-input v-model="filter['bank_source.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['bank_placement.name']?.isVisible">
-              <base-input v-model="filter['bank_placement.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['bank_placement.account.account_number']?.isVisible">
-              <base-input v-model="filter['bank_placement.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['bank_placement.account.account_name']?.isVisible">
-              <base-input v-model="filter['bank_placement.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['owner.name']?.isVisible">
               <base-input v-model="filter['owner.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['base_date']?.isVisible">
-              <base-input v-model="filter['base_date']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['transaction_date']?.isVisible">
-              <base-date-range-picker
-                v-model:date_from="filter['transaction_date_from']"
-                v-model:date_to="filter['transaction_date_to']"
-                placeholder="Search..."
-                :readonly="isLoading"
-                border="none"
-                paddingless
-              />
-            </th>
-            <th v-if="columns['settlement_date']?.isVisible">
-              <base-date-range-picker
-                v-model:date_from="filter['settlement_date_from']"
-                v-model:date_to="filter['settlement_date_to']"
-                placeholder="Search..."
-                :readonly="isLoading"
-                border="none"
-                paddingless
-              />
-            </th>
-            <th v-if="columns['maturity_date']?.isVisible">
-              <base-date-range-picker
-                v-model:date_from="filter['maturity_date_from']"
-                v-model:date_to="filter['maturity_date_to']"
-                placeholder="Search..."
-                :readonly="isLoading"
-                border="none"
-                paddingless
-              />
-            </th>
-            <th v-if="columns['transaction_number']?.isVisible">
-              <base-input v-model="filter['transaction_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['buying_brokerage_fee']?.isVisible">
-              <base-input v-model="filter['buying_brokerage_fee']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['price']?.isVisible">
-              <base-input v-model="filter['price']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['principal_amount']?.isVisible">
-              <base-input v-model="filter['principal_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['remaining_amount']?.isVisible">
-              <base-input v-model="filter['remaining_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['proceed_amount']?.isVisible">
-              <base-input v-model="filter['proceed_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['accrued_interest']?.isVisible">
-              <base-input v-model="filter['accrued_interest']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['total_proceed']?.isVisible">
-              <base-input v-model="filter['total_proceed']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['coupon_tenor']?.isVisible">
               <base-input v-model="filter['coupon_tenor']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['received_coupons.date']?.isVisible">
+              <base-date-range-picker
+                v-model:date_from="filter['received_coupons.date_from']"
+                v-model:date_to="filter['received_coupons.date_to']"
+                placeholder="Search..."
+                :readonly="isLoading"
+                border="none"
+                paddingless
+              />
+            </th>
+            <th v-if="columns['coupon_rate']?.isVisible">
+              <base-input v-model="filter['coupon_rate']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['coupon_gross_amount']?.isVisible">
               <base-input v-model="filter['coupon_gross_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -555,14 +452,14 @@ watch(sort, async () => {
                   <template #content>
                     <base-card class="p-0! gap-0! -mt-2" shadow>
                       <div class="flex flex-col">
-                        <router-link :to="`/bonds/${bond._id}`">
+                        <router-link :to="`/coupon-bonds/${bond._id}/details/${bond.received_coupons?.uuid}`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-book-open-cover" />
                             <p class="flex-1">View</p>
                           </base-button>
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
-                        <router-link v-if="authStore.hasPermission('bonds:update')" :to="`/bonds/${bond._id}/edit`">
+                        <router-link v-if="authStore.hasPermission('bonds:update')" :to="`/coupon-bonds/${bond._id}/create/${bond.received_coupons?.uuid}`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-file-pen" />
                             <p class="flex-1">Edit</p>
@@ -591,34 +488,27 @@ watch(sort, async () => {
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
+              <td v-if="columns['coupon_status']?.isVisible">
+                <router-link v-if="!bond.received_coupons?.received_date" :to="`/coupon-bonds/${bond._id}/create/${bond.received_coupons?.uuid}`">
+                  <base-button variant="filled" color="primary" class="w-32 font-bold">
+                    <base-icon icon="i-fa7-solid:money-from-bracket" /> Receive
+                  </base-button>
+                </router-link>
+                <base-badge v-else variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Completed
+                </base-badge>
+              </td>
               <td v-if="columns['type']?.isVisible">{{ bond.type }}</td>
               <td v-if="columns['form_number']?.isVisible">
                 <router-link :to="`/bonds/${bond._id}`" class="text-blue">{{ bond.form_number }}</router-link>
               </td>
               <td v-if="columns['product']?.isVisible">{{ bond.product }}</td>
-              <td v-if="columns['series']?.isVisible">{{ bond.series }}</td>
-              <td v-if="columns['year_issued']?.isVisible">{{ bond.product }}</td>
-              <td v-if="columns['coupon_rate']?.isVisible">{{ bond.coupon_rate }}</td>
-              <td v-if="columns['bank_source.account.account_number']?.isVisible">{{ bond.bank_source?.account?.account_number }}</td>
-              <td v-if="columns['bank_source.account.account_name']?.isVisible">{{ bond.bank_source?.account?.account_name }}</td>
-              <td v-if="columns['bank_placement.name']?.isVisible">{{ bond.bank_placement?.name }}</td>
-              <td v-if="columns['bank_placement.account.account_number']?.isVisible">{{ bond.bank_placement?.account?.account_number }}</td>
-              <td v-if="columns['bank_placement.account.account_name']?.isVisible">{{ bond.bank_placement?.account?.account_name }}</td>
               <td v-if="columns['owner.name']?.isVisible">{{ bond.owner?.name }}</td>
-              <td v-if="columns['base_date']?.isVisible">{{ bond.base_date }}</td>
-              <td v-if="columns['transaction_date']?.isVisible">{{ bond.transaction_date }}</td>
-              <td v-if="columns['settlement_date']?.isVisible">{{ bond.settlement_date }}</td>
-              <td v-if="columns['maturity_date']?.isVisible">{{ bond.maturity_date }}</td>
-              <td v-if="columns['transaction_number']?.isVisible">{{ formatNumber(bond.transaction_number, 2) }}</td>
-              <td v-if="columns['price']?.isVisible">{{ formatNumber(bond.price, 2) }}</td>
-              <td v-if="columns['principal_amount']?.isVisible">{{ formatNumber(bond.principal_amount, 2) }}</td>
-              <td v-if="columns['remaining_amount']?.isVisible">{{ formatNumber(bond.remaining_amount, 2) }}</td>
-              <td v-if="columns['proceed_amount']?.isVisible">{{ formatNumber(bond.proceed_amount, 2) }}</td>
-              <td v-if="columns['accrued_interest']?.isVisible">{{ formatNumber(bond.accrued_interest, 2) }}</td>
-              <td v-if="columns['total_proceed']?.isVisible">{{ formatNumber(bond.total_proceed, 2) }}</td>
-              <td v-if="columns['coupon_tenor']?.isVisible">{{ formatNumber(bond.coupon_tenor, 2) }}</td>
+              <td v-if="columns['coupon_tenor']?.isVisible">{{ formatNumber(bond.coupon_tenor) }}</td>
+              <td v-if="columns['received_coupons.date']?.isVisible">{{ bond.received_coupons.date }}</td>
+              <td v-if="columns['coupon_rate']?.isVisible">{{ formatNumber(bond.coupon_rate, 2) }}%</td>
               <td v-if="columns['coupon_gross_amount']?.isVisible">{{ formatNumber(bond.coupon_gross_amount, 2) }}</td>
-              <td v-if="columns['coupon_tax_rate']?.isVisible">{{ formatNumber(bond.coupon_tax_rate, 2) }}</td>
+              <td v-if="columns['coupon_tax_rate']?.isVisible">{{ formatNumber(bond.coupon_tax_rate, 2) }}%</td>
               <td v-if="columns['coupon_tax_amount']?.isVisible">{{ formatNumber(bond.coupon_tax_amount, 2) }}</td>
               <td v-if="columns['coupon_net_amount']?.isVisible">{{ formatNumber(bond.coupon_net_amount, 2) }}</td>
 

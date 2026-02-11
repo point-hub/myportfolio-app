@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue';
 
-import { formatNumber, roundNumber } from '@/utils/number';
+import { roundNumber } from '@/utils/number';
 
-import { type IForm, type IReceivedCoupon } from './form';
+import { type IForm } from './form';
 
 const data = defineModel<IForm>('data', {
   default: () => ({
@@ -16,6 +16,9 @@ const data = defineModel<IForm>('data', {
     received_coupons: {
       date: undefined,
       amount: undefined,
+      received_date: undefined,
+      received_amount: undefined,
+      remaining_amount: undefined,
       bank_id: undefined,
       bank_account_uuid: undefined,
     },
@@ -34,40 +37,9 @@ watchEffect(() => {
   data.value.coupon_tax_amount = roundNumber((data.value.coupon_tax_rate ?? 0) / 100 * data.value.coupon_gross_amount, 2);
   data.value.coupon_net_amount = data.value.coupon_gross_amount - data.value.coupon_tax_amount;
 
-  const settlementDate = data.value.settlement_date
-    ? new Date(data.value.settlement_date as string)
-    : null;
-
-  const maturityDate = data.value.maturity_date
-    ? new Date(data.value.maturity_date as string)
-    : null;
-
-  const tenor = Number(data.value.coupon_tenor ?? 0);
-
-  if (!settlementDate || !maturityDate || !tenor) {
-    data.value.received_coupons = [];
-    return;
-  }
-
-  const coupons: IReceivedCoupon[] = [];
-  const current = new Date(settlementDate);
-
-  current.setDate(current.getDate() + tenor);
-
-  while (current <= maturityDate) {
-    coupons.push({
-      date: current.toISOString().slice(0, 10),
-      amount: data.value.coupon_net_amount,
-      received_amount: 0,
-      remaining_amount: 0,
-      bank_id: undefined,
-      bank_account_uuid: undefined,
-    });
-
-    current.setDate(current.getDate() + tenor);
-  }
-
-  data.value.received_coupons = coupons;
+  data.value.received_coupons?.forEach((el) => {
+    el.remaining_amount = el.amount - el.received_amount;
+  });
 });
 </script>
 
@@ -80,27 +52,51 @@ watchEffect(() => {
       <base-input-number layout="horizontal" label="Tax Amount" align="left" :model-value="data.coupon_tax_amount" disabled />
       <base-input-number layout="horizontal" label="Net Amount" align="left" :model-value="data.coupon_net_amount" disabled />
       <base-input layout="horizontal" label="Next Coupon Date" align="left" :model-value="nextCouponDate" disabled />
-      <base-table class="min-h-48">
+
+      <!-- <base-table class="min-h-48">
         <thead>
           <tr>
             <th class="w-1">No</th>
             <th>Date</th>
-            <th class="text-right whitespace-nowrap w-1">Coupon Amount</th>
+            <th class="text-right whitespace-nowrap w-1">Amount</th>
+            <th>Received Bank</th>
+            <th>Received Date</th>
+            <th class="text-right whitespace-nowrap w-1">Received Amount</th>
+            <th class="text-right whitespace-nowrap w-1">Remaining Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(receivedCoupon, index) in data?.received_coupons">
             <td class="text-center">{{ index + 1 }}</td>
-            <td>{{ receivedCoupon.date }}</td>
-            <td  class="text-right">{{ formatNumber(receivedCoupon.amount, 2) }}</td>
+            <td class="whitespace-nowrap">{{ receivedCoupon.date }}</td>
+            <td><base-input-number v-model="receivedCoupon.amount" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+            <td>
+              <base-choosen
+                title="Bank Account"
+                v-model="receivedCoupon.bank_account_uuid"
+                v-model:search="searchBank"
+                :options="bankOptions"
+                @select="(selected: IBankAccountOption) => onSelectedBank(selected, receivedCoupon)"
+                :disabled="isSaving"
+                placeholder="Select"
+                type="text"
+              />
+            </td>
+            <td><base-datepicker v-model="receivedCoupon.received_date" :disabled="isSaving" border="none" /></td>
+            <td><base-input-number v-model="receivedCoupon.received_amount" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+            <td><base-input-number v-model="receivedCoupon.remaining_amount" disabled decimal-length="2" border="none" paddingless allow-negative /></td>
           </tr>
           <tr>
-            <td class="text-center"></td>
-            <td class="text-right font-bold">TOTAL</td>
             <td></td>
+            <td></td>
+            <td class="text-right">{{ formatNumber(totalAmount, 2) }}</td>
+            <td></td>
+            <td></td>
+            <td class="text-right">{{ formatNumber(totalReceived, 2) }}</td>
+            <td class="text-right">{{ formatNumber(totalRemaining, 2) }}</td>
           </tr>
         </tbody>
-      </base-table>
+      </base-table> -->
     </div>
   </base-card>
 </template>

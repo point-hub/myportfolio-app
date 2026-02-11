@@ -1,18 +1,13 @@
 import { reactive } from 'vue';
 
-import type { IBankAccount } from '@/composables/api/master/banks/get-accounts.api';
-import { getLocalDate } from '@/utils/date';
+import type { IBankAccountData } from '@/composables/api/master/banks/get-accounts.api';
+import type { IOwnerData } from '@/composables/api/master/owners/get.api';
 
 export interface IReceivedCoupon {
-  uuid: string
   date: string
-  amount: number
-  received_date?: string
-  received_amount: number
-  remaining_amount: number
-  bank?: IBankAccount
-  bank_id?: string
-  bank_account_uuid?: string
+  amount: string
+  received_amount: string
+  remaining_amount: string
 }
 
 export interface IForm {
@@ -23,11 +18,14 @@ export interface IForm {
   type?: string;
   series?: string;
   year_issued?: string;
+  bank_source?: IBankAccountData;
   bank_source_id?: string;
   bank_source_account_uuid?: string;
+  bank_placement?: IBankAccountData;
   bank_placement_id?: string;
   bank_placement_account_uuid?: string;
   owner_id?: string;
+  owner?: IOwnerData;
   base_date?: number;
   transaction_date?: string;
   settlement_date?: string;
@@ -54,6 +52,8 @@ export interface IForm {
   updated_by_id?: string | null;
   archived_at?: Date | null;
   archived_by_id?: string | null;
+  status?: 'active' | 'draft' | 'completed';
+  coupon_status?: 'pending' | 'completed';
 }
 
 // Update IFormError to match IForm
@@ -82,7 +82,6 @@ export type IFormError = Partial<
     | 'coupon_tax_rate'
     | 'coupon_tax_amount'
     | 'coupon_net_amount'
-    | 'coupon_date'
     | 'notes',
     string[]
   >
@@ -102,10 +101,10 @@ export function useForm() {
     bank_placement_id: undefined,
     bank_placement_account_uuid: undefined,
     owner_id: undefined,
-    base_date: 365,
-    transaction_date: getLocalDate(),
-    settlement_date: getLocalDate(),
-    maturity_date: getLocalDate(),
+    base_date: undefined,
+    transaction_date: undefined,
+    settlement_date: undefined,
+    maturity_date: undefined,
     transaction_number: undefined,
     price: undefined,
     principal_amount: undefined,
@@ -118,7 +117,6 @@ export function useForm() {
     coupon_tax_rate: undefined,
     coupon_tax_amount: undefined,
     coupon_net_amount: undefined,
-    coupon_date: undefined,
     notes: undefined,
     is_archived: null,
     created_at: undefined,

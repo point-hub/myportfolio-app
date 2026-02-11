@@ -50,7 +50,8 @@ export interface IBondData {
   updated_by_id?: string | null;
   archived_at?: Date | null;
   archived_by_id?: string | null;
-  status?: 'active' | 'draft';
+  status?: 'active' | 'draft' | 'completed';
+  coupon_status?: 'completed' | 'pending';
 }
 
 export interface IResponse {

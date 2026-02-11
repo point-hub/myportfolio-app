@@ -1,6 +1,7 @@
 import { reactive } from 'vue';
 
-import type { IBankAccount } from '@/composables/api/master/banks/get-accounts.api';
+import type { IBankAccount, IBankAccountData } from '@/composables/api/master/banks/get-accounts.api';
+import type { IOwnerData } from '@/composables/api/master/owners/get.api';
 import { getLocalDate } from '@/utils/date';
 
 export interface IReceivedCoupon {
@@ -10,9 +11,9 @@ export interface IReceivedCoupon {
   received_date?: string
   received_amount: number
   remaining_amount: number
-  bank?: IBankAccount
-  bank_id?: string
-  bank_account_uuid?: string
+  bank?: IBankAccount;
+  bank_id?: string;
+  bank_account_uuid?: string;
 }
 
 export interface IForm {
@@ -23,10 +24,13 @@ export interface IForm {
   type?: string;
   series?: string;
   year_issued?: string;
+  bank_source?: IBankAccountData;
   bank_source_id?: string;
   bank_source_account_uuid?: string;
+  bank_placement?: IBankAccountData;
   bank_placement_id?: string;
   bank_placement_account_uuid?: string;
+  owner?: IOwnerData;
   owner_id?: string;
   base_date?: number;
   transaction_date?: string;
@@ -45,7 +49,7 @@ export interface IForm {
   coupon_tax_amount?: number;
   coupon_net_amount?: number;
   coupon_date?: string;
-  received_coupons?: IReceivedCoupon[];
+  received_coupons: IReceivedCoupon[];
   notes?: string | null;
   is_archived?: boolean | null;
   created_at?: Date;
@@ -54,6 +58,8 @@ export interface IForm {
   updated_by_id?: string | null;
   archived_at?: Date | null;
   archived_by_id?: string | null;
+  status?: 'active' | 'draft' | 'completed';
+  coupon_status?: 'pending' | 'completed';
 }
 
 // Update IFormError to match IForm
@@ -120,6 +126,7 @@ export function useForm() {
     coupon_net_amount: undefined,
     coupon_date: undefined,
     notes: undefined,
+    received_coupons: [],
     is_archived: null,
     created_at: undefined,
     created_by_id: undefined,

@@ -11,6 +11,10 @@ export interface IBankAccountData {
   account_uuid: string
   account_number: string
   account_name: string
+  account: {
+    account_number: string
+    account_name: string
+  }
   notes: string
   is_archived: string
   created_at: Date

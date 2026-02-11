@@ -1,11 +1,12 @@
 import type { IReceivedCoupon } from '@/pages/bonds/create/form';
 import type { IAuthUser } from '@/stores/auth.store';
+import type { IPagination, IQuery } from '@/types';
 import { apiRequest } from '@/utils/api';
 
-import type { IBankAccountData } from '../master/banks/get-accounts.api';
+import type { IBankAccount } from '../master/banks/get-accounts.api';
 import type { IOwnerData } from '../master/owners/get.api';
 
-export interface IResponse {
+export interface IBondData {
   _id?: string;
   form_number?: string;
   product?: string;
@@ -15,10 +16,10 @@ export interface IResponse {
   year_issued?: string;
   bank_source_id?: string;
   bank_source_account_uuid?: string;
-  bank_source?: IBankAccountData;
+  bank_source?: IBankAccount;
   bank_placement_id?: string;
   bank_placement_account_uuid?: string;
-  bank_placement?: IBankAccountData;
+  bank_placement?: IBankAccount;
   owner_id?: string;
   owner?: IOwnerData;
   base_date?: number;
@@ -39,6 +40,7 @@ export interface IResponse {
   coupon_net_amount?: number;
   coupon_date?: string;
   received_coupons?: IReceivedCoupon[];
+  remaining_amount?: number;
   notes?: string | null;
   is_archived?: boolean | null;
   created_at?: Date;
@@ -48,14 +50,19 @@ export interface IResponse {
   updated_by_id?: string | null;
   archived_at?: Date | null;
   archived_by_id?: string | null;
-  status: 'active' | 'draft' | 'completed';
-  coupon_status: 'completed' | 'pending';
+  status?: 'active' | 'draft' | 'completed';
+  coupon_status?: 'completed' | 'pending';
+}
+
+export interface IResponse {
+  data: IBondData[]
+  pagination: IPagination
 }
 
 // Use a shared controller that can be replaced
 let controller: AbortController | null = null;
 
-export const findBondApi = async (_id: string): Promise<IResponse> => {
+export const getCouponsByIdBondsApi = async (id: string, query?: IQuery): Promise<IResponse> => {
   // Abort the previous request if it exists
   if (controller) {
     controller.abort();
@@ -63,7 +70,13 @@ export const findBondApi = async (_id: string): Promise<IResponse> => {
 
   // Create a new AbortController for this request
   controller = new AbortController();
-  const response = await apiRequest.get(`/v1/bonds/${_id}`, {
+  const response = await apiRequest.get(`/v1/bonds/${id}`, {
+    params: {
+      search: query?.search,
+      page: query?.page || 1,
+      page_size: query?.page_size || 10,
+      sort: query?.sort || '-_id',
+    },
     signal: controller.signal,
   });
 
