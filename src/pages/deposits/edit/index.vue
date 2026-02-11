@@ -47,9 +47,8 @@ onMounted(async () => {
       form.data.cashback = response.cashback!;
       form.data.cashback_schedule = response.cashback_schedule ?? [];
       form.data.notes = response.notes;
+      form.data.status = response.status;
       form.data.is_archived = response.is_archived;
-      form.data.is_draft = response.is_draft;
-      console.log(form.data);
     }
   } catch (error) {
     const errorResponse = handleError(error);
@@ -124,7 +123,7 @@ const onUpdateDraft = async () => {
     <card-internal-notes v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
     <card-reason v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
     <div class="flex gap-2">
-      <base-button class="flex-1" :is-loading="isSaving" color="danger" @click="onUpdateDraft">Update as Draft</base-button>
+      <base-button v-if="form.data.status === 'draft'" class="flex-1" :is-loading="isSaving" color="danger" @click="onUpdateDraft">Update as Draft</base-button>
       <base-button class="flex-1" :is-loading="isSaving" color="primary" @click="onUpdate">Update</base-button>
     </div>
   </app-container>

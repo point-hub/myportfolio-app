@@ -48,6 +48,7 @@ onMounted(async () => {
   logs.value = await getAuditLogsApi({
     search: {
       actor_id: authStore.authUser?._id,
+      group_by_operation_id: true,
     },
     sort: '-created_at',
   });

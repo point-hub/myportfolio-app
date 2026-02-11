@@ -73,11 +73,12 @@ export interface IForm {
     payment_date?: string
     rate?: number
     amount?: number
+    received_date?: string
   }[]
   notes?: string | null | undefined
-  update_reason?: string
   is_archived?: boolean
-  is_draft?: boolean
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
+  update_reason?: string
 }
 
 export type IFormError = Partial<
@@ -105,7 +106,8 @@ export type IFormError = Partial<
     | `cashback_schedule.${number}.payment_date`
     | `cashback_schedule.${number}.rate`
     | `cashback_schedule.${number}.amount`
-    | 'notes',
+    | 'notes'
+    | 'update_reason',
     string[]
   >
 >;
@@ -146,6 +148,7 @@ export function useForm() {
     },
     cashback_schedule: [],
     notes: undefined,
+    status: undefined,
     update_reason: undefined,
   };
 

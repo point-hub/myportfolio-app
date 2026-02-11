@@ -67,9 +67,17 @@ export interface IResponse {
     created_by?: IAuthUser
   }[]
   notes?: string | null | undefined
+  withdrawal?: {
+    received_date?: string
+    received_amount?: number
+    remaining_amount?: number
+    bank?: IBankData
+    created_by?: IAuthUser
+    created_at?: string
+  }
   is_archived?: boolean
-  is_draft?: boolean
-  created_at?: Date
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
+  created_at?: string
   created_by_id?: string
   created_by?: IAuthUser
 }

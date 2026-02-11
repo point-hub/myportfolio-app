@@ -34,11 +34,11 @@ onMounted(async () => {
 <template>
   <base-card title="Deposits">
     <div class="flex flex-col gap-4 my-5">
-      <base-input layout="horizontal" label="Form Number" required v-model="data.form_number" :errors="errors.form_number" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Form Number" required v-model="data.form_number" :errors="errors.form_number" disabled />
       <base-select
         label="Owner"
         required
-        v-model:selectedValue="data.owner_id"
+        v-model="data.owner_id"
         v-model:search="searchOwner"
         :options="ownerOptions"
         :errors="errors.owner_id"
@@ -48,7 +48,7 @@ onMounted(async () => {
       <base-select
         label="Group"
         required
-        v-model:selectedValue="data.group_id"
+        v-model="data.group_id"
         v-model:search="searchGroup"
         :options="groupOptions"
         :errors="errors.group_id"

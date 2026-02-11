@@ -15,6 +15,7 @@ import { handleError } from '@/utils/api';
 import { formatNumber } from '@/utils/number';
 
 import ModalDelete from '../components/delete-modal/index.vue';
+import WithdrawalModal from '../components/withdrawal-modal/index.vue';
 
 /**
  * Setup table columns and visibility state using the useTableSetting composable.
@@ -31,10 +32,12 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    form_number: { label: 'Form Number', isVisible: true, isSelectable: false },
+    status: { label: 'Status', isVisible: true, isSelectable: true },
+    'withdrawal.status': { label: 'Payment Status', isVisible: true, isSelectable: true },
+    form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
-    'owner.name': { label: 'Owner', isVisible: true, isSelectable: false },
-    'group.name': { label: 'Group', isVisible: true, isSelectable: false },
+    'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
+    'group.name': { label: 'Group', isVisible: true, isSelectable: true },
     'placement.base_date': { label: 'Base Date', isVisible: true, isSelectable: true },
     'placement.date': { label: 'Placement Date', isVisible: true, isSelectable: true },
     'placement.term': { label: 'Term', isVisible: true, isSelectable: true },
@@ -53,9 +56,11 @@ const {
     'interest.bank.name': { label: 'Bank Interest - Name', isVisible: true, isSelectable: true },
     'interest.bank.account.account_number': { label: 'Bank Interest - Account Number', isVisible: true, isSelectable: true },
     'interest.bank.account.account_name': { label: 'Bank Interest - Account Name', isVisible: true, isSelectable: true },
+    'withdrawal.received_date': { label: 'Withdrawal - Received Date', isVisible: true, isSelectable: true },
+    'withdrawal.received_amount': { label: 'Withdrawal - Received Amount', isVisible: true, isSelectable: true },
+    'withdrawal.remaining_amount': { label: 'Withdrawal - Remaining Amount', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
-    is_draft: { label: 'Is Draft', isVisible: true, isSelectable: true },
   },
 });
 
@@ -73,6 +78,7 @@ const {
 } = useTableFilter({
   initialFilter: {
     all: '',
+    status: '',
     form_number: '',
     'owner.name': '',
     'group.name': '',
@@ -99,11 +105,17 @@ const {
     'interest.tax_rate': '',
     'interest.tax_amount': '',
     'interest.net_amount': '',
+    'withdrawal.status': '',
+    'withdrawal.received_date': '',
+    'withdrawal.received_date_from': '',
+    'withdrawal.received_date_to': '',
+    'withdrawal.received_amount': '',
+    'withdrawal.remaining_amount': '',
     notes: '',
     is_archived: 'false',
-    is_draft: '',
   },
   initialSortKeys: {
+    status: 0,
     form_number: 0,
     'owner.name': 0,
     'group.name': 0,
@@ -123,9 +135,12 @@ const {
     'interest.tax_rate': 0,
     'interest.tax_amount': 0,
     'interest.net_amount': 0,
+    'withdrawal.status': 0,
+    'withdrawal.received_date': 0,
+    'withdrawal.received_amount': 0,
+    'withdrawal.remaining_amount': 0,
     notes: 0,
     is_archived: 0,
-    is_draft: 0,
   },
 });
 
@@ -147,12 +162,23 @@ const deposits = ref<IDepositData[]>();
 const isInitialSetup = ref(true);
 const isLoading = ref(false);
 const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
+const statusOptions = ref([
+  { label: 'Draft', value: 'draft' },
+  { label: 'Active', value: 'active' },
+  { label: 'Withdrawn', value: 'withdrawn' },
+  { label: 'Renewed', value: 'renewed' },
+]);
+const withdrawalStatusOptions = ref([
+  { label: 'Outstanding', value: 'outstanding' },
+  { label: 'Completed', value: 'completed' },
+]);
 
 /**
  * References for dynamic UI components like row menus and delete modal.
  */
 const rowMenuRef = ref();
 const deleteModalRef = ref();
+const withdrawalModalRef = ref();
 
 /**
  * Function triggered when pagination page changes.
@@ -246,6 +272,10 @@ const onDeleted = async () => {
   await getDeposits();
 };
 
+const onWithdrawalReceived = async () => {
+  await getDeposits();
+};
+
 /**
  * Lifecycle hook: runs when component is mounted.
  * Applies query params to state and fetches initial data.
@@ -317,6 +347,14 @@ watch(sort, async () => {
     await resetPageAndFetch();
   }
 });
+
+const getWithdrawalAmount = (deposit: IDepositData) => {
+  if (deposit.interest?.is_rollover) {
+    return Number(deposit.placement?.amount ?? 0) + Number(deposit.interest?.net_amount ?? 0);
+  } else {
+    return deposit.placement?.amount;
+  }
+};
 </script>
 
 <template>
@@ -365,6 +403,26 @@ watch(sort, async () => {
             <th class="w-1"></th>
 
             <!-- Render filter inputs for visible columns -->
+            <th v-if="columns['status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Status"
+                v-model:options="statusOptions"
+                v-model="filter.status"
+                border="none"
+                paddingless
+              />
+            </th>
+            <th v-if="columns['withdrawal.status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Received Status"
+                v-model:options="withdrawalStatusOptions"
+                v-model="filter['withdrawal.status']"
+                border="none"
+                paddingless
+              />
+            </th>
             <th v-if="columns['form_number']?.isVisible">
               <base-input v-model="filter.form_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -394,7 +452,6 @@ watch(sort, async () => {
               <base-input v-model="filter['placement.term']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['placement.maturity_date']?.isVisible">
-              <!-- <base-input v-model="filter['placement.maturity_date']" placeholder="Search..." :readonly="isLoading" border="none" paddingless /> -->
               <base-date-range-picker
                 v-model:date_from="filter['placement.maturity_date_from']"
                 v-model:date_to="filter['placement.maturity_date_to']"
@@ -446,6 +503,22 @@ watch(sort, async () => {
             <th v-if="columns['interest.bank.account.account_number']?.isVisible">
               <base-input v-model="filter['interest.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
+            <th v-if="columns['withdrawal.received_date']?.isVisible">
+              <base-date-range-picker
+                v-model:date_from="filter['withdrawal.received_date_from']"
+                v-model:date_to="filter['withdrawal.received_date_to']"
+                placeholder="Search..."
+                :readonly="isLoading"
+                border="none"
+                paddingless
+              />
+            </th>
+            <th v-if="columns['withdrawal.received_amount']?.isVisible">
+              <base-input v-model="filter['withdrawal.received_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.remaining_amount']?.isVisible">
+              <base-input v-model="filter['withdrawal.remaining_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['notes']?.isVisible">
               <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -454,17 +527,7 @@ watch(sort, async () => {
                 placeholder="Search..."
                 title="Is Archived"
                 v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
-                border="none"
-                paddingless
-              />
-            </th>
-            <th v-if="columns['is_draft']?.isVisible">
-              <base-choosen
-                placeholder="Search..."
-                title="Is Draft"
-                v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_draft"
+                v-model="filter.is_archived"
                 border="none"
                 paddingless
               />
@@ -496,7 +559,7 @@ watch(sort, async () => {
 
           <!-- Render rows of deposit data when available -->
           <template v-if="!isLoading && deposits && deposits.length > 0">
-            <tr v-for="(deposit, index) in deposits" :key="index" :class="{'bg-red-50 dark:bg-red-800': deposit.is_draft}">
+            <tr v-for="(deposit, index) in deposits" :key="index" :class="{'bg-red-50 dark:bg-red-800': deposit.status === 'draft'}">
               <td>
                 <!-- Row action menu -->
                 <base-popover placement="bottom" ref="rowMenuRef">
@@ -519,7 +582,34 @@ watch(sort, async () => {
                             <p class="flex-1">Edit</p>
                           </base-button>
                         </router-link>
+                        <router-link v-if="authStore.hasPermission('deposits:renew') && deposit.status === 'active'" :to="`/deposits/${deposit._id}/extend`">
+                          <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
+                            <base-icon icon="i-fa7-light-file-pen" />
+                            <p class="flex-1">Extend</p>
+                          </base-button>
+                        </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
+                        <base-button
+                          v-if="authStore.hasPermission('deposits:withdraw') && (deposit.status === 'active' || deposit.status === 'withdrawn')"
+                          variant="text"
+                          color="info"
+                          class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
+                          @click="() => {
+                            withdrawalModalRef.toggleModal({
+                              _id: deposit._id,
+                              payment_date: deposit.placement?.maturity_date,
+                              amount: getWithdrawalAmount(deposit),
+                              bank_id: deposit.source?.bank?._id,
+                              bank_account_uuid: deposit.source?.bank?.account?.uuid,
+                              received_date: deposit.withdrawal?.received_date,
+                              received_amount: deposit.withdrawal?.received_amount,
+                            })
+                            rowMenuRef[index].toggle()
+                          }"
+                        >
+                          <base-icon icon="i-fa7-light-money-from-bracket" />
+                          <p class="flex-1">Withdraw</p>
+                        </base-button>
                         <base-button v-if="authStore.hasPermission('deposits:delete')" @click="onDeleteModal(deposit, index)" variant="text" color="danger" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                           <base-icon icon="i-fa7-light-trash-xmark" />
                           <p class="flex-1">Delete</p>
@@ -531,6 +621,28 @@ watch(sort, async () => {
               </td>
 
               <!-- Deposit fields rendered conditionally based on column visibility -->
+              <td v-if="columns['status']?.isVisible">
+                <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-open" /> Draft
+                </base-badge>
+                <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-dollar" /> Active
+                </base-badge>
+                <base-badge v-else-if="deposit.status === 'withdrawn'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Withdrawn
+                </base-badge>
+                <base-badge v-else-if="deposit.status === 'renewed'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Renewed
+                </base-badge>
+              </td>
+              <td v-if="columns['withdrawal.status']?.isVisible">
+                <base-badge v-if="deposit.withdrawal?.received_date && deposit.withdrawal?.remaining_amount && deposit.withdrawal?.remaining_amount > 0" variant="filled" color="danger" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-open" /> Outstanding
+                </base-badge>
+                <base-badge v-else-if="deposit.withdrawal?.received_date && (deposit.withdrawal?.remaining_amount ?? 0) <= 0" variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Completed
+                </base-badge>
+              </td>
               <td v-if="columns['form_number']?.isVisible">
                 <router-link :to="`/deposits/${deposit._id}`" class="text-blue">{{ deposit.form_number }}</router-link>
               </td>
@@ -545,7 +657,7 @@ watch(sort, async () => {
               <td v-if="columns['placement.date']?.isVisible">{{ deposit.placement?.date }}</td>
               <td v-if="columns['placement.term']?.isVisible">{{ deposit.placement?.term }}</td>
               <td v-if="columns['placement.maturity_date']?.isVisible">{{ deposit.placement?.maturity_date }}</td>
-              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount) }}</td>
+              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount, 2) }}</td>
               <td v-if="columns['placement.bank.name']?.isVisible">{{ deposit.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ deposit.source?.bank?.name }}</td>
@@ -553,23 +665,21 @@ watch(sort, async () => {
               <td v-if="columns['source.bank.account.account_number']?.isVisible">{{ deposit.source?.bank?.account?.account_number }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ deposit.interest?.payment_method }}</td>
-              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate) }}</td>
-              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount) }}</td>
-              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate) }}</td>
-              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount) }}</td>
-              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount) }}</td>
+              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate, 2) }}</td>
+              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount, 2) }}</td>
+              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate, 2) }}</td>
+              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount, 2) }}</td>
+              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount, 2) }}</td>
               <td v-if="columns['interest.bank.name']?.isVisible">{{ deposit.interest?.bank?.name }}</td>
               <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ deposit.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['interest.bank.account.account_number']?.isVisible">{{ deposit.interest?.bank?.account?.account_number }}</td>
+              <td v-if="columns['withdrawal.received_date']?.isVisible">{{ deposit.withdrawal?.received_date }}</td>
+              <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.received_amount, 2) }}</td>
+              <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.remaining_amount, 2) }}</td>
               <td v-if="columns['notes']?.isVisible">{{ deposit.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="deposit.is_archived" variant="filled" color="danger" class="font-bold">
                   <base-icon icon="i-fa7-solid:box-archive" /> ARCHIVED
-                </base-badge>
-              </td>
-              <td v-if="columns['is_draft']?.isVisible">
-                <base-badge v-if="deposit.is_draft" variant="filled" color="danger" class="font-bold">
-                  <base-icon icon="i-fa7-solid:box-archive" /> DRAFT
                 </base-badge>
               </td>
             </tr>
@@ -589,6 +699,7 @@ watch(sort, async () => {
 
     <!-- Delete confirmation modal -->
     <modal-delete ref="deleteModalRef" @deleted="onDeleted" />
+    <withdrawal-modal ref="withdrawalModalRef" @received="onWithdrawalReceived" />
   </base-card>
 
   <!-- Table Setting modal -->

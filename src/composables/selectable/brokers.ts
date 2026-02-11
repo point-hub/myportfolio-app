@@ -10,12 +10,23 @@ export function useSelectableBrokers() {
 
   const options = computed(() =>
     brokers.value.map((broker) => ({
-      label: `[${broker.code}] ${broker.name} ${broker.account_number} a/n ${broker.account_name}`,
+      label: `${broker.name}`,
       value: broker._id,
     })),
   );
 
+  // controller is scoped to THIS composable instance
+  let controller: AbortController | null = null;
+
   const getBrokers = async (search?: string) => {
+    // Abort the previous request if it exists
+    if (controller) {
+      controller.abort();
+    }
+
+    // Create a new AbortController for this request
+    controller = new AbortController();
+
     isLoading.value = true;
     const response = await getBrokersApi({
       search: {

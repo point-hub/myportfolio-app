@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isArray } from '@point-hub/js-utils';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -173,7 +174,7 @@ const getChangedKeys = (
                 </span>
               </p>
             </div>
-            <base-table>
+            <base-table class="table-fixed w-full">
               <thead>
                 <tr>
                   <th class="w-[30%]"><div class="flex items-center gap-2 whitespace-nowrap">Field</div></th>
@@ -196,8 +197,26 @@ const getChangedKeys = (
                 <template v-if="!isLoading">
                   <tr v-for="key in getChangedKeys(auditLog.changes, auditLog.changes?.snapshot?.before, auditLog.changes?.snapshot?.after)" :key="key">
                     <td class="font-semibold">{{ key }}</td>
-                    <td class="break-all text-red-700 dark:text-red-300">{{ auditLog.changes?.snapshot?.before?.[key] }}</td>
-                    <td class="break-all text-green-700 dark:text-green-300">{{ auditLog.changes?.snapshot?.after?.[key] }}</td>
+                    <td class="break-all max-w-0 text-red-700 dark:text-red-300">
+                      <div v-if="isArray(auditLog.changes?.snapshot?.before?.[key])" class="overflow-x-auto">
+                        <pre class="whitespace-pre min-w-max">
+                          <code>
+{{ auditLog.changes?.snapshot?.before?.[key] }}
+                          </code>
+                        </pre>
+                      </div>
+                      <template v-else>{{ auditLog.changes?.snapshot?.before?.[key] }}</template>
+                    </td>
+                    <td class="break-all max-w-0 text-green-700 dark:text-green-300">
+                      <div v-if="isArray(auditLog.changes?.snapshot?.after?.[key])" class="overflow-x-auto">
+                        <pre class="whitespace-pre min-w-max">
+                          <code>
+{{ auditLog.changes?.snapshot?.after?.[key] }}
+                          </code>
+                        </pre>
+                      </div>
+                      <template v-else>{{ auditLog.changes?.snapshot?.after?.[key] }}</template>
+                    </td>
                   </tr>
                 </template>
               </tbody>

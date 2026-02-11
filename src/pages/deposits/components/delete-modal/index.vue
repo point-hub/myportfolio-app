@@ -37,11 +37,13 @@ const onDelete = async (reason: string) => {
       toast(errorResponse.message, {
         lists: errorResponse.lists,
         color: 'danger',
+        timer: 10000,
       });
     }
   } finally {
     // stop loading state
     isDeleting.value = false;
+    confirmActionModalRef.value.toggleModal(false);
   }
 };
 

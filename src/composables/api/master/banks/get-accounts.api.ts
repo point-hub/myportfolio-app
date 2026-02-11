@@ -17,6 +17,23 @@ export interface IBankAccountData {
   created_by_id: string
 }
 
+export interface IBankAccount {
+  _id: string
+  code: string
+  name: string
+  branch: string
+  address: string
+  phone: string
+  account: {
+    account_number: string
+    account_name: string
+  }
+  notes: string
+  is_archived: string
+  created_at: Date
+  created_by_id: string
+}
+
 export interface IResponse {
   data: IBankAccountData[]
   pagination: IPagination

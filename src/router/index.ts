@@ -4,8 +4,14 @@ import authConfig from '@/config/auth';
 import routesAccount from '@/pages/account/routes';
 import routesAdministrator from '@/pages/administrator/routes';
 import routesAuth from '@/pages/auth/routes';
+import routesBond from '@/pages/bonds/routes';
 import routesDeposit from '@/pages/deposits/routes';
+import routesDividendStock from '@/pages/dividend-stocks/routes';
+import routesInsurance from '@/pages/insurances/routes';
 import routesMaster from '@/pages/master/routes';
+import routesPaymentStock from '@/pages/payment-stocks/routes';
+import routesSaving from '@/pages/savings/routes';
+import routesStock from '@/pages/stocks/routes';
 import { useAuthStore } from '@/stores/auth.store';
 
 const router = createRouter({
@@ -30,6 +36,12 @@ const router = createRouter({
             routesAccount,
             routesMaster,
             routesDeposit,
+            routesInsurance,
+            routesSaving,
+            routesPaymentStock,
+            routesDividendStock,
+            routesStock,
+            routesBond,
             routesAdministrator,
           ],
         },

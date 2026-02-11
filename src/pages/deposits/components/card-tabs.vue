@@ -10,11 +10,17 @@ const route = useRoute();
 const isDeposits = computed(() => route.path === '/deposits');
 const isDepositInterests = computed(() => route.path === '/deposits/interests');
 const isDepositCashbacks = computed(() => route.path === '/deposits/cashbacks');
+const isDepositDashboard = computed(() => route.path === '/deposits/dashboard');
 </script>
 
 <template>
   <base-card class="py-3! gap-0!">
     <div class="flex gap-2 overflow-auto scrollbar-hidden">
+      <router-link v-if="authStore.hasPermission('deposits:module')" :to="`/deposits/dashboard`">
+        <base-button variant="filled" :color="isDepositDashboard ? 'primary' : 'info'" size="sm" class="font-bold">
+          <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> DASHBOARD
+        </base-button>
+      </router-link>
       <router-link v-if="authStore.hasPermission('deposits:module')" :to="`/deposits`">
         <base-button variant="filled" :color="isDeposits ? 'primary' : 'info'" size="sm" class="font-bold">
           <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST DEPOSITS

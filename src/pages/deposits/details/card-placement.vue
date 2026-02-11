@@ -25,7 +25,7 @@ const data = defineModel<IForm>('data', {
       <base-input layout="h" label="Placement Date" disabled :model-value="data.placement?.date" />
       <base-input layout="h" label="Term" disabled :model-value="data.placement?.term" />
       <base-input layout="h" label="Maturity Date" disabled :model-value="data.placement?.maturity_date" />
-      <base-input layout="h" label="Amount" disabled :model-value="data.placement?.amount" />
+      <base-input-number align="left" layout="h" label="Amount" disabled :model-value="data.placement?.amount" />
     </div>
   </base-card>
 </template>

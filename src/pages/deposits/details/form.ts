@@ -24,8 +24,10 @@ export interface IForm {
   }
   source?: {
     bank?: {
+      _id?: string
       name?: string
       account?: {
+        uuid?: string
         account_name?: string
         account_number?: string
       }
@@ -70,6 +72,7 @@ export interface IForm {
       }
     }
     created_by?: IAuthUser
+    created_at?: string
   }[]
   cashback?: {
     bank?: {
@@ -86,6 +89,30 @@ export interface IForm {
     amount?: number
     received_date?: string
     received_amount?: number
+    received_additional_payment_date?: string
+    received_additional_payment_amount?: number
+    bank?: {
+      name?: string
+      account?: {
+        account_name?: string
+        account_number?: string
+      }
+    }
+    additional_bank?: {
+      name?: string
+      account?: {
+        account_name?: string
+        account_number?: string
+      }
+    }
+    created_by?: IAuthUser
+    created_at?: string
+  }[]
+  withdrawal?: {
+    received_date?: string
+    amount?: number
+    received_amount?: number
+    remaining_amount?: number
     bank?: {
       name?: string
       account?: {
@@ -94,10 +121,13 @@ export interface IForm {
       }
     }
     created_by?: IAuthUser
-  }[]
+    created_at?: string
+  }
   notes?: string | undefined | null
   is_archived?: boolean
-  is_draft?: boolean
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
+  created_by?: IAuthUser
+  created_at?: string
 }
 
 export function useForm() {
@@ -133,7 +163,22 @@ export function useForm() {
       bank: undefined,
     },
     cashback_schedule: [],
+    withdrawal: {
+      received_date: undefined,
+      received_amount: undefined,
+      bank: {
+        name: undefined,
+        account: {
+          account_name: undefined,
+          account_number: undefined,
+        },
+      },
+      created_by: undefined,
+    },
     notes: undefined,
+    status: undefined,
+    created_by: undefined,
+    created_at: undefined,
   };
 
   const data = reactive<IForm>(defaultForm);

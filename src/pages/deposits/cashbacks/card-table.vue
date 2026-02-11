@@ -31,24 +31,25 @@ const {
   resetTableSetting,
 } = useTableSetting({
   columns: {
-    'cashback_schedule.status': { label: 'Status', isVisible: true, isSelectable: false },
+    'status': { label: 'Status', isVisible: true, isSelectable: true },
+    'cashback_schedule.status': { label: 'Payment Status', isVisible: true, isSelectable: true },
     'placement.bilyet_number': { label: 'Bilyet Number', isVisible: true, isSelectable: true },
-    'cashback_schedule.payment_date': { label: 'Payment Date', isVisible: true, isSelectable: false },
-    'cashback_schedule.received_date': { label: 'Received Date', isVisible: true, isSelectable: false },
-    'cashback_schedule.received_additional_payment_date': { label: 'Received Additional Payment Date', isVisible: true, isSelectable: false },
-    'cashback_schedule.amount': { label: 'Cashback Amount', isVisible: true, isSelectable: false },
-    'cashback_schedule.received_amount': { label: 'Received Amount', isVisible: true, isSelectable: false },
-    'cashback_schedule.received_additional_payment_amount': { label: 'Received Additional Payment Amount', isVisible: true, isSelectable: false },
-    'cashback_schedule.remaining_amount': { label: 'Remaining Amount', isVisible: true, isSelectable: false },
-    'cashback_schedule.bank.name': { label: 'Bank Name', isVisible: true, isSelectable: false },
-    'cashback_schedule.bank.account.account_name': { label: 'Bank Account Name', isVisible: true, isSelectable: false },
-    'cashback_schedule.bank.account.account_number': { label: 'Bank Account Number', isVisible: true, isSelectable: false },
-    'cashback_schedule.additional_bank.name': { label: 'Additional Bank Name', isVisible: true, isSelectable: false },
-    'cashback_schedule.additional_bank.account.account_name': { label: 'Additional Bank Account Name', isVisible: true, isSelectable: false },
-    'cashback_schedule.additional_bank.account.account_number': { label: 'Additional Bank Account Number', isVisible: true, isSelectable: false },
-    'cashback_schedule.created_by.username': { label: 'Created By', isVisible: true, isSelectable: false },
-    form_number: { label: 'Form Number', isVisible: true, isSelectable: false },
-    'owner.name': { label: 'Owner', isVisible: true, isSelectable: false },
+    'cashback_schedule.payment_date': { label: 'Payment Date', isVisible: true, isSelectable: true },
+    'cashback_schedule.received_date': { label: 'Received Date', isVisible: true, isSelectable: true },
+    'cashback_schedule.received_additional_payment_date': { label: 'Received Additional Payment Date', isVisible: true, isSelectable: true },
+    'cashback_schedule.amount': { label: 'Cashback Amount', isVisible: true, isSelectable: true },
+    'cashback_schedule.received_amount': { label: 'Received Amount', isVisible: true, isSelectable: true },
+    'cashback_schedule.received_additional_payment_amount': { label: 'Received Additional Payment Amount', isVisible: true, isSelectable: true },
+    'cashback_schedule.remaining_amount': { label: 'Remaining Amount', isVisible: true, isSelectable: true },
+    'cashback_schedule.bank.name': { label: 'Bank Name', isVisible: true, isSelectable: true },
+    'cashback_schedule.bank.account.account_name': { label: 'Bank Account Name', isVisible: true, isSelectable: true },
+    'cashback_schedule.bank.account.account_number': { label: 'Bank Account Number', isVisible: true, isSelectable: true },
+    'cashback_schedule.additional_bank.name': { label: 'Additional Bank Name', isVisible: true, isSelectable: true },
+    'cashback_schedule.additional_bank.account.account_name': { label: 'Additional Bank Account Name', isVisible: true, isSelectable: true },
+    'cashback_schedule.additional_bank.account.account_number': { label: 'Additional Bank Account Number', isVisible: true, isSelectable: true },
+    'cashback_schedule.created_by.username': { label: 'Created By', isVisible: true, isSelectable: true },
+    form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
+    'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
     'placement.base_date': { label: 'Base Date', isVisible: true, isSelectable: true },
     'placement.date': { label: 'Placement Date', isVisible: true, isSelectable: true },
     'placement.term': { label: 'Term', isVisible: true, isSelectable: true },
@@ -79,6 +80,7 @@ const {
 } = useTableFilter({
   initialFilter: {
     all: '',
+    status: '',
     form_number: '',
     'owner.name': '',
     'cashback_schedule.status': '',
@@ -117,6 +119,7 @@ const {
     is_archived: 'false',
   },
   initialSortKeys: {
+    status: 0,
     form_number: 0,
     'owner.name': 0,
     'cashback_schedule.status': 0,
@@ -168,6 +171,12 @@ const isInitialSetup = ref(true);
 const isLoading = ref(false);
 const archivedOptions = ref([{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]);
 const receivedOptions = ref([{ label: 'Received', value: 'true' }, { label: 'Unpaid', value: 'false' }]);
+const statusOptions = ref([
+  { label: 'Draft', value: 'draft' },
+  { label: 'Active', value: 'active' },
+  { label: 'Withdrawn', value: 'withdrawn' },
+  { label: 'Renewed', value: 'renewed' },
+]);
 
 /**
  * References for dynamic UI components like row menus and delete modal.
@@ -369,12 +378,22 @@ watch(sort, async () => {
             <th class="w-1"></th>
 
             <!-- Render filter inputs for visible columns -->
+            <th v-if="columns['status']?.isVisible">
+              <base-choosen
+                placeholder="Search..."
+                title="Status"
+                v-model:options="statusOptions"
+                v-model="filter.status"
+                border="none"
+                paddingless
+              />
+            </th>
             <th v-if="columns['cashback_schedule.status']?.isVisible">
               <base-choosen
                 placeholder="Search..."
                 title="Received Status"
                 v-model:options="receivedOptions"
-                v-model:selectedValue="filter['cashback_schedule.status']"
+                v-model="filter['cashback_schedule.status']"
                 border="none"
                 paddingless
               />
@@ -507,7 +526,7 @@ watch(sort, async () => {
                 placeholder="Search..."
                 title="Is Archived"
                 v-model:options="archivedOptions"
-                v-model:selectedValue="filter.is_archived"
+                v-model="filter.is_archived"
                 border="none"
                 paddingless
               />
@@ -540,7 +559,7 @@ watch(sort, async () => {
           <!-- Render rows of deposit data when available -->
           <template v-if="!isLoading && deposits && deposits.length > 0">
             <template v-for="(deposit, index) in deposits" :key="index">
-              <tr>
+              <tr :class="{'bg-red-50 dark:bg-red-800': deposit.status === 'draft'}">
                 <td>
                   <!-- Row action menu -->
                   <base-popover placement="bottom" ref="rowMenuRef">
@@ -557,6 +576,7 @@ watch(sort, async () => {
                             @click="() => {
                               receiveCashbackModalRef.toggleModal({
                                 _id: deposit._id,
+                                uuid: deposit.cashback_schedule?.uuid,
                                 payment_date: deposit.cashback_schedule?.payment_date,
                                 amount: deposit.cashback_schedule?.amount,
                                 bank_id: deposit.cashback_schedule?.bank?._id,
@@ -577,12 +597,14 @@ watch(sort, async () => {
                           </base-button>
                           <base-divider orientation="vertical" class="my-0!" />
                           <base-button
+                            v-if="authStore.hasPermission('deposits:receive-cashback')"
                             variant="text"
                             color="info"
                             class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!"
                             @click="() => {
                               receiveCashbackModalRef.toggleModal({
                                 _id: deposit._id,
+                                uuid: deposit.cashback_schedule?.uuid,
                                 payment_date: deposit.cashback_schedule?.payment_date,
                                 amount: deposit.cashback_schedule?.amount,
                                 bank_id: deposit.cashback_schedule?.bank?._id,
@@ -606,21 +628,41 @@ watch(sort, async () => {
                   </base-popover>
                 </td>
                 <!-- Deposit fields rendered conditionally based on column visibility -->
+                <td v-if="columns['status']?.isVisible" class="text-center">
+                  <base-badge v-if="deposit.status === 'draft'" variant="filled" color="danger" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-open" /> Draft
+                  </base-badge>
+                  <base-badge v-else-if="deposit.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-dollar" /> Active
+                  </base-badge>
+                  <base-badge v-else-if="deposit.status === 'withdrawn'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-check" /> Withdrawn
+                  </base-badge>
+                  <base-badge v-else-if="deposit.status === 'renewed'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                    <base-icon icon="i-fa7-solid:box-check" /> Renewed
+                  </base-badge>
+                </td>
                 <td v-if="columns['cashback_schedule.status']?.isVisible" class="text-center">
                   <base-button
                     @click="receiveCashbackModalRef.toggleModal({
                       _id: deposit._id,
+                      uuid: deposit.cashback_schedule?.uuid,
                       payment_date: deposit.cashback_schedule?.payment_date,
                       amount: deposit.cashback_schedule?.amount,
+                      bank_id: deposit.cashback?.bank?._id,
+                      bank_account_uuid: deposit.cashback?.bank?.account?.uuid,
                     })"
-                    v-if="!deposit.cashback_schedule?.received_date"
+                    v-if="authStore.hasPermission('deposits:receive-cashback')
+                      && (!deposit.cashback_schedule?.received_amount || deposit.cashback_schedule?.received_amount === 0)
+                      && (deposit.status === 'active' || deposit.status === 'withdrawn')"
                     variant="filled"
                     color="primary"
+                    class="font-bold w-32"
                   >
                     <base-icon icon="i-fa7-solid:money-from-bracket"></base-icon> Receive
                   </base-button>
-                  <base-badge v-else variant="filled" color="success">
-                    RECEIVED
+                  <base-badge v-else-if="(deposit.cashback_schedule?.received_amount ?? 0) > 0 && deposit.status !== 'draft'" variant="filled" color="success" class="font-bold w-32">
+                    <base-icon icon="i-fa7-solid:box-check" /> RECEIVED
                   </base-badge>
                 </td>
                 <td v-if="columns['placement.bilyet_number']?.isVisible">{{ deposit.placement?.bilyet_number }}</td>
@@ -648,13 +690,13 @@ watch(sort, async () => {
                 <td v-if="columns['placement.date']?.isVisible">{{ deposit.placement?.date }}</td>
                 <td v-if="columns['placement.term']?.isVisible">{{ deposit.placement?.term }}</td>
                 <td v-if="columns['placement.maturity_date']?.isVisible">{{ deposit.placement?.maturity_date }}</td>
-                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount) }}</td>
+                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount, 2) }}</td>
                 <td v-if="columns['interest.payment_method']?.isVisible">{{ deposit.interest?.payment_method }}</td>
-                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate) }}</td>
-                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount) }}</td>
-                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate) }}</td>
-                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount) }}</td>
-                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount) }}</td>
+                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate, 2) }}</td>
+                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount, 2) }}</td>
+                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate, 2) }}</td>
+                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount, 2) }}</td>
+                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount, 2) }}</td>
                 <td v-if="columns['notes']?.isVisible">{{ deposit.notes }}</td>
                 <td v-if="columns['is_archived']?.isVisible">
                   <base-badge v-if="deposit.is_archived" variant="filled" color="danger" class="font-bold">

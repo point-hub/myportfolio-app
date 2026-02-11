@@ -3,12 +3,21 @@ import { computed, onMounted, ref } from 'vue';
 
 import { getBankAccountsApi, type IBankAccountData } from '../api/master/banks/get-accounts.api';
 
+export interface IBankAccountOption {
+  label: string
+  bank_id: string
+  name: string
+  account_name: string
+  account_number: string
+  value: string
+}
+
 export function useSelectableBankAccounts() {
   const banks = ref<IBankAccountData[]>([]);
   const searchBank = ref<string | undefined>();
   const isLoading = ref(false);
 
-  const options = computed(() =>
+  const options = computed<IBankAccountOption[]>(() =>
     banks.value.map((bank) => ({
       label: `[${bank.name}] ${bank.account_number} a/n ${bank.account_name}`,
       bank_id: bank._id,

@@ -11,7 +11,7 @@ import { useTableFilter } from '@/composables/table-filter';
 import { useTableSetting } from '@/composables/table-setting';
 import { toast } from '@/toast';
 import { handleError } from '@/utils/api';
-import { formatDate } from '@/utils/date';
+import { formatDatetime } from '@/utils/date';
 import { getEntityLink } from '@/utils/router-resolver';
 
 /**
@@ -119,8 +119,8 @@ const getAuditLogs = async (page = 1) => {
     const response = await getAuditLogsApi({
       search: {
         ...filter,
-        created_at_from: formatDate(filter.created_at_from, { boundary: 'start-of-day' }),
-        created_at_to: formatDate(filter.created_at_to, { boundary: 'end-of-day' }),
+        created_at_from: formatDatetime(filter.created_at_from, { boundary: 'start-of-day' }),
+        created_at_to: formatDatetime(filter.created_at_to, { boundary: 'end-of-day' }),
         entity_type: 'brokers',
         entity_id: String(route.params.id),
       },
@@ -354,7 +354,7 @@ watch(sort, async () => {
           <template v-if="!isLoading && auditLogs?.data && auditLogs?.data.length > 0">
             <tr v-for="(auditLog, index) in auditLogs?.data" :key="index">
               <!-- AuditLog fields rendered conditionally based on column visibility -->
-              <td v-if="columns['created_at']?.isVisible" class="whitespace-nowrap">{{ formatDate(auditLog.created_at) }}</td>
+              <td v-if="columns['created_at']?.isVisible" class="whitespace-nowrap">{{ formatDatetime(auditLog.created_at) }}</td>
               <td v-if="columns['operation_id']?.isVisible">
                 <router-link :to="`/administrator/audit-logs/${auditLog.operation_id}`" class="text-blue-600">
                   {{ auditLog.operation_id?.substring(0, 13) }}...

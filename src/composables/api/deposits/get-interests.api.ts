@@ -50,6 +50,7 @@ export interface IDepositData {
     is_rollover?: boolean
   }
   interest_schedule?: {
+    uuid?: string
     term?: number
     payment_date?: string
     amount?: number
@@ -65,6 +66,7 @@ export interface IDepositData {
     bank?: IBankData
   }
   cashback_schedule?: {
+    uuid?: string
     payment_date?: string
     rate?: number
     amount?: number
@@ -78,7 +80,7 @@ export interface IDepositData {
   }[]
   notes?: string | null | undefined
   is_archived: boolean
-  is_draft: boolean
+  status?: 'draft' | 'active' | 'withdrawn' | 'renewed'
   created_at: Date
   created_by_id: string
 }
