@@ -20,7 +20,7 @@ const isDividendStockDividend = computed(() => route.path === '/dividend-stocks'
           <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST TRADE CONFIRMATION
         </base-button>
       </router-link>
-      <router-link v-if="authStore.hasPermission('dividend-stocks:module')" :to="`/dividend-stocks`">
+      <router-link v-if="authStore.hasPermission('payment-stocks:module')" :to="`/payment-stocks`">
         <base-button variant="filled" :color="isDividendStockPaymnet ? 'primary' : 'info'" size="sm" class="font-bold">
           <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST PAYMENT
         </base-button>
