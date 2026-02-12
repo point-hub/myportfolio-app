@@ -14,36 +14,14 @@ const emit = defineEmits(['archived', 'restored', 'received']);
 const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
-const archiveModalRef = ref();
-const restoreModalRef = ref();
 const deleteModalRef = ref();
 const bond = defineModel<IForm>('data');
-
-/**
- * Opens the archive confirmation modal for a specific bond.
- */
-const onArchiveModal = () => {
-  archiveModalRef.value.toggleModal({
-    _id: bond.value?._id,
-    label: `${bond.value?.form_number}`,
-  });
-};
 
 /**
  * Handler called after a successful archive.
  */
 const onArchived = async () => {
   emit('archived');
-};
-
-/**
- * Opens the restore confirmation modal for a specific bond.
- */
-const onRestoreModal = () => {
-  restoreModalRef.value.toggleModal({
-    _id: bond.value?._id,
-    label: `${bond.value?.form_number}`,
-  });
 };
 
 /**

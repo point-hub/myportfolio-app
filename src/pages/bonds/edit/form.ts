@@ -52,7 +52,7 @@ export interface IForm {
   updated_by_id?: string | null;
   archived_at?: Date | null;
   archived_by_id?: string | null;
-  status?: 'active' | 'draft'
+  status?: 'active' | 'draft' | 'completed'
 }
 
 // Update IFormError to match IForm
@@ -118,6 +118,7 @@ export function useForm() {
     coupon_net_amount: undefined,
     notes: undefined,
     is_archived: null,
+    status: undefined,
     created_at: undefined,
     created_by_id: undefined,
     updated_at: null,

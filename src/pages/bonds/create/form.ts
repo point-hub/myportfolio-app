@@ -4,7 +4,7 @@ import type { IBankAccount } from '@/composables/api/master/banks/get-accounts.a
 import { getLocalDate } from '@/utils/date';
 
 export interface IReceivedCoupon {
-  uuid: string
+  uuid?: string
   date: string
   amount: number
   received_date?: string

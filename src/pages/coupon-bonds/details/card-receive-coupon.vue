@@ -2,10 +2,9 @@
 import { computed, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { type IBankAccountOption,useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
 import { roundNumber } from '@/utils/number';
 
-import { type IForm, type IReceivedCoupon } from './form';
+import { type IForm } from './form';
 
 const data = defineModel<IForm>('data', {
   default: () => ({
@@ -18,8 +17,6 @@ const data = defineModel<IForm>('data', {
     received_coupons: [],
   }),
 });
-
-const { options: bankOptions, searchBank } = useSelectableBankAccounts();
 
 const nextCouponDate = computed(() => {
   if (couponIndex.value + 1 >= data.value?.received_coupons.length) {
@@ -39,10 +36,6 @@ watchEffect(() => {
     el.remaining_amount = el.amount - el.received_amount;
   });
 });
-
-const onSelectedBank = (selected: IBankAccountOption, receivedCoupon: IReceivedCoupon) => {
-  receivedCoupon.bank_id = selected.bank_id;
-};
 
 const route = useRoute();
 
