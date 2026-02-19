@@ -34,6 +34,7 @@ interface IData {
   received_amount: number
   bank_id: string
   bank_account_uuid: string
+  notes: string
   readonly: boolean
 }
 const toggleModal = (data: IData) => {
@@ -164,6 +165,7 @@ defineExpose({
       <base-input-number layout="v" label="Received Amount" required align="left" v-model="receivedAmount" :errors="errors.received_amount" :disabled="isReceiving" decimal-length="2" />
       <hr class="border-slate-300 dark:border-slate-600"  />
       <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" allow-negative />
+      <base-textarea layout="v" label="Notes" :min-height="128" v-model="data.notes" :errors="errors.notes" />
     </div>
     <template #action>
       <base-button variant="filled" color="primary" @click="onReceive">Confirm</base-button>
