@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue';
 
-import { roundNumber } from '@/utils/number';
+import { formatNumber, roundNumber } from '@/utils/number';
 
-import { type IForm } from './form';
+import { type IForm, type IReceivedCoupon } from './form';
 
 const data = defineModel<IForm>('data', {
   default: () => ({
@@ -33,8 +33,42 @@ watchEffect(() => {
   data.value.coupon_gross_amount = roundNumber((data.value.principal_amount ?? 0) * (data.value.coupon_rate ?? 0) / (data.value.base_date ?? 0) * (data.value.coupon_tenor ?? 0), 2);
   data.value.coupon_tax_amount = roundNumber((data.value.coupon_tax_rate ?? 0) / 100 * data.value.coupon_gross_amount, 2);
   data.value.coupon_net_amount = data.value.coupon_gross_amount - data.value.coupon_tax_amount;
-});
 
+  const settlementDate = data.value.settlement_date
+    ? new Date(data.value.settlement_date as string)
+    : null;
+
+  const maturityDate = data.value.maturity_date
+    ? new Date(data.value.maturity_date as string)
+    : null;
+
+  const tenor = Number(data.value.coupon_tenor ?? 0);
+
+  if (!settlementDate || !maturityDate || !tenor) {
+    data.value.received_coupons = [];
+    return;
+  }
+
+  const coupons: IReceivedCoupon[] = [];
+  const current = new Date(settlementDate);
+
+  current.setDate(current.getDate() + tenor);
+
+  while (current <= maturityDate) {
+    coupons.push({
+      date: current.toISOString().slice(0, 10),
+      amount: data.value.coupon_net_amount,
+      received_amount: 0,
+      remaining_amount: 0,
+      bank_id: undefined,
+      bank_account_uuid: undefined,
+    });
+
+    current.setDate(current.getDate() + tenor);
+  }
+
+  data.value.received_coupons = coupons;
+});
 </script>
 
 <template>
@@ -46,6 +80,27 @@ watchEffect(() => {
       <base-input-number layout="horizontal" label="Tax Amount" align="left" :model-value="data.coupon_tax_amount" disabled />
       <base-input-number layout="horizontal" label="Net Amount" align="left" :model-value="data.coupon_net_amount" disabled />
       <base-input layout="horizontal" label="Next Coupon Date" align="left" :model-value="nextCouponDate" disabled />
+      <base-table class="min-h-48">
+        <thead>
+          <tr>
+            <th class="w-1">No</th>
+            <th>Date</th>
+            <th class="text-right whitespace-nowrap w-1">Coupon Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(receivedCoupon, index) in data?.received_coupons">
+            <td class="text-center">{{ index + 1 }}</td>
+            <td>{{ receivedCoupon.date }}</td>
+            <td  class="text-right">{{ formatNumber(receivedCoupon.amount, 2) }}</td>
+          </tr>
+          <tr>
+            <td class="text-center"></td>
+            <td class="text-right font-bold">TOTAL</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </base-table>
     </div>
   </base-card>
 </template>

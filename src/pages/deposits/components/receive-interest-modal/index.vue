@@ -22,6 +22,7 @@ interface IData {
   bank_account_uuid?: string
   additional_bank_id?: string
   additional_bank_account_uuid?: string
+  notes?: string
   readonly?: boolean
 }
 
@@ -39,6 +40,7 @@ const data = ref<IData>({
   bank_account_uuid: undefined,
   additional_bank_id: undefined,
   additional_bank_account_uuid: undefined,
+  notes: undefined,
   readonly: false,
 });
 const readonly = ref(false);
@@ -225,6 +227,7 @@ defineExpose({
       <base-datepicker v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Date" v-model="data.received_additional_payment_date" :errors="errors.additional_received_date" :disabled="isReceiving || readonly" />
       <base-input-number v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Amount" align="left" v-model="data.received_additional_payment_amount" :errors="errors.additional_received_amount" :disabled="isReceiving || readonly" decimal-length="2" />
       <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" allow-negative />
+      <base-textarea layout="v" label="Notes" :min-height="128" v-model="data.notes" :errors="errors.notes" />
     </div>
     <template #action>
       <base-button v-if="!readonly" variant="filled" color="primary" @click="onReceive">Confirm</base-button>

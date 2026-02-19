@@ -587,8 +587,8 @@ watch(sort, async () => {
                 <base-badge v-else-if="bond.status === 'active'" variant="filled" color="info" class="font-bold w-32 uppercase">
                   <base-icon icon="i-fa7-solid:box-dollar" /> Active
                 </base-badge>
-                <base-badge v-else-if="bond.status === 'paid'" variant="filled" color="success" class="font-bold w-32 uppercase">
-                  <base-icon icon="i-fa7-solid:box-check" /> Paid
+                <base-badge v-else-if="bond.status === 'completed'" variant="filled" color="success" class="font-bold w-32 uppercase">
+                  <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
               <td v-if="columns['type']?.isVisible">{{ bond.type }}</td>

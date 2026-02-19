@@ -1,10 +1,20 @@
-export function formatDate(isoDate: string | Date | undefined) {
-  if (!isoDate) {
-    return '';
-  }
+export function formatDate(
+  isoDate: string | Date | undefined,
+  options?: {
+    isStartOfMonth?: boolean;
+    isEndOfMonth?: boolean;
+  },
+) {
+  if (!isoDate) return '';
 
   const pad = (n: number) => String(n).padStart(2, '0');
   const date = new Date(isoDate);
+
+  if (options?.isStartOfMonth) {
+    date.setDate(1);
+  } else if (options?.isEndOfMonth) {
+    date.setMonth(date.getMonth() + 1, 0);
+  }
 
   const year = date.getFullYear();
   const month = pad(date.getMonth() + 1);
