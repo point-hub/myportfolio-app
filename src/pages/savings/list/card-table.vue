@@ -51,7 +51,7 @@ const {
     'interest.rate': { label: 'Interest Rate', isVisible: true, isSelectable: true },
     'interest.gross_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
     'interest.tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
-    'interest.tax_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
+    'interest.tax_amount': { label: 'Tax Amount', isVisible: true, isSelectable: true },
     'interest.net_amount': { label: 'Net Amount', isVisible: true, isSelectable: true },
     'interest.bank.name': { label: 'Bank Interest - Name', isVisible: true, isSelectable: true },
     'interest.bank.account.account_number': { label: 'Bank Interest - Account Number', isVisible: true, isSelectable: true },
@@ -470,11 +470,11 @@ const getWithdrawalAmount = (saving: ISavingData) => {
             <th v-if="columns['source.bank.name']?.isVisible">
               <base-input v-model="filter['source.bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['source.bank.account.account_name']?.isVisible">
-              <base-input v-model="filter['source.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['source.bank.account.account_number']?.isVisible">
               <base-input v-model="filter['source.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['source.bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['source.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['interest.payment_method']?.isVisible">
               <base-input v-model="filter['interest.payment_method']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -497,11 +497,11 @@ const getWithdrawalAmount = (saving: ISavingData) => {
             <th v-if="columns['interest.bank.name']?.isVisible">
               <base-input v-model="filter['interest.bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['interest.bank.account.account_name']?.isVisible">
-              <base-input v-model="filter['interest.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['interest.bank.account.account_number']?.isVisible">
               <base-input v-model="filter['interest.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['interest.bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['interest.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['withdrawal.received_date']?.isVisible">
               <base-date-range-picker
@@ -603,6 +603,7 @@ const getWithdrawalAmount = (saving: ISavingData) => {
                               bank_account_uuid: saving.source?.bank?.account?.uuid,
                               received_date: saving.withdrawal?.received_date,
                               received_amount: saving.withdrawal?.received_amount,
+                              notes: saving.withdrawal?.notes,
                             })
                             rowMenuRef[index].toggle()
                           }"
@@ -661,8 +662,8 @@ const getWithdrawalAmount = (saving: ISavingData) => {
               <td v-if="columns['placement.bank.name']?.isVisible">{{ saving.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ saving.source?.bank?.name }}</td>
-              <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ saving.source?.bank?.account?.account_name }}</td>
               <td v-if="columns['source.bank.account.account_number']?.isVisible">{{ saving.source?.bank?.account?.account_number }}</td>
+              <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ saving.source?.bank?.account?.account_name }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ saving.interest?.payment_method }}</td>
               <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(saving.interest?.rate, 2) }}</td>
@@ -671,8 +672,8 @@ const getWithdrawalAmount = (saving: ISavingData) => {
               <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(saving.interest?.tax_amount, 2) }}</td>
               <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(saving.interest?.net_amount, 2) }}</td>
               <td v-if="columns['interest.bank.name']?.isVisible">{{ saving.interest?.bank?.name }}</td>
-              <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ saving.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['interest.bank.account.account_number']?.isVisible">{{ saving.interest?.bank?.account?.account_number }}</td>
+              <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ saving.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['withdrawal.received_date']?.isVisible">{{ saving.withdrawal?.received_date }}</td>
               <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(saving.withdrawal?.received_amount, 2) }}</td>
               <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(saving.withdrawal?.remaining_amount, 2) }}</td>

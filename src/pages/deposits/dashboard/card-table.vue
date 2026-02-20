@@ -51,7 +51,7 @@ const {
     'interest.rate': { label: 'Interest Rate', isVisible: true, isSelectable: true },
     'interest.gross_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
     'interest.tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
-    'interest.tax_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
+    'interest.tax_amount': { label: 'Tax Amount', isVisible: true, isSelectable: true },
     'interest.net_amount': { label: 'Net Amount', isVisible: true, isSelectable: true },
     'interest.bank.name': { label: 'Bank Interest - Name', isVisible: true, isSelectable: true },
     'interest.bank.account.account_number': { label: 'Bank Interest - Account Number', isVisible: true, isSelectable: true },

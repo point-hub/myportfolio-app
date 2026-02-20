@@ -45,8 +45,8 @@ const {
     'cashback_schedule.bank.account.account_name': { label: 'Bank Account Name', isVisible: true, isSelectable: true },
     'cashback_schedule.bank.account.account_number': { label: 'Bank Account Number', isVisible: true, isSelectable: true },
     'cashback_schedule.additional_bank.name': { label: 'Additional Bank Name', isVisible: true, isSelectable: true },
-    'cashback_schedule.additional_bank.account.account_name': { label: 'Additional Bank Account Name', isVisible: true, isSelectable: true },
     'cashback_schedule.additional_bank.account.account_number': { label: 'Additional Bank Account Number', isVisible: true, isSelectable: true },
+    'cashback_schedule.additional_bank.account.account_name': { label: 'Additional Bank Account Name', isVisible: true, isSelectable: true },
     'cashback_schedule.created_by.username': { label: 'Created By', isVisible: true, isSelectable: true },
     form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
     'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
@@ -59,7 +59,7 @@ const {
     'interest.rate': { label: 'Interest Rate', isVisible: true, isSelectable: true },
     'interest.gross_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
     'interest.tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
-    'interest.tax_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
+    'interest.tax_amount': { label: 'Tax Amount', isVisible: true, isSelectable: true },
     'interest.net_amount': { label: 'Net Amount', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
@@ -455,11 +455,11 @@ watch(sort, async () => {
             <th v-if="columns['cashback_schedule.additional_bank.name']?.isVisible">
               <base-input v-model="filter['cashback_schedule.additional_bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['cashback_schedule.additional_bank.account.account_name']?.isVisible">
-              <base-input v-model="filter['cashback_schedule.additional_bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['cashback_schedule.additional_bank.account.account_number']?.isVisible">
               <base-input v-model="filter['cashback_schedule.additional_bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['cashback_schedule.additional_bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['cashback_schedule.additional_bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['cashback_schedule.created_by.username']?.isVisible">
               <base-input v-model="filter['cashback_schedule.created_by.username']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -615,6 +615,7 @@ watch(sort, async () => {
                                 additional_bank_account_uuid: deposit.cashback_schedule?.additional_bank?.account?.uuid,
                                 received_additional_payment_date: deposit.cashback_schedule?.received_additional_payment_date,
                                 received_additional_payment_amount: deposit.cashback_schedule?.received_additional_payment_amount,
+                                notes: deposit.cashback_schedule?.notes,
                               })
                               rowMenuRef[index].toggle()
                             }"
@@ -677,8 +678,8 @@ watch(sort, async () => {
                 <td class="text-right" v-if="columns['cashback_schedule.bank.account.account_name']?.isVisible">{{ deposit.cashback_schedule?.bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.bank.account.account_number']?.isVisible">{{ deposit.cashback_schedule?.bank?.account?.account_number }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.additional_bank.name']?.isVisible">{{ deposit.cashback_schedule?.additional_bank?.name }}</td>
-                <td class="text-right" v-if="columns['cashback_schedule.additional_bank.account.account_name']?.isVisible">{{ deposit.cashback_schedule?.additional_bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.additional_bank.account.account_number']?.isVisible">{{ deposit.cashback_schedule?.additional_bank?.account?.account_number }}</td>
+                <td class="text-right" v-if="columns['cashback_schedule.additional_bank.account.account_name']?.isVisible">{{ deposit.cashback_schedule?.additional_bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.created_by.username']?.isVisible">{{ deposit.cashback_schedule?.created_by?.username }}</td>
                 <td v-if="columns['form_number']?.isVisible">
                   <router-link :to="`/deposits/${deposit._id}`" class="text-blue">{{ deposit.form_number }}</router-link>

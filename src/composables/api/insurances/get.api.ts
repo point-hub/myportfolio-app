@@ -56,6 +56,7 @@ export interface IInsuranceData {
     amount?: number
     received_amount?: number
     bank?: IBankData
+    notes?: string
     created_by?: IAuthUser
     created_at?: string
   }[]
@@ -69,6 +70,7 @@ export interface IInsuranceData {
     amount?: number
     received_amount?: number
     bank?: IBankData
+    notes?: string
     created_by?: IAuthUser
     created_at?: string
   }[]
@@ -77,6 +79,7 @@ export interface IInsuranceData {
     received_amount?: number
     remaining_amount?: number
     bank?: IBankData
+    notes?: string
     created_by?: IAuthUser
     created_at?: string
   }

@@ -17,12 +17,14 @@ const receivedDate = ref();
 const receivedAmount = ref();
 const bankId = ref();
 const bankAccountUuid = ref();
+const notes = ref();
 
 const errors = ref<{ [key: string]: undefined | string[]; }>({
   received_date: [],
   received_amount: [],
   bank_id: [],
   bank_account_uuid: [],
+  notes: [],
 });
 const emit = defineEmits(['received']);
 
@@ -34,6 +36,7 @@ interface IData {
   received_amount: number
   bank_id: string
   bank_account_uuid: string
+  notes: string
   readonly: boolean
 }
 const toggleModal = (data: IData) => {
@@ -46,6 +49,7 @@ const toggleModal = (data: IData) => {
   receivedAmount.value= data.received_amount;
   bankId.value= data.bank_id;
   bankAccountUuid.value= data.bank_account_uuid;
+  notes.value= data.notes;
 
   confirmActionModalRef.value.toggleModal();
 };
@@ -65,6 +69,7 @@ const onReceive = async () => {
       remaining_amount: remainingAmount.value,
       bank_id: bankId.value,
       bank_account_uuid: bankAccountUuid.value,
+      notes: notes.value,
     });
     toast('Withdrawal success', { color: 'success' });
     emit('received');
@@ -132,6 +137,7 @@ const reset = () => {
   bankAccountUuid.value = null;
   receivedDate.value = null;
   receivedAmount.value = null;
+  notes.value = null;
 };
 
 defineExpose({
@@ -164,6 +170,7 @@ defineExpose({
       <base-input-number layout="v" label="Received Amount" required align="left" v-model="receivedAmount" :errors="errors.received_amount" :disabled="isReceiving" decimal-length="2" />
       <hr class="border-slate-300 dark:border-slate-600"  />
       <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" allow-negative />
+      <base-textarea layout="v" label="Notes" :min-height="128" v-model="notes" :errors="errors.notes" />
     </div>
     <template #action>
       <base-button variant="filled" color="primary" @click="onReceive">Confirm</base-button>

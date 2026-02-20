@@ -76,6 +76,7 @@ export interface IDepositData {
     additional_bank?: IBankData
     received_additional_payment_date?: string
     received_additional_payment_amount?: number
+    notes?: string
     created_by?: IAuthUser
   }
   notes?: string | null | undefined

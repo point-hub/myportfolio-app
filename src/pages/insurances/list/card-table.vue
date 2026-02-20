@@ -51,7 +51,7 @@ const {
     'interest.rate': { label: 'Interest Rate', isVisible: true, isSelectable: true },
     'interest.gross_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
     'interest.tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
-    'interest.tax_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
+    'interest.tax_amount': { label: 'Tax Amount', isVisible: true, isSelectable: true },
     'interest.net_amount': { label: 'Net Amount', isVisible: true, isSelectable: true },
     'interest.bank.name': { label: 'Bank Interest - Name', isVisible: true, isSelectable: true },
     'interest.bank.account.account_number': { label: 'Bank Interest - Account Number', isVisible: true, isSelectable: true },
@@ -470,11 +470,11 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
             <th v-if="columns['source.bank.name']?.isVisible">
               <base-input v-model="filter['source.bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['source.bank.account.account_name']?.isVisible">
-              <base-input v-model="filter['source.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['source.bank.account.account_number']?.isVisible">
               <base-input v-model="filter['source.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['source.bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['source.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['interest.payment_method']?.isVisible">
               <base-input v-model="filter['interest.payment_method']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -603,6 +603,7 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
                               bank_account_uuid: insurance.source?.bank?.account?.uuid,
                               received_date: insurance.withdrawal?.received_date,
                               received_amount: insurance.withdrawal?.received_amount,
+                              notes: insurance.withdrawal?.notes,
                             })
                             rowMenuRef[index].toggle()
                           }"
@@ -661,8 +662,8 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
               <td v-if="columns['placement.bank.name']?.isVisible">{{ insurance.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ insurance.source?.bank?.name }}</td>
-              <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ insurance.source?.bank?.account?.account_name }}</td>
               <td v-if="columns['source.bank.account.account_number']?.isVisible">{{ insurance.source?.bank?.account?.account_number }}</td>
+              <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ insurance.source?.bank?.account?.account_name }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ insurance.interest?.payment_method }}</td>
               <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(insurance.interest?.rate, 2) }}</td>

@@ -59,7 +59,7 @@ const {
     'interest.rate': { label: 'Interest Rate', isVisible: true, isSelectable: true },
     'interest.gross_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
     'interest.tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
-    'interest.tax_amount': { label: 'Gross Amount', isVisible: true, isSelectable: true },
+    'interest.tax_amount': { label: 'Tax Amount', isVisible: true, isSelectable: true },
     'interest.net_amount': { label: 'Net Amount', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
@@ -455,11 +455,11 @@ watch(sort, async () => {
             <th v-if="columns['interest_schedule.additional_bank.name']?.isVisible">
               <base-input v-model="filter['interest_schedule.additional_bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['interest_schedule.additional_bank.account.account_name']?.isVisible">
-              <base-input v-model="filter['interest_schedule.additional_bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['interest_schedule.additional_bank.account.account_number']?.isVisible">
               <base-input v-model="filter['interest_schedule.additional_bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['interest_schedule.additional_bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['interest_schedule.additional_bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['interest_schedule.created_by.username']?.isVisible">
               <base-input v-model="filter['interest_schedule.created_by.username']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -487,7 +487,6 @@ watch(sort, async () => {
               <base-input v-model="filter['placement.term']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['placement.maturity_date']?.isVisible">
-              <!-- <base-input v-model="filter['placement.maturity_date']" placeholder="Search..." :readonly="isLoading" border="none" paddingless /> -->
               <base-date-range-picker
                 v-model:date_from="filter['placement.maturity_date_from']"
                 v-model:date_to="filter['placement.maturity_date_to']"
@@ -587,6 +586,7 @@ watch(sort, async () => {
                                 additional_bank_account_uuid: deposit.interest_schedule?.additional_bank?.account?.uuid,
                                 received_additional_payment_date: deposit.interest_schedule?.received_additional_payment_date,
                                 received_additional_payment_amount: deposit.interest_schedule?.received_additional_payment_amount,
+                                notes: deposit.interest_schedule?.notes,
                                 readonly: true
                               })
                               rowMenuRef[index].toggle()
@@ -615,6 +615,7 @@ watch(sort, async () => {
                                 additional_bank_account_uuid: deposit.interest_schedule?.additional_bank?.account?.uuid,
                                 received_additional_payment_date: deposit.interest_schedule?.received_additional_payment_date,
                                 received_additional_payment_amount: deposit.interest_schedule?.received_additional_payment_amount,
+                                notes: deposit.interest_schedule?.notes,
                               })
                               rowMenuRef[index].toggle()
                             }"
@@ -677,8 +678,8 @@ watch(sort, async () => {
                 <td class="text-right" v-if="columns['interest_schedule.bank.account.account_name']?.isVisible">{{ deposit.interest_schedule?.bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.account.account_number']?.isVisible">{{ deposit.interest_schedule?.bank?.account?.account_number }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.additional_bank.name']?.isVisible">{{ deposit.interest_schedule?.additional_bank?.name }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.additional_bank.account.account_name']?.isVisible">{{ deposit.interest_schedule?.additional_bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.additional_bank.account.account_number']?.isVisible">{{ deposit.interest_schedule?.additional_bank?.account?.account_number }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.additional_bank.account.account_name']?.isVisible">{{ deposit.interest_schedule?.additional_bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.created_by.username']?.isVisible">{{ deposit.interest_schedule?.created_by?.username }}</td>
                 <td v-if="columns['form_number']?.isVisible">
                   <router-link :to="`/deposits/${deposit._id}`" class="text-blue">{{ deposit.form_number }}</router-link>

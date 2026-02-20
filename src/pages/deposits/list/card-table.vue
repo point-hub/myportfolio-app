@@ -470,11 +470,11 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
             <th v-if="columns['source.bank.name']?.isVisible">
               <base-input v-model="filter['source.bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['source.bank.account.account_name']?.isVisible">
-              <base-input v-model="filter['source.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['source.bank.account.account_number']?.isVisible">
               <base-input v-model="filter['source.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['source.bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['source.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['interest.payment_method']?.isVisible">
               <base-input v-model="filter['interest.payment_method']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -603,6 +603,7 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                               bank_account_uuid: deposit.source?.bank?.account?.uuid,
                               received_date: deposit.withdrawal?.received_date,
                               received_amount: deposit.withdrawal?.received_amount,
+                              notes: deposit.withdrawal?.notes,
                             })
                             rowMenuRef[index].toggle()
                           }"
@@ -661,8 +662,8 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               <td v-if="columns['placement.bank.name']?.isVisible">{{ deposit.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ deposit.source?.bank?.name }}</td>
-              <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ deposit.source?.bank?.account?.account_name }}</td>
               <td v-if="columns['source.bank.account.account_number']?.isVisible">{{ deposit.source?.bank?.account?.account_number }}</td>
+              <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ deposit.source?.bank?.account?.account_name }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ deposit.interest?.payment_method }}</td>
               <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate, 2) }}</td>
@@ -671,8 +672,8 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount, 2) }}</td>
               <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount, 2) }}</td>
               <td v-if="columns['interest.bank.name']?.isVisible">{{ deposit.interest?.bank?.name }}</td>
-              <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ deposit.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['interest.bank.account.account_number']?.isVisible">{{ deposit.interest?.bank?.account?.account_number }}</td>
+              <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ deposit.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['withdrawal.received_date']?.isVisible">{{ deposit.withdrawal?.received_date }}</td>
               <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.received_amount, 2) }}</td>
               <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.remaining_amount, 2) }}</td>
