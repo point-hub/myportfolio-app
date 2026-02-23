@@ -41,6 +41,14 @@ export interface IBondData {
   coupon_date?: string;
   received_coupons?: IReceivedCoupon[];
   remaining_amount?: number;
+  disbursement_bank?: IBankAccount;
+  disbursement_bank_id?: string;
+  disbursement_bank_account_uuid?: string;
+  selling_price?: number;
+  disbursement_amount?: number;
+  disbursement_date_received?: string;
+  disbursement_amount_received?: number;
+  disbursement_amount_difference?: number;
   notes?: string | null;
   is_archived?: boolean | null;
   created_at?: Date;

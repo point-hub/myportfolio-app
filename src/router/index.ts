@@ -12,6 +12,7 @@ import routesInsurance from '@/pages/insurances/routes';
 import routesMaster from '@/pages/master/routes';
 import routesPaymentStock from '@/pages/payment-stocks/routes';
 import routesSaving from '@/pages/savings/routes';
+import routesSellBond from '@/pages/sell-bonds/routes';
 import routesStock from '@/pages/stocks/routes';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -44,6 +45,7 @@ const router = createRouter({
             routesStock,
             routesBond,
             routesCouponBond,
+            routesSellBond,
             routesAdministrator,
           ],
         },
