@@ -37,11 +37,11 @@ onMounted(async () => {
   <base-card title="Bonds">
     <div class="flex flex-col gap-4 my-5">
       <base-input layout="horizontal" label="Form Number" required v-model="data.form_number" :errors="errors.form_number" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Product" required v-model="data.product" :errors="errors.form_number" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Year Issued" required v-model="data.year_issued" :errors="errors.form_number" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Publisher" v-model="data.publisher" :errors="errors.form_number" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Type" v-model="data.type" :errors="errors.form_number" :disabled="isSaving" />
-      <base-input layout="horizontal" label="Series" v-model="data.series" :errors="errors.form_number" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Product" required v-model="data.product" :errors="errors.product" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Year Issued" required v-model="data.year_issued" :errors="errors.year_issued" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Publisher" v-model="data.publisher" :errors="errors.publisher" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Type" v-model="data.type" :errors="errors.type" :disabled="isSaving" />
+      <base-input layout="horizontal" label="Series" v-model="data.series" :errors="errors.series" :disabled="isSaving" />
     </div>
   </base-card>
 </template>

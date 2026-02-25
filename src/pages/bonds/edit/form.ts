@@ -60,6 +60,11 @@ export type IFormError = Partial<
   Record<
     | '_id'
     | 'form_number'
+    | 'product'
+    | 'publisher'
+    | 'type'
+    | 'series'
+    | 'year_issued'
     | 'bank_source_id'
     | 'bank_source_account_uuid'
     | 'bank_placement_id'
