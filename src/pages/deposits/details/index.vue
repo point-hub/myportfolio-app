@@ -113,6 +113,7 @@ const onReceived = async () => {
 
     <status-banner v-if="form.data.status === 'draft'" status-type="danger" message="Draft." />
     <status-banner v-if="form.data.status === 'withdrawn'" status-type="success" message="Withdrawn." />
+    <status-banner v-if="form.data.status === 'renewed'" status-type="success" message="Renewed." />
 
     <base-card v-if="!form.data._id">
       Data Not Found
