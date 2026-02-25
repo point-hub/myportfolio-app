@@ -597,7 +597,7 @@ watch(sort, async () => {
               </td>
               <td v-if="columns['product']?.isVisible">{{ bond.product }}</td>
               <td v-if="columns['series']?.isVisible">{{ bond.series }}</td>
-              <td v-if="columns['year_issued']?.isVisible">{{ bond.product }}</td>
+              <td v-if="columns['year_issued']?.isVisible">{{ bond.year_issued }}</td>
               <td v-if="columns['coupon_rate']?.isVisible">{{ bond.coupon_rate }}</td>
               <td v-if="columns['bank_source.account.account_number']?.isVisible">{{ bond.bank_source?.account?.account_number }}</td>
               <td v-if="columns['bank_source.account.account_name']?.isVisible">{{ bond.bank_source?.account?.account_name }}</td>
