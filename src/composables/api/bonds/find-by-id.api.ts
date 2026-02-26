@@ -25,6 +25,7 @@ export interface IResponse {
   transaction_date?: string;
   settlement_date?: string;
   maturity_date?: string;
+  last_coupon_date?: string;
   transaction_number?: number;
   price?: number;
   principal_amount?: number;

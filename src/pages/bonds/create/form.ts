@@ -32,6 +32,7 @@ export interface IForm {
   transaction_date?: string;
   settlement_date?: string;
   maturity_date?: string;
+  last_coupon_date?: string;
   transaction_number?: number;
   price?: number;
   principal_amount?: number;
@@ -75,6 +76,7 @@ export type IFormError = Partial<
     | 'transaction_date'
     | 'settlement_date'
     | 'maturity_date'
+    | 'last_coupon_date'
     | 'transaction_number'
     | 'price'
     | 'principle_amount'
@@ -111,6 +113,7 @@ export function useForm() {
     transaction_date: getLocalDate(),
     settlement_date: getLocalDate(),
     maturity_date: getLocalDate(),
+    last_coupon_date: getLocalDate(),
     transaction_number: undefined,
     price: undefined,
     principal_amount: undefined,

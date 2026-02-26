@@ -46,6 +46,7 @@ onMounted(async () => {
       form.data.transaction_date = response.transaction_date;
       form.data.settlement_date = response.settlement_date;
       form.data.maturity_date = response.maturity_date;
+      form.data.last_coupon_date = response.last_coupon_date;
       form.data.transaction_number = response.transaction_number;
       form.data.price = response.price;
       form.data.principal_amount = response.principal_amount;

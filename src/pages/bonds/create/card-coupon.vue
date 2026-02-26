@@ -23,7 +23,7 @@ const data = defineModel<IForm>('data', {
 });
 
 const nextCouponDate = computed(() => {
-  const base = new Date(data.value.maturity_date as string);
+  const base = new Date(data.value.last_coupon_date as string);
   base.setDate(base.getDate() + Number(data.value.coupon_tenor ?? 0));
 
   return base.toISOString().slice(0, 10);
@@ -38,13 +38,13 @@ watchEffect(() => {
     ? new Date(data.value.settlement_date as string)
     : null;
 
-  const maturityDate = data.value.maturity_date
-    ? new Date(data.value.maturity_date as string)
+  const lastCouponDate = data.value.last_coupon_date
+    ? new Date(data.value.last_coupon_date as string)
     : null;
 
   const tenor = Number(data.value.coupon_tenor ?? 0);
 
-  if (!settlementDate || !maturityDate || !tenor) {
+  if (!settlementDate || !lastCouponDate || !tenor) {
     data.value.received_coupons = [];
     return;
   }
@@ -54,7 +54,7 @@ watchEffect(() => {
 
   current.setDate(current.getDate() + tenor);
 
-  while (current <= maturityDate) {
+  while (current <= lastCouponDate) {
     coupons.push({
       date: current.toISOString().slice(0, 10),
       amount: data.value.coupon_net_amount,

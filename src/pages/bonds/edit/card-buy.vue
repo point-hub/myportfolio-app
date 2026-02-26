@@ -115,6 +115,7 @@ const onSelectedBankPlacement = (selected: IBankAccountOption) => {
       <base-datepicker layout="horizontal" label="Transaction Date" required v-model="data.transaction_date" :errors="errors.transaction_date" :disabled="isSaving" />
       <base-datepicker layout="horizontal" label="Settlement Date" required v-model="data.settlement_date" :errors="errors.settlement_date" :disabled="isSaving" />
       <base-datepicker layout="horizontal" label="Maturity Date" required v-model="data.maturity_date" :errors="errors.maturity_date" :disabled="isSaving" />
+      <base-datepicker layout="horizontal" label="Last Coupon Date" required v-model="data.last_coupon_date" :errors="errors.last_coupon_date" :disabled="isSaving" />
       <base-input layout="horizontal" label="Transaction Number" required v-model="data.transaction_number" :errors="errors.transaction_number" :disabled="isSaving" />
 
       <base-input-number layout="horizontal" label="Price" align="left" required v-model="data.price" :errors="errors.price" :disabled="isSaving" />
