@@ -80,7 +80,7 @@ watchEffect(() => {
       <base-input-number layout="horizontal" label="Tax Amount" align="left" :model-value="data.coupon_tax_amount" disabled />
       <base-input-number layout="horizontal" label="Net Amount" align="left" :model-value="data.coupon_net_amount" disabled />
       <base-input layout="horizontal" label="Next Coupon Date" align="left" :model-value="nextCouponDate" disabled />
-      <base-table class="min-h-48">
+      <!-- <base-table class="min-h-48">
         <thead>
           <tr>
             <th class="w-1">No</th>
@@ -100,7 +100,7 @@ watchEffect(() => {
             <td></td>
           </tr>
         </tbody>
-      </base-table>
+      </base-table> -->
     </div>
   </base-card>
 </template>
