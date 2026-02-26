@@ -30,7 +30,7 @@ const nextCouponDate = computed(() => {
 });
 
 watchEffect(() => {
-  data.value.coupon_gross_amount = roundNumber((data.value.principal_amount ?? 0) * (data.value.coupon_rate ?? 0) / (data.value.base_date ?? 0) * (data.value.coupon_tenor ?? 0), 2);
+  data.value.coupon_gross_amount = roundNumber((data.value.principal_amount ?? 0) * ((data.value.coupon_rate ?? 0) / 100) / (data.value.base_date ?? 0) * (data.value.coupon_tenor ?? 0), 2);
   data.value.coupon_tax_amount = roundNumber((data.value.coupon_tax_rate ?? 0) / 100 * data.value.coupon_gross_amount, 2);
   data.value.coupon_net_amount = data.value.coupon_gross_amount - data.value.coupon_tax_amount;
 
