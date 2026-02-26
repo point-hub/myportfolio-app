@@ -13,9 +13,10 @@ const data = defineModel<IForm>('data', {
     disbursement_bank_account_uuid: undefined,
     disbursement_amount: undefined,
     disbursement_amount_received: undefined,
-    disbursement_amount_difference: undefined,
-    disbursement_remaining: undefined,
+    disbursement_amount_remaining: undefined,
+    disbursement_notes: undefined,
     selling_price: undefined,
+    remaining_amount: undefined,
   }),
 });
 
@@ -26,7 +27,8 @@ const isSaving = defineModel('is-saving', { default: false });
 const { options: bankOptions, searchBank } = useSelectableBankAccounts();
 
 watchEffect(() => {
-  data.value.disbursement_amount_difference = roundNumber((data.value.disbursement_amount ?? 0) - (data.value.disbursement_amount_received ?? 0), 2);
+  data.value.remaining_amount = roundNumber((data.value.principal_amount ?? 0) - (data.value.disbursement_amount ?? 0), 2);
+  data.value.disbursement_amount_remaining = roundNumber((data.value.disbursement_amount ?? 0) - (data.value.disbursement_amount_received ?? 0), 2);
 });
 
 const onSelectedBank = (selected: IBankAccountOption) => {
@@ -55,7 +57,7 @@ const onSelectedBank = (selected: IBankAccountOption) => {
       <div class="flex flex-col gap-4">
         <base-input-number align="left" layout="horizontal" label="Buying Price" :model-value="data.price" disabled />
         <base-input-number align="left" layout="horizontal" label="Principal Amount" :model-value="data.principal_amount" disabled />
-        <base-input-number align="left" layout="horizontal" label="Remaining of Principal Amount" :model-value="data.principal_amount" disabled />
+        <base-input-number align="left" layout="horizontal" label="Remaining of Principal Amount" :model-value="data.remaining_amount" disabled allow-negative />
         <base-input-number required align="left" layout="horizontal" label="Selling Price" v-model="data.selling_price" :disabled="isSaving" />
         <base-input-number required align="left" layout="horizontal" label="Disbursement Amount" v-model="data.disbursement_amount" :disabled="isSaving" />
       </div>
@@ -63,8 +65,9 @@ const onSelectedBank = (selected: IBankAccountOption) => {
     <base-card title="Disbursement Receipt Information">
       <div class="flex flex-col gap-4">
         <base-input-number required align="left" layout="horizontal" label="Amount of Disbursement Received" v-model="data.disbursement_amount_received" :disabled="isSaving" />
-        <base-datepicker layout="horizontal" label="Date Received of Disbursement" v-model="data.disbursement_date_received" :disabled="isSaving" />
-        <base-input-number align="left" layout="horizontal" label="Nominal Difference" :model-value="data.disbursement_amount_difference" disabled allow-negative />
+        <base-datepicker layout="horizontal" label="Date Received of Disbursement" v-model="data.disbursement_date" :disabled="isSaving" />
+        <base-input-number align="left" layout="horizontal" label="Nominal Difference" :model-value="data.disbursement_amount_remaining" disabled allow-negative />
+        <base-textarea layout="horizontal" label="Disbursement Notes" :min-height="128" v-model="data.disbursement_notes" :disabled="isSaving" />
       </div>
     </base-card>
   </div>

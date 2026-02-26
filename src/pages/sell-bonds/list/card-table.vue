@@ -52,16 +52,19 @@ const {
     'transaction_number': { label: 'Transaction Number', isVisible: true, isSelectable: true },
     'price': { label: 'Price', isVisible: true, isSelectable: true },
     'principal_amount': { label: 'Principal Amount', isVisible: true, isSelectable: true },
-    'remaining_amount': { label: 'Remaining Amount', isVisible: true, isSelectable: true },
+    'remaining_amount': { label: 'Remaining of Principal Amount', isVisible: true, isSelectable: true },
     'proceed_amount': { label: 'Proceed', isVisible: true, isSelectable: true },
     'accrued_interest': { label: 'Accrued Interest', isVisible: true, isSelectable: true },
     'total_proceed': { label: 'Total Proceed', isVisible: true, isSelectable: true },
+    'selling_price': { label: 'Selling Price', isVisible: true, isSelectable: true },
+    'disbursement_date': { label: 'Disbursement Date', isVisible: true, isSelectable: true },
     'disbursement_bank.name': { label: 'Disbursement Bank', isVisible: true, isSelectable: true },
     'disbursement_bank.account.account_number': { label: 'Disbursement Bank - Account Number', isVisible: true, isSelectable: true },
     'disbursement_bank.account.account_name': { label: 'Disbursement  Bank - Account Name', isVisible: true, isSelectable: true },
-    'disbursement_amount': { label: 'Amount Received', isVisible: true, isSelectable: true },
-    'disbursement_amount_difference': { label: 'Amount Difference', isVisible: true, isSelectable: true },
-    'disbursement_amount_remaining': { label: 'Amount Remaining', isVisible: true, isSelectable: true },
+    'disbursement_amount': { label: 'Disbursement Amount', isVisible: true, isSelectable: true },
+    'disbursement_amount_received': { label: 'Disbursement Amount Received', isVisible: true, isSelectable: true },
+    'disbursement_amount_remaining': { label: 'Remaining Disbursement', isVisible: true, isSelectable: true },
+    'disbursement_notes': { label: 'Disbursement Notes', isVisible: true, isSelectable: true },
   },
 });
 
@@ -105,12 +108,17 @@ const {
     'maturity_date': '',
     'maturity_date_from': formatDate(new Date(), { isStartOfMonth: true }),
     'maturity_date_to': formatDate(new Date(), { isEndOfMonth: true }),
+    'selling_price': '',
+    'disbursement_date': '',
+    'disbursement_date_from': '',
+    'disbursement_date_to': '',
     'disbursement_bank.name': '',
     'disbursement_bank.account.account_number': '',
     'disbursement_bank.account.account_name': '',
     'disbursement_amount': '',
-    'disbursement_difference': '',
-    'disbursement_remaining': '',
+    'disbursement_amount_received': '',
+    'disbursement_amount_remaining': '',
+    'disbursement_notes': '',
     principal_amount_remaining: '',
     is_archived: 'false',
   },
@@ -139,12 +147,15 @@ const {
     'proceed_amount': 0,
     'accrued_interest': 0,
     'total_proceed': 0,
+    'selling_price': 0,
+    'disbursement_date': 0,
     'disbursement_bank.name': 0,
     'disbursement_bank.account.account_number': 0,
     'disbursement_bank.account.account_name': 0,
     'disbursement_amount': 0,
-    'disbursement_difference': 0,
-    'disbursement_remaining': 0,
+    'disbursement_amount_received': 0,
+    'disbursement_amount_remaining': 0,
+    'disbursement_notes': 0,
     principal_amount_remaining: 0,
     is_archived: 0,
   },
@@ -464,6 +475,19 @@ watch(sort, async () => {
             <th v-if="columns['total_proceed']?.isVisible">
               <base-input v-model="filter['total_proceed']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
+            <th v-if="columns['selling_price']?.isVisible">
+              <base-input v-model="filter['selling_price']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['disbursement_date']?.isVisible">
+              <base-date-range-picker
+                v-model:date_from="filter['disbursement_date_from']"
+                v-model:date_to="filter['disbursement_date_to']"
+                placeholder="Search..."
+                :readonly="isLoading"
+                border="none"
+                paddingless
+              />
+            </th>
             <th v-if="columns['disbursement_bank.name']?.isVisible">
               <base-input v-model="filter['disbursement_bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -476,11 +500,14 @@ watch(sort, async () => {
             <th v-if="columns['disbursement_amount']?.isVisible">
               <base-input v-model="filter['disbursement_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['disbursement_amount_difference']?.isVisible">
-              <base-input v-model="filter['disbursement_amount_difference']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            <th v-if="columns['disbursement_amount_received']?.isVisible">
+              <base-input v-model="filter['disbursement_amount_received']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['disbursement_amount_remaining']?.isVisible">
               <base-input v-model="filter['disbursement_amount_remaining']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['disbursement_notes']?.isVisible">
+              <base-input v-model="filter['disbursement_notes']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
           </tr>
         </thead>
@@ -546,19 +573,22 @@ watch(sort, async () => {
               <td v-if="columns['transaction_date']?.isVisible">{{ bond.transaction_date }}</td>
               <td v-if="columns['settlement_date']?.isVisible">{{ bond.settlement_date }}</td>
               <td v-if="columns['maturity_date']?.isVisible">{{ bond.maturity_date }}</td>
-              <td v-if="columns['transaction_number']?.isVisible">{{ formatNumber(bond.transaction_number, 2) }}</td>
-              <td v-if="columns['price']?.isVisible">{{ formatNumber(bond.price, 2) }}</td>
+              <td v-if="columns['transaction_number']?.isVisible">{{ bond.transaction_number }}</td>
+              <td v-if="columns['price']?.isVisible">{{ formatNumber(bond.price, 0) }}</td>
               <td v-if="columns['principal_amount']?.isVisible">{{ formatNumber(bond.principal_amount, 2) }}</td>
               <td v-if="columns['remaining_amount']?.isVisible">{{ formatNumber(bond.remaining_amount, 2) }}</td>
               <td v-if="columns['proceed_amount']?.isVisible">{{ formatNumber(bond.proceed_amount, 2) }}</td>
               <td v-if="columns['accrued_interest']?.isVisible">{{ formatNumber(bond.accrued_interest, 2) }}</td>
               <td v-if="columns['total_proceed']?.isVisible">{{ formatNumber(bond.total_proceed, 2) }}</td>
+              <td v-if="columns['selling_price']?.isVisible">{{ formatNumber(bond.selling_price, 2) }}</td>
+              <td v-if="columns['disbursement_date']?.isVisible">{{ bond.disbursement_date }}</td>
               <td v-if="columns['disbursement_bank.name']?.isVisible">{{ bond.disbursement_bank?.name }}</td>
               <td v-if="columns['disbursement_bank.account.account_number']?.isVisible">{{ bond.disbursement_bank?.account?.account_number }}</td>
               <td v-if="columns['disbursement_bank.account.account_name']?.isVisible">{{ bond.disbursement_bank?.account?.account_name }}</td>
               <td v-if="columns['disbursement_amount']?.isVisible">{{ formatNumber(bond.disbursement_amount, 2) }}</td>
-              <td v-if="columns['disbursement_amount_difference']?.isVisible">{{ formatNumber(bond.disbursement_amount_difference, 2) }}</td>
-              <td v-if="columns['disbursement_amount_remaining']?.isVisible">{{ formatNumber((bond.principal_amount ?? 0) - (bond.disbursement_amount ?? 0), 2) }}</td>
+              <td v-if="columns['disbursement_amount_received']?.isVisible">{{ formatNumber(bond.disbursement_amount_received, 2) }}</td>
+              <td v-if="columns['disbursement_amount_remaining']?.isVisible">{{ formatNumber((bond.disbursement_amount ?? 0) - (bond.disbursement_amount_received ?? 0), 2) }}</td>
+              <td v-if="columns['disbursement_notes']?.isVisible">{{ bond.disbursement_notes }}</td>
             </tr>
           </template>
         </tbody>

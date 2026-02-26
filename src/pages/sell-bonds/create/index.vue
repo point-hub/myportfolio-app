@@ -50,6 +50,7 @@ onMounted(async () => {
       form.data.transaction_number = response.transaction_number;
       form.data.price = response.price;
       form.data.principal_amount = response.principal_amount;
+      form.data.remaining_amount = response.remaining_amount;
       form.data.proceed_amount = response.proceed_amount;
       form.data.accrued_interest = response.accrued_interest;
       form.data.total_proceed = response.total_proceed;
@@ -82,6 +83,10 @@ onMounted(async () => {
 const onSave = async () => {
   try {
     isSaving.value = true;
+    if ((form.data.disbursement_amount ?? 0) > (form.data.principal_amount ?? 0)) {
+      toast('Disbursement Amount is higher than Remaining of Principal Amount', { color: 'danger' });
+      return;
+    }
     const response = await createSellBondApi(`${route.params.id}`, form.data);
     if (response?.matched_count) {
       toast('Sell bond success', { color: 'success' });
