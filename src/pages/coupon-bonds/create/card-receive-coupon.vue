@@ -19,14 +19,28 @@ const data = defineModel<IForm>('data', {
   }),
 });
 
+const errors = defineModel('errors', {
+  default: () => ({
+    received_date: [],
+    received_amount: [],
+    bank_id: [],
+  }),
+});
+
 const { options: bankOptions, searchBank } = useSelectableBankAccounts();
 
 const nextCouponDate = computed(() => {
   if (couponIndex.value + 1 >= data.value?.received_coupons.length) {
     return '';
   } else {
-    const base = new Date(data.value.received_coupons[couponIndex.value + 1]?.date as string);
-    return base.toISOString().slice(0, 10);
+    const base = new Date(
+      data.value.received_coupons[couponIndex.value + 1]?.date as string,
+    );
+
+    return base.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    });
   }
 });
 
@@ -71,7 +85,7 @@ const lastAchievedDate = computed(() => {
   <div v-if="data.received_coupons && data.received_coupons.length > 0" class="flex flex-col gap-2">
     <base-card title="Coupon Information">
       <div class="flex flex-col gap-4" >
-        <base-datepicker required layout="horizontal" label="Date Received" v-model="data.received_coupons[couponIndex]!.received_date" :disabled="isSaving" />
+        <base-datepicker required layout="horizontal" label="Date Received" v-model="data.received_coupons[couponIndex]!.received_date" :errors="errors.received_date" :disabled="isSaving" />
         <base-select
           label="Bank"
           required
@@ -80,9 +94,11 @@ const lastAchievedDate = computed(() => {
           :options="bankOptions"
           @select="(selected: IBankAccountOption) => onSelectedBank(selected, data.received_coupons[couponIndex]!)"
           :disabled="isSaving"
+          :errors="errors.bank_id"
           placeholder="Select"
         />
-        <base-input-number layout="horizontal" label="Coupon Received" align="left" required v-model="data.received_coupons[couponIndex]!.received_amount" :disabled="isSaving" />
+        <base-input-number layout="horizontal" label="Coupon Received" align="left" required v-model="data.received_coupons[couponIndex]!.received_amount" :errors="errors.received_amount" :disabled="isSaving" />
+        <base-textarea layout="horizontal" label="Notes" :min-height="128" v-model="data.received_coupons[couponIndex]!.notes" :disabled="isSaving" />
       </div>
     </base-card>
     <base-card title="Total Received">

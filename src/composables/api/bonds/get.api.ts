@@ -46,9 +46,10 @@ export interface IBondData {
   disbursement_bank_account_uuid?: string;
   selling_price?: number;
   disbursement_amount?: number;
-  disbursement_date_received?: string;
+  disbursement_date?: string;
   disbursement_amount_received?: number;
-  disbursement_amount_difference?: number;
+  disbursement_amount_remaining?: number;
+  disbursement_notes?: string;
   notes?: string | null;
   is_archived?: boolean | null;
   created_at?: Date;

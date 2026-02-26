@@ -6,6 +6,7 @@ import { getLocalDate } from '@/utils/date';
 
 export interface IReceivedCoupon {
   uuid?: string
+  notes?: string
   date: string
   amount: number
   received_date?: string

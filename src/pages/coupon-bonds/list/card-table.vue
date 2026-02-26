@@ -44,7 +44,7 @@ const {
     'coupon_gross_amount': { label: 'Gross Coupon', isVisible: true, isSelectable: true },
     'coupon_tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
     'coupon_tax_amount': { label: 'Amount of Tax', isVisible: true, isSelectable: true },
-    'coupon_net_amount': { label: 'Coupon Net', isVisible: true, isSelectable: true },
+    'coupon_net_amount': { label: 'Coupon after Net', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },

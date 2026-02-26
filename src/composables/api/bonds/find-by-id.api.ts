@@ -29,6 +29,7 @@ export interface IResponse {
   transaction_number?: number;
   price?: number;
   principal_amount?: number;
+  remaining_amount?: number;
   proceed_amount?: number;
   accrued_interest?: number;
   total_proceed?: number;

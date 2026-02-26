@@ -66,6 +66,7 @@ const lastAchievedDate = computed(() => {
         <base-datepicker layout="horizontal" label="Date Received" :model-value="data.received_coupons[couponIndex]!.received_date" disabled />
         <base-input layout="horizontal" label="Bank Placement" :model-value="`[${data.received_coupons[couponIndex]!.bank?.name}] ${data.received_coupons[couponIndex]!.bank?.account?.account_number} a/n ${data.received_coupons[couponIndex]!.bank?.account?.account_name}`" disabled />
         <base-input-number layout="horizontal" label="Coupon Received" align="left" v-model="data.received_coupons[couponIndex]!.received_amount" disabled />
+        <base-textarea layout="horizontal" label="Notes" :min-height="128" v-model="data.received_coupons[couponIndex]!.notes" disabled />
       </div>
     </base-card>
     <base-card title="Total Received">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { createCouponBondApi } from '@/composables/api/bonds/create-coupon.api';
@@ -79,9 +79,46 @@ onMounted(async () => {
   }
 });
 
+const couponIndex = computed(() => {
+  const uuid = String(route.params.uuid);
+
+  return form.data?.received_coupons?.findIndex(
+    (coupon) => coupon.uuid === uuid,
+  ) ?? -1;
+});
+
+interface IError {
+  received_date: string[]
+  received_amount: string[]
+  bank_id: string[]
+}
+const couponError = ref<IError>({
+  received_date: [],
+  received_amount: [],
+  bank_id: [],
+});
+
 const onSave = async () => {
   try {
     isSaving.value = true;
+
+    if (!form.data.received_coupons[couponIndex.value]!.received_date) {
+      couponError.value.received_date = ['date is required'];
+    }
+
+    if (!form.data.received_coupons[couponIndex.value]!.received_amount) {
+      couponError.value.received_amount = ['received amount is required'];
+    }
+
+    if (!form.data.received_coupons[couponIndex.value]!.bank_id) {
+      couponError.value.bank_id = ['bank is required'];
+    }
+
+    if (!form.data.received_coupons[couponIndex.value]!.received_date || !form.data.received_coupons[couponIndex.value]!.received_amount || !form.data.received_coupons[couponIndex.value]!.bank_id) {
+      toast('Validation failed, Please check the highlighted fields.', { color: 'danger' });
+      return;
+    }
+
     const response = await createCouponBondApi(`${route.params.id}`, form.data);
     if (response?.matched_count) {
       toast('Create coupon success', { color: 'success' });
@@ -133,7 +170,7 @@ const onSave = async () => {
       <card-internal-notes v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
     </template>
     <template v-else>
-      <card-receive-coupon v-model:data="form.data" v-model:errors="form.errors" v-model:is-saving="isSaving" />
+      <card-receive-coupon v-model:data="form.data" v-model:errors="couponError" v-model:is-saving="isSaving" />
       <div class="flex gap-2">
         <base-button class="flex-1" :is-loading="isSaving" color="primary" @click="onSave">Save</base-button>
       </div>
