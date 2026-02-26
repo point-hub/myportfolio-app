@@ -26,6 +26,7 @@ const isTabCoupon = ref(true);
 onMounted(async () => {
   try {
     isLoading.value = true;
+
     const response = await findBondApi(route.params.id as string);
     if (response) {
       form.data._id = response._id;
@@ -47,6 +48,7 @@ onMounted(async () => {
       form.data.transaction_date = response.transaction_date;
       form.data.settlement_date = response.settlement_date;
       form.data.maturity_date = response.maturity_date;
+      form.data.last_coupon_date = response.last_coupon_date;
       form.data.transaction_number = response.transaction_number;
       form.data.price = response.price;
       form.data.principal_amount = response.principal_amount;
@@ -117,6 +119,16 @@ const onSave = async () => {
     if (!form.data.received_coupons[couponIndex.value]!.received_date || !form.data.received_coupons[couponIndex.value]!.received_amount || !form.data.received_coupons[couponIndex.value]!.bank_id) {
       toast('Validation failed, Please check the highlighted fields.', { color: 'danger' });
       return;
+    }
+
+    const uuid = String(route.params.uuid);
+
+    const index = form.data.received_coupons?.findIndex(
+      (coupon) => coupon.uuid === uuid,
+    ) ?? -1;
+
+    if (index >= 0 && form.data.received_coupons?.[index]) {
+      form.data.received_coupons[index].updated_at = new Date();
     }
 
     const response = await createCouponBondApi(`${route.params.id}`, form.data);

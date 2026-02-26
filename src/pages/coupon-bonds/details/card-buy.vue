@@ -16,6 +16,7 @@ const data = defineModel<IForm>('data', {
     transaction_date: undefined,
     settlement_date: undefined,
     maturity_date: undefined,
+    last_coupon_date: undefined,
     transaction_number: undefined,
     price: undefined,
     principal_amount: undefined,
@@ -50,6 +51,7 @@ onMounted(async () => {
       <base-datepicker layout="horizontal" label="Transaction Date" v-model="data.transaction_date" disabled />
       <base-datepicker layout="horizontal" label="Settlement Date" v-model="data.settlement_date" disabled />
       <base-datepicker layout="horizontal" label="Maturity Date" v-model="data.maturity_date" disabled />
+      <base-datepicker layout="horizontal" label="Last Coupon Date" v-model="data.last_coupon_date" disabled />
       <base-input layout="horizontal" label="Transaction Number" v-model="data.transaction_number" disabled />
 
       <base-input-number layout="horizontal" label="Price" align="left" v-model="data.price" disabled />

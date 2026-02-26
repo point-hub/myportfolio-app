@@ -26,10 +26,13 @@ const data = defineModel<IForm>('data', {
 });
 
 const nextCouponDate = computed(() => {
-  const base = new Date(data.value.maturity_date as string);
+  const base = new Date(data.value.last_coupon_date as string);
   base.setDate(base.getDate() + Number(data.value.coupon_tenor ?? 0));
 
-  return base.toISOString().slice(0, 10);
+  return base.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
 });
 
 watchEffect(() => {

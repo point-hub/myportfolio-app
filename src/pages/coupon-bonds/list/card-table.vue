@@ -44,9 +44,13 @@ const {
     'coupon_gross_amount': { label: 'Gross Coupon', isVisible: true, isSelectable: true },
     'coupon_tax_rate': { label: 'Tax Rate', isVisible: true, isSelectable: true },
     'coupon_tax_amount': { label: 'Amount of Tax', isVisible: true, isSelectable: true },
-    'coupon_net_amount': { label: 'Coupon after Net', isVisible: true, isSelectable: true },
+    'coupon_net_amount': { label: 'Coupon after Tax', isVisible: true, isSelectable: true },
+    'coupon_disbursement_bank': { label: 'Disbursement Bank', isVisible: true, isSelectable: true },
+    'coupon_disbursement_bank_account_number': { label: 'Disbursement Account Number', isVisible: true, isSelectable: true },
+    'coupon_disbursement_bank_account_name': { label: 'Disbursement Account Name', isVisible: true, isSelectable: true },
+    'coupon_disbursement_date': { label: 'Disbursement Date', isVisible: true, isSelectable: true },
+    'coupon_disbursement_amount': { label: 'Disbursement Amount', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
-    is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },
 });
 
@@ -402,6 +406,21 @@ watch(sort, async () => {
             <th v-if="columns['coupon_net_amount']?.isVisible">
               <base-input v-model="filter['coupon_net_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
+            <th v-if="columns['coupon_disbursement_bank']?.isVisible">
+              <base-input v-model="filter['coupon_disbursement_bank']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['coupon_disbursement_bank_account_number']?.isVisible">
+              <base-input v-model="filter['coupon_disbursement_bank_account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['coupon_disbursement_bank_account_name']?.isVisible">
+              <base-input v-model="filter['coupon_disbursement_bank_account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['coupon_disbursement_date']?.isVisible">
+              <base-input v-model="filter['coupon_disbursement_date']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['coupon_disbursement_amount']?.isVisible">
+              <base-input v-model="filter['coupon_disbursement_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['notes']?.isVisible">
               <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -511,13 +530,12 @@ watch(sort, async () => {
               <td v-if="columns['coupon_tax_rate']?.isVisible">{{ formatNumber(bond.coupon_tax_rate, 2) }}%</td>
               <td v-if="columns['coupon_tax_amount']?.isVisible">{{ formatNumber(bond.coupon_tax_amount, 2) }}</td>
               <td v-if="columns['coupon_net_amount']?.isVisible">{{ formatNumber(bond.coupon_net_amount, 2) }}</td>
-
-              <td v-if="columns['notes']?.isVisible">{{ bond.notes }}</td>
-              <td v-if="columns['is_archived']?.isVisible">
-                <base-badge v-if="bond.is_archived" variant="filled" color="danger" class="font-bold">
-                  <base-icon icon="i-fa7-solid:box-archive" /> ARCHIVED
-                </base-badge>
-              </td>
+              <td v-if="columns['coupon_disbursement_bank']?.isVisible">{{ bond.received_coupons?.bank?.name }}</td>
+              <td v-if="columns['coupon_disbursement_bank_account_number']?.isVisible">{{ bond.received_coupons?.bank?.account.account_number }}</td>
+              <td v-if="columns['coupon_disbursement_bank_account_name']?.isVisible">{{ bond.received_coupons?.bank?.account.account_name }}</td>
+              <td v-if="columns['coupon_disbursement_date']?.isVisible">{{ bond.received_coupons?.received_date }}</td>
+              <td v-if="columns['coupon_disbursement_amount']?.isVisible">{{ bond.received_coupons?.received_amount ? formatNumber(bond.received_coupons?.received_amount, 2) : '' }}</td>
+              <td v-if="columns['notes']?.isVisible">{{ bond.received_coupons?.notes }}</td>
             </tr>
           </template>
         </tbody>

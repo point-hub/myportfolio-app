@@ -23,7 +23,10 @@ const nextCouponDate = computed(() => {
     return '';
   } else {
     const base = new Date(data.value.received_coupons[couponIndex.value + 1]?.date as string);
-    return base.toISOString().slice(0, 10);
+    return base.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    });
   }
 });
 
@@ -46,17 +49,6 @@ const couponIndex = computed(() => {
     (coupon) => coupon.uuid === uuid,
   ) ?? -1;
 });
-
-const lastAchievedDate = computed(() => {
-  let lastIndex = 0;
-  if (couponIndex.value + 1 >= data.value?.received_coupons.length) {
-    return '';
-  } else if (couponIndex.value < 0) {
-    return '';
-  } else {
-    return data.value.received_coupons[lastIndex]?.received_date;
-  }
-});
 </script>
 
 <template>
@@ -71,10 +63,10 @@ const lastAchievedDate = computed(() => {
     </base-card>
     <base-card title="Total Received">
       <div class="flex flex-col gap-4">
-        <base-input layout="horizontal" label="Last Update" align="left" :model-value="lastAchievedDate" disabled />
+        <base-input layout="horizontal" label="Last Update" align="left" :model-value="data.received_coupons[couponIndex]!.updated_at" disabled />
         <base-input-number layout="horizontal" label="Nominal Difference" align="left" :model-value="data.received_coupons[couponIndex]!.remaining_amount" disabled allow-negative />
         <base-input-number layout="horizontal" label="Total Received" align="left" :model-value="data.received_coupons[couponIndex]!.received_amount" disabled />
-        <base-input layout="horizontal" label="Next Coupon Update" align="left" :model-value="nextCouponDate" disabled />
+        <base-input layout="horizontal" label="Next Coupon Date" align="left" :model-value="nextCouponDate" disabled />
       </div>
     </base-card>
   </div>

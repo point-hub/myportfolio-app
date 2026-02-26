@@ -3,6 +3,7 @@ import { computed, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { type IBankAccountOption,useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
+import { formatDate } from '@/utils/date';
 import { roundNumber } from '@/utils/number';
 
 import { type IForm, type IReceivedCoupon } from './form';
@@ -19,7 +20,12 @@ const data = defineModel<IForm>('data', {
   }),
 });
 
-const errors = defineModel('errors', {
+interface IError {
+  received_date: string[]
+  received_amount: string[]
+  bank_id: string[]
+}
+const errors = defineModel<IError>('errors', {
   default: () => ({
     received_date: [],
     received_amount: [],
@@ -64,20 +70,11 @@ const route = useRoute();
 const couponIndex = computed(() => {
   const uuid = String(route.params.uuid);
 
-  return data.value?.received_coupons?.findIndex(
+  const index = data.value?.received_coupons?.findIndex(
     (coupon) => coupon.uuid === uuid,
   ) ?? -1;
-});
 
-const lastAchievedDate = computed(() => {
-  let lastIndex = 0;
-  if (couponIndex.value + 1 >= data.value?.received_coupons.length) {
-    return '';
-  } else if (couponIndex.value < 0) {
-    return '';
-  } else {
-    return data.value.received_coupons[lastIndex]?.received_date;
-  }
+  return index;
 });
 </script>
 
@@ -103,10 +100,10 @@ const lastAchievedDate = computed(() => {
     </base-card>
     <base-card title="Total Received">
       <div class="flex flex-col gap-4">
-        <base-input layout="horizontal" label="Last Update" align="left" :model-value="lastAchievedDate" disabled />
+        <base-input layout="horizontal" label="Last Update" align="left" :model-value="formatDate(data.received_coupons[couponIndex]!.updated_at)" disabled />
         <base-input-number layout="horizontal" label="Nominal Difference" align="left" :model-value="data.received_coupons[couponIndex]!.remaining_amount" disabled allow-negative />
         <base-input-number layout="horizontal" label="Total Received" align="left" :model-value="data.received_coupons[couponIndex]!.received_amount" disabled />
-        <base-input layout="horizontal" label="Next Coupon Update" align="left" :model-value="nextCouponDate" disabled />
+        <base-input layout="horizontal" label="Next Coupon Date" align="left" :model-value="nextCouponDate" disabled />
       </div>
     </base-card>
   </div>

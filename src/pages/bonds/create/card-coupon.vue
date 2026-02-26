@@ -26,7 +26,10 @@ const nextCouponDate = computed(() => {
   const base = new Date(data.value.last_coupon_date as string);
   base.setDate(base.getDate() + Number(data.value.coupon_tenor ?? 0));
 
-  return base.toISOString().slice(0, 10);
+  return base.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
 });
 
 watchEffect(() => {
@@ -34,8 +37,8 @@ watchEffect(() => {
   data.value.coupon_tax_amount = roundNumber((data.value.coupon_tax_rate ?? 0) / 100 * data.value.coupon_gross_amount, 2);
   data.value.coupon_net_amount = data.value.coupon_gross_amount - data.value.coupon_tax_amount;
 
-  const settlementDate = data.value.settlement_date
-    ? new Date(data.value.settlement_date as string)
+  const maturityDate = data.value.maturity_date
+    ? new Date(data.value.maturity_date as string)
     : null;
 
   const lastCouponDate = data.value.last_coupon_date
@@ -44,17 +47,17 @@ watchEffect(() => {
 
   const tenor = Number(data.value.coupon_tenor ?? 0);
 
-  if (!settlementDate || !lastCouponDate || !tenor) {
+  if (!maturityDate || !lastCouponDate || !tenor) {
     data.value.received_coupons = [];
     return;
   }
 
   const coupons: IReceivedCoupon[] = [];
-  const current = new Date(settlementDate);
+  const current = new Date(lastCouponDate);
 
   current.setDate(current.getDate() + tenor);
 
-  while (current <= lastCouponDate) {
+  while (current <= maturityDate) {
     coupons.push({
       date: current.toISOString().slice(0, 10),
       amount: data.value.coupon_net_amount,

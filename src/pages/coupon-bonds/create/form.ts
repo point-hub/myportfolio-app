@@ -15,6 +15,7 @@ export interface IReceivedCoupon {
   bank?: IBankAccount;
   bank_id?: string;
   bank_account_uuid?: string;
+  updated_at?: Date;
 }
 
 export interface IForm {
@@ -37,6 +38,7 @@ export interface IForm {
   transaction_date?: string;
   settlement_date?: string;
   maturity_date?: string;
+  last_coupon_date?: string;
   transaction_number?: number;
   price?: number;
   principal_amount?: number;

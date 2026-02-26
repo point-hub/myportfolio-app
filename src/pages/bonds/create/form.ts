@@ -13,6 +13,7 @@ export interface IReceivedCoupon {
   bank?: IBankAccount
   bank_id?: string
   bank_account_uuid?: string
+  notes?: string
 }
 
 export interface IForm {
