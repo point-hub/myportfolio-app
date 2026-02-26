@@ -133,7 +133,11 @@ const onSave = async () => {
 
     const response = await createCouponBondApi(`${route.params.id}`, form.data);
     if (response?.matched_count) {
-      toast('Create coupon success', { color: 'success' });
+      if (route.query.edit) {
+        toast('Update coupon success', { color: 'success' });
+      } else {
+        toast('Create coupon success', { color: 'success' });
+      }
       await router.push('/coupon-bonds');
     }
   } catch (error) {

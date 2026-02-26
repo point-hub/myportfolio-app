@@ -50,7 +50,7 @@ const {
     'coupon_disbursement_bank_account_name': { label: 'Disbursement Account Name', isVisible: true, isSelectable: true },
     'coupon_disbursement_date': { label: 'Disbursement Date', isVisible: true, isSelectable: true },
     'coupon_disbursement_amount': { label: 'Disbursement Amount', isVisible: true, isSelectable: true },
-    notes: { label: 'Notes', isVisible: false, isSelectable: true },
+    notes: { label: 'Notes', isVisible: true, isSelectable: true },
   },
 });
 
@@ -478,7 +478,7 @@ watch(sort, async () => {
                           </base-button>
                         </router-link>
                         <base-divider orientation="vertical" class="my-0!" />
-                        <router-link v-if="authStore.hasPermission('bonds:update')" :to="`/coupon-bonds/${bond._id}/create/${bond.received_coupons?.uuid}`">
+                        <router-link v-if="authStore.hasPermission('bonds:update')" :to="`/coupon-bonds/${bond._id}/create/${bond.received_coupons?.uuid}?edit=true`">
                           <base-button variant="text" color="info" class="w-full py-1! px-3! m-0! flex gap-2! items-center justify-start text-left!">
                             <base-icon icon="i-fa7-light-file-pen" />
                             <p class="flex-1">Edit</p>
