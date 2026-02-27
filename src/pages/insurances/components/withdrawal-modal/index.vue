@@ -62,6 +62,11 @@ const toggleModal = (data: IData) => {
   additional_bank_id.value = data.additional_bank_id;
   additional_bank_account_uuid.value = data.additional_bank_account_uuid;
   notes.value= data.notes;
+
+  if (data.additional_received_date) {
+    isAddAdditionalPayment.value = true;
+  }
+
   confirmActionModalRef.value.toggleModal();
 };
 

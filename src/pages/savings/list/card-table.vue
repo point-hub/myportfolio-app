@@ -603,6 +603,10 @@ const getWithdrawalAmount = (saving: ISavingData) => {
                               bank_account_uuid: saving.source?.bank?.account?.uuid,
                               received_date: saving.withdrawal?.received_date,
                               received_amount: saving.withdrawal?.received_amount,
+                              additional_bank_id: saving.withdrawal?.additional_bank?._id,
+                              additional_bank_account_uuid: saving.withdrawal?.additional_bank?.account?.uuid,
+                              additional_received_date: saving.withdrawal?.additional_received_date,
+                              additional_received_amount: saving.withdrawal?.additional_received_amount,
                               notes: saving.withdrawal?.notes,
                             })
                             rowMenuRef[index].toggle()

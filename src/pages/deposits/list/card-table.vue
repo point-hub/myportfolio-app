@@ -658,6 +658,10 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
                               bank_account_uuid: deposit.source?.bank?.account?.uuid,
                               received_date: deposit.withdrawal?.received_date,
                               received_amount: deposit.withdrawal?.received_amount,
+                              additional_bank_id: deposit.withdrawal?.additional_bank?._id,
+                              additional_bank_account_uuid: deposit.withdrawal?.additional_bank?.account?.uuid,
+                              additional_received_date: deposit.withdrawal?.additional_received_date,
+                              additional_received_amount: deposit.withdrawal?.additional_received_amount,
                               notes: deposit.withdrawal?.notes,
                             })
                             rowMenuRef[index].toggle()

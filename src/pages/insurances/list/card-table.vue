@@ -603,6 +603,10 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
                               bank_account_uuid: insurance.source?.bank?.account?.uuid,
                               received_date: insurance.withdrawal?.received_date,
                               received_amount: insurance.withdrawal?.received_amount,
+                              additional_bank_id: insurance.withdrawal?.additional_bank?._id,
+                              additional_bank_account_uuid: insurance.withdrawal?.additional_bank?.account?.uuid,
+                              additional_received_date: insurance.withdrawal?.additional_received_date,
+                              additional_received_amount: insurance.withdrawal?.additional_received_amount,
                               notes: insurance.withdrawal?.notes,
                             })
                             rowMenuRef[index].toggle()
