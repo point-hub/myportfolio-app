@@ -166,6 +166,10 @@ const reset = () => {
   bankAccountUuid.value = null;
   receivedDate.value = null;
   receivedAmount.value = null;
+  additional_bank_id.value = null;
+  additional_bank_account_uuid.value = null;
+  received_additional_payment_date.value = null;
+  received_additional_payment_amount.value = null;
 };
 
 const isAddAdditionalPayment = ref(false);
