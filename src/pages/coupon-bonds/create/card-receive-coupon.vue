@@ -44,8 +44,8 @@ const nextCouponDate = computed(() => {
     );
 
     return base.toLocaleDateString('en-US', {
+      day: '2-digit',
       month: 'short',
-      year: 'numeric',
     });
   }
 });

@@ -24,8 +24,8 @@ const nextCouponDate = computed(() => {
   } else {
     const base = new Date(data.value.received_coupons[couponIndex.value + 1]?.date as string);
     return base.toLocaleDateString('en-US', {
+      day: '2-digit',
       month: 'short',
-      year: 'numeric',
     });
   }
 });
