@@ -184,7 +184,7 @@ defineExpose({
 <template>
   <base-confirm-action-modal
     ref="confirmActionModalRef"
-    title="Withdrawal Savingo"
+    title="Withdrawal Saving"
   >
     <div class="flex flex-col gap-4">
       <base-datepicker layout="v" label="Maturity Date" :model-value="maturityDate" disabled />
