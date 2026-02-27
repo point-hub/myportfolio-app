@@ -23,16 +23,15 @@ const data = defineModel<IForm>('data', {
 });
 
 const nextCouponDate = computed(() => {
-  if (!data.value.maturity_date) { return; }
+  if (!data.value.last_coupon_date) { return; }
 
-  const base = new Date(data.value.maturity_date as string);
+  const base = new Date(data.value.last_coupon_date as string);
   base.setDate(base.getDate() + Number(data.value.coupon_tenor ?? 0));
 
-  const yyyy = base.getFullYear();
-  const mm = String(base.getMonth() + 1).padStart(2, '0');
-  const dd = String(base.getDate()).padStart(2, '0');
-
-  return `${yyyy}-${mm}-${dd}`;
+  return base.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+  });
 });
 
 watchEffect(() => {
