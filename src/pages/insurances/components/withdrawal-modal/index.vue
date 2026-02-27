@@ -18,6 +18,10 @@ const receivedAmount = ref();
 const bankId = ref();
 const bankAccountUuid = ref();
 const notes = ref();
+const received_additional_payment_date = ref();
+const received_additional_payment_amount = ref();
+const additional_bank_id = ref();
+const additional_bank_account_uuid = ref();
 
 const errors = ref<{ [key: string]: undefined | string[]; }>({
   received_date: [],
@@ -36,6 +40,10 @@ interface IData {
   received_amount: number
   bank_id: string
   bank_account_uuid: string
+  additional_received_date: string
+  additional_received_amount: number
+  additional_bank_id: string
+  additional_bank_account_uuid: string
   notes: string
   readonly: boolean
 }
@@ -49,8 +57,11 @@ const toggleModal = (data: IData) => {
   receivedAmount.value= data.received_amount;
   bankId.value= data.bank_id;
   bankAccountUuid.value= data.bank_account_uuid;
+  received_additional_payment_date.value = data.additional_received_date;
+  received_additional_payment_amount.value = data.additional_received_amount;
+  additional_bank_id.value = data.additional_bank_id;
+  additional_bank_account_uuid.value = data.additional_bank_account_uuid;
   notes.value= data.notes;
-
   confirmActionModalRef.value.toggleModal();
 };
 
@@ -69,6 +80,10 @@ const onReceive = async () => {
       remaining_amount: remainingAmount.value,
       bank_id: bankId.value,
       bank_account_uuid: bankAccountUuid.value,
+      additional_received_date: received_additional_payment_date.value,
+      additional_received_amount: Number(received_additional_payment_amount.value),
+      additional_bank_id: additional_bank_id.value,
+      additional_bank_account_uuid: additional_bank_account_uuid.value,
       notes: notes.value,
     });
     toast('Withdrawal success', { color: 'success' });
@@ -121,13 +136,23 @@ const onDelete = async () => {
 };
 
 const remainingAmount = computed(() => {
-  return roundNumber((amount.value ?? 0) - (receivedAmount.value ?? 0), 2);
+  return roundNumber((amount.value ?? 0)
+  - (receivedAmount.value ?? 0)
+  - (received_additional_payment_amount.value ?? 0), 2);
 });
 
 const { options: bankOptions, searchBank } = useSelectableBankAccounts();
 watch(() => [bankAccountUuid.value, bankOptions.value], () => {
   const selected = bankOptions.value.find(o => o.value === bankAccountUuid.value);
   bankId.value = selected?.bank_id;
+});
+
+const { options: additionalBankOptions, searchBank: searchAdditionalBank } = useSelectableBankAccounts();
+watch(() => [additional_bank_account_uuid.value, additionalBankOptions.value], () => {
+  const selected = additionalBankOptions.value.find(o => o.value === additional_bank_account_uuid.value);
+  if (selected?.bank_id) {
+    additional_bank_id.value = selected.bank_id;
+  }
 });
 
 const reset = () => {
@@ -137,6 +162,11 @@ const reset = () => {
   bankAccountUuid.value = null;
   receivedDate.value = null;
   receivedAmount.value = null;
+};
+
+const isAddAdditionalPayment = ref(false);
+const onAddAdditionalPayment = () => {
+  isAddAdditionalPayment.value = true;
 };
 
 defineExpose({
@@ -168,12 +198,26 @@ defineExpose({
       <base-datepicker layout="v" label="Received Date" required v-model="receivedDate" :errors="errors.received_date" :disabled="isReceiving" />
       <base-input-number layout="v" label="Received Amount" required align="left" v-model="receivedAmount" :errors="errors.received_amount" :disabled="isReceiving" decimal-length="2" />
       <hr class="border-slate-300 dark:border-slate-600"  />
+      <base-select
+        layout="v"
+        label="Bank (Additional Payment)"
+        v-if="isAddAdditionalPayment"
+        v-model="additional_bank_account_uuid"
+        v-model:search="searchAdditionalBank"
+        :errors="errors.additional_bank_account_uuid"
+        :options="additionalBankOptions"
+        :disabled="isReceiving"
+        placeholder="Select"
+      />
+      <base-datepicker v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Date" v-model="received_additional_payment_date" :errors="errors.additional_received_date" :disabled="isReceiving" />
+      <base-input-number v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Amount" align="left" v-model="received_additional_payment_amount" :errors="errors.additional_received_amount" :disabled="isReceiving" decimal-length="2" />
       <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="2" allow-negative />
-      <base-textarea layout="v" label="Notes" :min-height="128" v-model="notes" :errors="errors.notes" />
+      <base-textarea layout="v" label="Notes" :min-height="128" v-model="notes" :errors="errors.notes" :disabled="isReceiving" />
     </div>
     <template #action>
       <base-button variant="filled" color="primary" @click="onReceive">Confirm</base-button>
       <base-button variant="filled" color="danger" @click="onDelete">Delete</base-button>
+      <base-button v-if="!isAddAdditionalPayment" variant="filled" color="info" @click="onAddAdditionalPayment">Add Additional Payment</base-button>
       <base-button variant="filled" color="secondary" @click="confirmActionModalRef.toggleModal(false)">Close</base-button>
     </template>
   </base-confirm-action-modal>

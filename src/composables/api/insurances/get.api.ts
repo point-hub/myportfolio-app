@@ -75,10 +75,13 @@ export interface IInsuranceData {
     created_at?: string
   }[]
   withdrawal?: {
+    remaining_amount?: number
     received_date?: string
     received_amount?: number
-    remaining_amount?: number
     bank?: IBankData
+    additional_received_date?: string
+    additional_received_amount?: number
+    additional_bank?: IBankData
     notes?: string
     created_by?: IAuthUser
     created_at?: string

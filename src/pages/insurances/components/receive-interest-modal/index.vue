@@ -16,10 +16,10 @@ interface IData {
   amount?: number
   received_date?: string
   received_amount?: number
-  received_additional_payment_date?: string
-  received_additional_payment_amount?: number
   bank_id?: string
   bank_account_uuid?: string
+  received_additional_payment_date?: string
+  received_additional_payment_amount?: number
   additional_bank_id?: string
   additional_bank_account_uuid?: string
   notes?: string
