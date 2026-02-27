@@ -124,7 +124,7 @@ const onSelectedBankPlacement = (selected: IBankAccountOption) => {
       <base-input-number layout="horizontal" label="Accrued Interest" align="left" required v-model="data.accrued_interest" :errors="errors.accrued_interest" :disabled="isSaving" />
       <base-input-number layout="horizontal" label="Total Proceed" align="left" required v-model="data.total_proceed" :errors="errors.total_proceed" :disabled="isSaving" />
 
-      <base-input-number layout="horizontal" label="Coupon Rate" align="left" required v-model="data.coupon_rate" :errors="errors.coupon_rate" :disabled="isSaving" />
+      <base-input-number layout="horizontal" label="Coupon Rate" align="left" required v-model="data.coupon_rate" :errors="errors.coupon_rate" :disabled="isSaving" decimal-length="2" />
       <base-input-number layout="horizontal" label="Coupon Tenor" align="left" required v-model="data.coupon_tenor" :errors="errors.coupon_tenor" :disabled="isSaving" decimal-length="2" />
       <base-input-number layout="horizontal" label="Coupon Tax Rate" align="left" required v-model="data.coupon_tax_rate" :errors="errors.coupon_tax_rate" :disabled="isSaving" />
     </div>

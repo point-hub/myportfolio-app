@@ -47,10 +47,10 @@ watchEffect(() => {
   <base-card title="Coupon Information">
     <div class="flex flex-col gap-4">
       <base-input layout="horizontal" label="Coupon Tenor" align="left" :model-value="formatNumber(data.coupon_tenor, 2)" disabled />
-      <base-input-number layout="horizontal" label="Gross Coupon" align="left" :model-value="data.coupon_gross_amount" disabled />
-      <base-input-number layout="horizontal" label="Tax Rate" align="left" :model-value="data.coupon_tax_rate" disabled />
-      <base-input-number layout="horizontal" label="Tax Amount" align="left" :model-value="data.coupon_tax_amount" disabled />
-      <base-input-number layout="horizontal" label="Net Amount" align="left" :model-value="data.coupon_net_amount" disabled />
+      <base-input-number layout="horizontal" label="Gross Coupon" align="left" :model-value="data.coupon_gross_amount" disabled decimal-length="2" />
+      <base-input-number layout="horizontal" label="Tax Rate" align="left" :model-value="data.coupon_tax_rate" disabled decimal-length="2" />
+      <base-input-number layout="horizontal" label="Tax Amount" align="left" :model-value="data.coupon_tax_amount" disabled decimal-length="2" />
+      <base-input-number layout="horizontal" label="Net Amount" align="left" :model-value="data.coupon_net_amount" disabled decimal-length="2" />
       <base-input layout="horizontal" label="Next Coupon Date" align="left" :model-value="nextCouponDate" disabled />
     </div>
   </base-card>
