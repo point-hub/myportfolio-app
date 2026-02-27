@@ -58,7 +58,16 @@ const {
     'interest.bank.account.account_name': { label: 'Bank Interest - Account Name', isVisible: true, isSelectable: true },
     'withdrawal.received_date': { label: 'Withdrawal - Received Date', isVisible: true, isSelectable: true },
     'withdrawal.received_amount': { label: 'Withdrawal - Received Amount', isVisible: true, isSelectable: true },
+    'withdrawal.bank.name': { label: 'Bank Withdrawal - Name', isVisible: true, isSelectable: true },
+    'withdrawal.bank.account.account_number': { label: 'Bank Withdrawal - Account Number', isVisible: true, isSelectable: true },
+    'withdrawal.bank.account.account_name': { label: 'Bank Withdrawal - Account Name', isVisible: true, isSelectable: true },
+    'withdrawal.additional_received_date': { label: 'Additional Withdrawal - Received Date', isVisible: true, isSelectable: true },
+    'withdrawal.additional_received_amount': { label: 'Additional Withdrawal - Received Amount', isVisible: true, isSelectable: true },
+    'withdrawal.additional_bank.name': { label: 'Bank Additional Withdrawal - Name', isVisible: true, isSelectable: true },
+    'withdrawal.additional_bank.account.account_number': { label: 'Bank Additional Withdrawal - Account Number', isVisible: true, isSelectable: true },
+    'withdrawal.additional_bank.account.account_name': { label: 'Bank Additional Withdrawal - Account Name', isVisible: true, isSelectable: true },
     'withdrawal.remaining_amount': { label: 'Withdrawal - Remaining Amount', isVisible: true, isSelectable: true },
+    'withdrawal.notes': { label: 'Withdrawal - Notes', isVisible: true, isSelectable: true },
     notes: { label: 'Notes', isVisible: false, isSelectable: true },
     is_archived: { label: 'Is Archived', isVisible: false, isSelectable: true },
   },
@@ -110,7 +119,18 @@ const {
     'withdrawal.received_date_from': '',
     'withdrawal.received_date_to': '',
     'withdrawal.received_amount': '',
+    'withdrawal.bank.name': '',
+    'withdrawal.bank.account.account_name': '',
+    'withdrawal.bank.account.account_number': '',
+    'withdrawal.additional_received_date': '',
+    'withdrawal.additional_received_date_from': '',
+    'withdrawal.additional_received_date_to': '',
+    'withdrawal.additional_received_amount': '',
+    'withdrawal.additional_bank.name': '',
+    'withdrawal.additional_bank.account.account_name': '',
+    'withdrawal.additional_bank.account.account_number': '',
     'withdrawal.remaining_amount': '',
+    'withdrawal.notes': '',
     notes: '',
     is_archived: 'false',
   },
@@ -139,6 +159,7 @@ const {
     'withdrawal.received_date': 0,
     'withdrawal.received_amount': 0,
     'withdrawal.remaining_amount': 0,
+    'withdrawal.notes': 0,
     notes: 0,
     is_archived: 0,
   },
@@ -516,8 +537,42 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
             <th v-if="columns['withdrawal.received_amount']?.isVisible">
               <base-input v-model="filter['withdrawal.received_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
+            <th v-if="columns['withdrawal.bank.name']?.isVisible">
+              <base-input v-model="filter['withdrawal.bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.bank.account.account_number']?.isVisible">
+              <base-input v-model="filter['withdrawal.bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['withdrawal.bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.additional_received_date']?.isVisible">
+              <base-date-range-picker
+                v-model:date_from="filter['withdrawal.additional_received_date_from']"
+                v-model:date_to="filter['withdrawal.additional_received_date_to']"
+                placeholder="Search..."
+                :readonly="isLoading"
+                border="none"
+                paddingless
+              />
+            </th>
+            <th v-if="columns['withdrawal.additional_received_amount']?.isVisible">
+              <base-input v-model="filter['withdrawal.additional_received_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.additional_bank.name']?.isVisible">
+              <base-input v-model="filter['withdrawal.additional_bank.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.additional_bank.account.account_number']?.isVisible">
+              <base-input v-model="filter['withdrawal.additional_bank.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.additional_bank.account.account_name']?.isVisible">
+              <base-input v-model="filter['withdrawal.additional_bank.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['withdrawal.remaining_amount']?.isVisible">
               <base-input v-model="filter['withdrawal.remaining_amount']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['withdrawal.notes']?.isVisible">
+              <base-input v-model="filter['withdrawal.notes']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['notes']?.isVisible">
               <base-input v-model="filter.notes" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -676,7 +731,16 @@ const getWithdrawalAmount = (deposit: IDepositData) => {
               <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ deposit.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['withdrawal.received_date']?.isVisible">{{ deposit.withdrawal?.received_date }}</td>
               <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.received_amount, 2) }}</td>
+              <td v-if="columns['withdrawal.bank.name']?.isVisible">{{ deposit.withdrawal?.bank?.name }}</td>
+              <td v-if="columns['withdrawal.bank.account.account_number']?.isVisible">{{ deposit.withdrawal?.bank?.account?.account_number }}</td>
+              <td v-if="columns['withdrawal.bank.account.account_name']?.isVisible">{{ deposit.withdrawal?.bank?.account?.account_name }}</td>
+              <td v-if="columns['withdrawal.additional_received_date']?.isVisible">{{ deposit.withdrawal?.additional_received_date }}</td>
+              <td v-if="columns['withdrawal.additional_received_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.additional_received_amount, 2) }}</td>
+              <td v-if="columns['withdrawal.additional_bank.name']?.isVisible">{{ deposit.withdrawal?.additional_bank?.name }}</td>
+              <td v-if="columns['withdrawal.additional_bank.account.account_number']?.isVisible">{{ deposit.withdrawal?.additional_bank?.account?.account_number }}</td>
+              <td v-if="columns['withdrawal.additional_bank.account.account_name']?.isVisible">{{ deposit.withdrawal?.additional_bank?.account?.account_name }}</td>
               <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(deposit.withdrawal?.remaining_amount, 2) }}</td>
+              <td v-if="columns['withdrawal.notes']?.isVisible">{{ deposit.withdrawal?.notes }}</td>
               <td v-if="columns['notes']?.isVisible">{{ deposit.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="deposit.is_archived" variant="filled" color="danger" class="font-bold">

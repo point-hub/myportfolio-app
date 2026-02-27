@@ -37,6 +37,7 @@ const {
     'product': { label: 'Product', isVisible: true, isSelectable: true },
     'series': { label: 'Series', isVisible: true, isSelectable: true },
     'year_issued': { label: 'Year Issued', isVisible: true, isSelectable: true },
+    'publisher': { label: 'Publisher', isVisible: true, isSelectable: true },
     'coupon_rate': { label: 'Coupon Rate', isVisible: true, isSelectable: true },
     'bank_source.account.account_number': { label: 'Source of Fund - Account Number', isVisible: true, isSelectable: true },
     'bank_source.account.account_name': { label: 'Source of Fund - Account Name', isVisible: true, isSelectable: true },
@@ -85,6 +86,7 @@ const {
     'product': '',
     'series': '',
     'year_issued': '',
+    'publisher': '',
     'coupon_rate': '',
     'bank_source.account.account_number': '',
     'bank_source.account.account_name': '',
@@ -118,6 +120,7 @@ const {
     'product': 0,
     'series': 0,
     'year_issued': 0,
+    'publisher': 0,
     'coupon_rate': 0,
     'bank_source.account.account_number': 0,
     'bank_source.account.account_name': 0,
@@ -412,6 +415,9 @@ watch(sort, async () => {
             <th v-if="columns['year_issued']?.isVisible">
               <base-input v-model="filter['year_issued']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
+            <th v-if="columns['publisher']?.isVisible">
+              <base-input v-model="filter['publisher']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['coupon_rate']?.isVisible">
               <base-input v-model="filter['coupon_rate']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -598,6 +604,7 @@ watch(sort, async () => {
               <td v-if="columns['product']?.isVisible">{{ bond.product }}</td>
               <td v-if="columns['series']?.isVisible">{{ bond.series }}</td>
               <td v-if="columns['year_issued']?.isVisible">{{ bond.year_issued }}</td>
+              <td v-if="columns['publisher']?.isVisible">{{ bond.publisher }}</td>
               <td v-if="columns['coupon_rate']?.isVisible">{{ bond.coupon_rate }}</td>
               <td v-if="columns['bank_source.account.account_number']?.isVisible">{{ bond.bank_source?.account?.account_number }}</td>
               <td v-if="columns['bank_source.account.account_name']?.isVisible">{{ bond.bank_source?.account?.account_name }}</td>
