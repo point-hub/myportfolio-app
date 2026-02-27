@@ -29,9 +29,9 @@ const nextCouponDate = computed(() => {
   const base = new Date(data.value.last_coupon_date as string);
   base.setDate(base.getDate() + Number(data.value.coupon_tenor ?? 0));
 
-  return base.toLocaleDateString('en-US', {
+  return base.toLocaleDateString('en-GB', {
+    day: '2-digit',
     month: 'short',
-    year: 'numeric',
   });
 });
 
