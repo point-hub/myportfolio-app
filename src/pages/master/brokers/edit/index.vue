@@ -32,7 +32,7 @@ onMounted(async () => {
       form.data.branch = response.branch;
       form.data.address = response.address;
       form.data.phone = response.phone;
-      form.data.accounts = response.accounts;
+      form.data.accounts = response.accounts ?? [];
       form.data.notes = response.notes;
     }
   } catch (error) {
