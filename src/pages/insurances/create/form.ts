@@ -65,6 +65,7 @@ export type IFormError = Partial<
     | 'interest.tax_amount'
     | 'interest.net_amount'
     | 'interest.bank_id'
+    | 'interest.bank_account_uuid'
     | 'interest.is_rollover'
     | 'cashback.bank_id'
     | `cashback_schedule.${number}.payment_date`

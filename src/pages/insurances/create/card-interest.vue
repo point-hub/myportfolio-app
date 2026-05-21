@@ -170,8 +170,8 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
       />
       <base-input-number layout="h" label="Rate" align="left" required v-model="data.interest.rate" :errors="errors['interest.rate']" :disabled="isSaving" decimal-length="2" />
       <base-input-number layout="h" label="Gross Amount" align="left" required :model-value="grossAmount" :errors="errors['interest.gross_amount']" disabled decimal-length="2" />
-      <base-input-number layout="h" label="Tax Rate" align="left" required v-model="data.interest.tax_rate" :errors="errors['interest.tax_rate']" :disabled="isSaving" decimal-length="2" />
-      <base-input-number layout="h" label="Tax Amount" align="left" required :model-value="taxAmount" :errors="errors['interest.tax_amount']" disabled decimal-length="2" />
+      <base-input-number layout="h" label="Tax Rate" align="left" v-model="data.interest.tax_rate" :errors="errors['interest.tax_rate']" :disabled="isSaving" decimal-length="2" />
+      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="taxAmount" :errors="errors['interest.tax_amount']" disabled decimal-length="2" />
       <base-input-number layout="h" label="Net Amount" align="left" required :model-value="netAmount" :errors="errors['interest.net_amount']" disabled decimal-length="2" />
       <base-select
         label="Bank Recipient"
@@ -179,7 +179,7 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         v-model="data.interest.bank_account_uuid"
         v-model:search="searchBank"
         :options="bankOptions"
-        :errors="errors['interest.bank_id']"
+        :errors="errors['interest.bank_account_uuid']"
         :disabled="isSaving"
         placeholder="Select"
         description="Bank where you should receive the interest"

@@ -62,7 +62,7 @@ watchEffect(() => {
         placeholder="Select"
         description="Bank where you placed the insurance"
       />
-      <base-input layout="h" label="Policy Number" required v-model="data.placement.policy_number" :errors="errors['placement.base_date']" :disabled="isSaving" />
+      <base-input layout="h" label="Policy Number" required v-model="data.placement.policy_number" :errors="errors['placement.policy_number']" :disabled="isSaving" />
       <base-input-number layout="h" label="Base Date" align="left" required v-model="data.placement.base_date" :errors="errors['placement.base_date']" :disabled="isSaving" />
       <base-datepicker layout="h" label="Placement Date" required v-model="data.placement.date" :errors="errors['placement.date']" :disabled="isSaving" description="Placement Date" />
       <base-input-number layout="h" label="Term" align="left" required v-model="data.placement.term" :errors="errors['placement.term']" :disabled="isSaving" description="How many days" />
