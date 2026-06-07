@@ -89,6 +89,9 @@ onMounted(() => {
     if (authStore.hasPermission('issuers:module')) { masterMenu.submenu?.push({ name: 'Issuers', path: '/master/issuers' }); }
     appMenu.value[0]?.menu?.push(masterMenu);
   }
+  if (authStore.hasPermission('dashboard:read')) {
+    appMenu.value[0]?.menu?.push({ name: 'Dashboard', path: '/dashboard' });
+  }
   if (authStore.hasPermission('savings:module')) {
     appMenu.value[0]?.menu?.push({ name: 'Savings', path: '/savings' });
   }
