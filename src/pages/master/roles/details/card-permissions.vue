@@ -48,7 +48,7 @@ const hasPermission = (resource: string, action: string) =>
  * SCOPES
  * ===================== */
 const SCOPE_MAP = {
-  main: ['stocks', 'payment-stocks', 'dividend-stocks', 'bonds', 'deposits', 'savings', 'insurances'],
+  main: ['dashboard', 'stocks', 'payment-stocks', 'dividend-stocks', 'bonds', 'deposits', 'savings', 'insurances'],
   master: ['master', 'users', 'roles', 'owners', 'banks', 'brokers', 'issuers'],
   administrator: ['administrator', 'audit-logs'],
 } as const;
@@ -61,6 +61,7 @@ const RESOURCE_LABELS: Record<string, string> = {
   banks: 'Banks',
   brokers: 'Brokers',
   issuers: 'Issuers',
+  dashboard: 'Dashboard',
   stocks: 'Stocks',
   'payment-stocks': 'Payment Stocks',
   'dividend-stocks': 'Dividend Stocks',
@@ -109,7 +110,10 @@ const masterActions = actionsByScope('master');
  * ===================== */
 onMounted(async () => {
   const response = await getPermissionsApi();
-  availablePermissions.value = toResourceActions(response.data);
+  availablePermissions.value = toResourceActions([
+    ...response.data,
+    { name: 'dashboard:read' },
+  ]);
 });
 </script>
 
