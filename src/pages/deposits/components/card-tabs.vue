@@ -10,6 +10,7 @@ const route = useRoute();
 const isDeposits = computed(() => route.path === '/deposits');
 const isDepositInterests = computed(() => route.path === '/deposits/interests');
 const isDepositCashbacks = computed(() => route.path === '/deposits/cashbacks');
+const isDepositCashflows = computed(() => route.path === '/deposits/cashflows');
 const isDepositDashboard = computed(() => route.path === '/deposits/dashboard');
 </script>
 
@@ -34,6 +35,11 @@ const isDepositDashboard = computed(() => route.path === '/deposits/dashboard');
       <router-link v-if="authStore.hasPermission('deposits:module')" :to="`/deposits/cashbacks`">
         <base-button variant="filled" :color="isDepositCashbacks ? 'primary' : 'info'" size="sm" class="font-bold">
           <base-icon icon="i-fa7-solid:rectangle-history-circle-user" /> LIST CASHBACKS
+        </base-button>
+      </router-link>
+      <router-link v-if="authStore.hasPermission('deposits:module')" :to="`/deposits/cashflows`">
+        <base-button variant="filled" :color="isDepositCashflows ? 'primary' : 'info'" size="sm" class="font-bold">
+          <base-icon icon="i-fa7-solid:money-bill-trend-up" /> CASHFLOW
         </base-button>
       </router-link>
     </div>
