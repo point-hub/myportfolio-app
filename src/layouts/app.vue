@@ -105,7 +105,13 @@ onMounted(() => {
     appMenu.value[0]?.menu?.push({ name: 'Bonds', path: '/bonds' });
   }
   if (authStore.hasPermission('stocks:module')) {
-    appMenu.value[0]?.menu?.push({ name: 'Stocks', path: '/stocks' });
+    appMenu.value[0]?.menu?.push({
+      name: 'Stocks',
+      submenu: [
+        { name: 'Stocks', path: '/stocks' },
+        { name: 'Stock Holdings', path: '/stocks/holdings' },
+      ],
+    });
   }
 });
 </script>
