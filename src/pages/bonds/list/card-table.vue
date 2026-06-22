@@ -390,9 +390,6 @@ watch(sort, async () => {
             <th class="w-1"></th>
 
             <!-- Render filter inputs for visible columns -->
-            <th v-if="columns['type']?.isVisible">
-              <base-input v-model="filter.type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['status']?.isVisible">
               <base-choosen
                 placeholder="Search..."
@@ -402,6 +399,9 @@ watch(sort, async () => {
                 border="none"
                 paddingless
               />
+            </th>
+            <th v-if="columns['type']?.isVisible">
+              <base-input v-model="filter.type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['form_number']?.isVisible">
               <base-input v-model="filter.form_number" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
