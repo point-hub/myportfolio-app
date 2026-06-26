@@ -34,13 +34,13 @@ watchEffect(() => {
           <td class="text-center">{{ index + 1 }}</td>
           <td>{{ transaction.transaction_number }}</td>
           <td>{{ transaction.date }}</td>
-          <td class="text-right">{{ formatNumber(transaction?.amount, 2) }}</td>
+          <td class="text-right">{{ formatNumber(transaction?.amount, 3) }}</td>
         </tr>
         <tr>
           <td></td>
           <td></td>
           <td class="text-right font-bold">TOTAL</td>
-          <td class="text-right">{{ formatNumber(data?.total, 2) }}</td>
+          <td class="text-right">{{ formatNumber(data?.total, 3) }}</td>
         </tr>
       </tbody>
     </base-table>

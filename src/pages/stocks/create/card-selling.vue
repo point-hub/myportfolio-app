@@ -73,10 +73,10 @@ const onDelete = (index: number) => {
               paddingless
             />
           </td>
-          <td><base-input-number v-model="selling.lots" :errors="errors?.[`selling_list.${index}.lots`]" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number :model-value="selling.shares" :errors="errors?.[`selling_list.${index}.shares`]" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="selling.price" :errors="errors?.[`selling_list.${index}.price`]" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="selling.total" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="selling.lots" :errors="errors?.[`selling_list.${index}.lots`]" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number :model-value="selling.shares" :errors="errors?.[`selling_list.${index}.shares`]" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="selling.price" :errors="errors?.[`selling_list.${index}.price`]" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="selling.total" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
           <td>
             <!-- <base-button @click="onDelete(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />

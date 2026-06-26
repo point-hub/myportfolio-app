@@ -65,42 +65,42 @@ watchEffect(() => {
       <tbody>
         <tr>
           <td class="font-bold">Total Trade Amount</td>
-          <td><base-input-number :model-value="data.buying_total" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number :model-value="data.selling_total" disabled decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number :model-value="data.buying_total" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number :model-value="data.selling_total" disabled decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">Brokerage Fee</td>
-          <td><base-input-number v-model="data.buying_brokerage_fee" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="data.selling_brokerage_fee" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.buying_brokerage_fee" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.selling_brokerage_fee" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">VAT</td>
-          <td><base-input-number v-model="data.buying_vat" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="data.selling_vat" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.buying_vat" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.selling_vat" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">Levy</td>
-          <td><base-input-number v-model="data.buying_levy" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="data.selling_levy" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.buying_levy" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.selling_levy" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">KPEI</td>
-          <td><base-input-number v-model="data.buying_kpei" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="data.selling_kpei" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.buying_kpei" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.selling_kpei" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">Stamp</td>
-          <td><base-input-number v-model="data.buying_stamp" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="data.selling_stamp" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.buying_stamp" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="data.selling_stamp" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">Proceed Amount</td>
-          <td><base-input-number :model-value="data.buying_proceed" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number :model-value="data.selling_proceed" disabled decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number :model-value="data.buying_proceed" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number :model-value="data.selling_proceed" disabled decimal-length="3" border="none" paddingless /></td>
         </tr>
         <tr>
           <td class="font-bold">Pay To</td>
-          <td colspan="2"><base-input-number :model-value="data.proceed_amount" disabled decimal-length="2" border="none" paddingless /></td>
+          <td colspan="2"><base-input-number :model-value="data.proceed_amount" disabled decimal-length="3" border="none" paddingless /></td>
         </tr>
       </tbody>
     </base-table>

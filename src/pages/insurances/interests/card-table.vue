@@ -671,10 +671,10 @@ watch(sort, async () => {
                 <td class="text-left" v-if="columns['interest_schedule.payment_date']?.isVisible">{{ insurance.interest_schedule?.payment_date }}</td>
                 <td class="text-left" v-if="columns['interest_schedule.received_date']?.isVisible">{{ insurance.interest_schedule?.received_date }}</td>
                 <td class="text-left" v-if="columns['interest_schedule.received_additional_payment_date']?.isVisible">{{ insurance.interest_schedule?.received_additional_payment_date }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.amount']?.isVisible">{{ formatNumber(insurance.interest_schedule?.amount, 2) }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.received_amount']?.isVisible">{{ formatNumber(insurance.interest_schedule?.received_amount, 2) }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.received_additional_payment_amount']?.isVisible">{{ formatNumber(insurance.interest_schedule?.received_additional_payment_amount, 2) }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.remaining_amount']?.isVisible">{{ formatNumber(roundNumber((insurance.interest_schedule?.amount ?? 0) - (insurance.interest_schedule?.received_amount ?? 0) - (insurance.interest_schedule?.received_additional_payment_amount ?? 0), 2), 2) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.amount']?.isVisible">{{ formatNumber(insurance.interest_schedule?.amount, 3) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.received_amount']?.isVisible">{{ formatNumber(insurance.interest_schedule?.received_amount, 3) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.received_additional_payment_amount']?.isVisible">{{ formatNumber(insurance.interest_schedule?.received_additional_payment_amount, 3) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.remaining_amount']?.isVisible">{{ formatNumber(roundNumber((insurance.interest_schedule?.amount ?? 0) - (insurance.interest_schedule?.received_amount ?? 0) - (insurance.interest_schedule?.received_additional_payment_amount ?? 0), 3), 3) }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.name']?.isVisible">{{ insurance.interest_schedule?.bank?.name }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.account.account_number']?.isVisible">{{ insurance.interest_schedule?.bank?.account?.account_number }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.account.account_name']?.isVisible">{{ insurance.interest_schedule?.bank?.account?.account_name }}</td>
@@ -690,15 +690,15 @@ watch(sort, async () => {
                 </td>
                 <td v-if="columns['placement.base_date']?.isVisible">{{ insurance.placement?.base_date }}</td>
                 <td v-if="columns['placement.date']?.isVisible">{{ insurance.placement?.date }}</td>
-                <td v-if="columns['placement.term']?.isVisible">{{ formatNumber(insurance.placement?.term, 2) }}</td>
+                <td v-if="columns['placement.term']?.isVisible">{{ formatNumber(insurance.placement?.term, 3) }}</td>
                 <td v-if="columns['placement.maturity_date']?.isVisible">{{ insurance.placement?.maturity_date }}</td>
-                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(insurance.placement?.amount, 2) }}</td>
+                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(insurance.placement?.amount, 3) }}</td>
                 <td v-if="columns['interest.payment_method']?.isVisible">{{ insurance.interest?.payment_method }}</td>
-                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(insurance.interest?.rate, 2) }}</td>
-                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(insurance.interest?.gross_amount, 2) }}</td>
-                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(insurance.interest?.tax_rate, 2) }}</td>
-                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(insurance.interest?.tax_amount, 2) }}</td>
-                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(insurance.interest?.net_amount, 2) }}</td>
+                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(insurance.interest?.rate, 3) }}</td>
+                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(insurance.interest?.gross_amount, 3) }}</td>
+                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(insurance.interest?.tax_rate, 3) }}</td>
+                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(insurance.interest?.tax_amount, 3) }}</td>
+                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(insurance.interest?.net_amount, 3) }}</td>
                 <td v-if="columns['notes']?.isVisible">{{ insurance.notes }}</td>
                 <td v-if="columns['is_archived']?.isVisible">
                   <base-badge v-if="insurance.is_archived" variant="filled" color="danger" class="font-bold">
