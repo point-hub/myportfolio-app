@@ -41,9 +41,7 @@ const {
     'coupon_rate': { label: 'Coupon Rate', isVisible: true, isSelectable: true },
     'bank_source.account.account_number': { label: 'Source of Fund - Account Number', isVisible: true, isSelectable: true },
     'bank_source.account.account_name': { label: 'Source of Fund - Account Name', isVisible: true, isSelectable: true },
-    'bank_placement.name': { label: 'Bank', isVisible: true, isSelectable: true },
-    'bank_placement.account.account_number': { label: 'Bank - Account Number', isVisible: true, isSelectable: true },
-    'bank_placement.account.account_name': { label: 'Bank - Account Name', isVisible: true, isSelectable: true },
+    'bank_placement.name': { label: 'Bank Placement', isVisible: true, isSelectable: true },
     'owner.name': { label: 'Owner', isVisible: true, isSelectable: true },
     'base_date': { label: 'Base Date', isVisible: true, isSelectable: true },
     'transaction_date': { label: 'Transaction Date', isVisible: true, isSelectable: true },
@@ -91,8 +89,6 @@ const {
     'bank_source.account.account_number': '',
     'bank_source.account.account_name': '',
     'bank_placement.name': '',
-    'bank_placement.account.account_number': '',
-    'bank_placement.account.account_name': '',
     'owner.name': '',
     'base_date': '',
     'transaction_date': '',
@@ -125,8 +121,6 @@ const {
     'bank_source.account.account_number': 0,
     'bank_source.account.account_name': 0,
     'bank_placement.name': 0,
-    'bank_placement.account.account_number': 0,
-    'bank_placement.account.account_name': 0,
     'owner.name': 0,
     'base_date': 0,
     'transaction_date': 0,
@@ -430,12 +424,6 @@ watch(sort, async () => {
             <th v-if="columns['bank_placement.name']?.isVisible">
               <base-input v-model="filter['bank_placement.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
-            <th v-if="columns['bank_placement.account.account_number']?.isVisible">
-              <base-input v-model="filter['bank_placement.account.account_number']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
-            <th v-if="columns['bank_placement.account.account_name']?.isVisible">
-              <base-input v-model="filter['bank_placement.account.account_name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
-            </th>
             <th v-if="columns['owner.name']?.isVisible">
               <base-input v-model="filter['owner.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -609,8 +597,6 @@ watch(sort, async () => {
               <td v-if="columns['bank_source.account.account_number']?.isVisible">{{ bond.bank_source?.account?.account_number }}</td>
               <td v-if="columns['bank_source.account.account_name']?.isVisible">{{ bond.bank_source?.account?.account_name }}</td>
               <td v-if="columns['bank_placement.name']?.isVisible">{{ bond.bank_placement?.name }}</td>
-              <td v-if="columns['bank_placement.account.account_number']?.isVisible">{{ bond.bank_placement?.account?.account_number }}</td>
-              <td v-if="columns['bank_placement.account.account_name']?.isVisible">{{ bond.bank_placement?.account?.account_name }}</td>
               <td v-if="columns['owner.name']?.isVisible">{{ bond.owner?.name }}</td>
               <td v-if="columns['base_date']?.isVisible">{{ bond.base_date }}</td>
               <td v-if="columns['transaction_date']?.isVisible">{{ bond.transaction_date }}</td>

@@ -34,6 +34,9 @@ const {
   columns: {
     status: { label: 'Status', isVisible: true, isSelectable: true },
     coupon_status: { label: 'Coupon Status', isVisible: true, isSelectable: true },
+    'bank_placement.name': { label: 'Bank Placement', isVisible: true, isSelectable: true },
+    'publisher': { label: 'Publisher', isVisible: true, isSelectable: true },
+    'series': { label: 'Series', isVisible: true, isSelectable: true },
     'type': { label: 'Type of Bond', isVisible: true, isSelectable: true },
     form_number: { label: 'Form Number', isVisible: true, isSelectable: true },
     'product': { label: 'Product', isVisible: true, isSelectable: true },
@@ -70,6 +73,9 @@ const {
     all: '',
     status: '',
     'coupon_status': '',
+    'bank_placement.name': '',
+    'publisher': '',
+    'series': '',
     'type': '',
     form_number: '',
     'product': '',
@@ -89,6 +95,9 @@ const {
   initialSortKeys: {
     status: 0,
     'coupon_status': 0,
+    'bank_placement.name': 0,
+    'publisher': 0,
+    'series': 0,
     'type': 0,
     form_number: 0,
     'product': 0,
@@ -366,6 +375,15 @@ watch(sort, async () => {
                 paddingless
               />
             </th>
+            <th v-if="columns['bank_placement.name']?.isVisible">
+              <base-input v-model="filter['bank_placement.name']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['publisher']?.isVisible">
+              <base-input v-model="filter['publisher']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['series']?.isVisible">
+              <base-input v-model="filter['series']" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
             <th v-if="columns['type']?.isVisible">
               <base-input v-model="filter.type" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
@@ -517,6 +535,9 @@ watch(sort, async () => {
                   <base-icon icon="i-fa7-solid:box-check" /> Completed
                 </base-badge>
               </td>
+              <td v-if="columns['bank_placement.name']?.isVisible">{{ bond.bank_placement?.name }}</td>
+              <td v-if="columns['publisher']?.isVisible">{{ bond.publisher }}</td>
+              <td v-if="columns['series']?.isVisible">{{ bond.series }}</td>
               <td v-if="columns['type']?.isVisible">{{ bond.type }}</td>
               <td v-if="columns['form_number']?.isVisible">
                 <router-link :to="`/bonds/${bond._id}`" class="text-blue">{{ bond.form_number }}</router-link>
