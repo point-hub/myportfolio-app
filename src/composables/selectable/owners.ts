@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 
 import { getOwnersApi, type IOwnerData } from '../api/master/owners/get.api';
 
-export function useSelectableOwners() {
+export function useSelectableOwners(type?: 'owner' | 'group') {
   const owners = ref<IOwnerData[]>([]);
   const searchOwner = ref<string | undefined>();
   const isLoading = ref(false);
@@ -31,6 +31,7 @@ export function useSelectableOwners() {
     const response = await getOwnersApi({
       search: {
         all: search,
+        type,
       },
       page: 1,
       page_size: 100,
