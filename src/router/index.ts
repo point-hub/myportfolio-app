@@ -5,6 +5,7 @@ import routesAccount from '@/pages/account/routes';
 import routesAdministrator from '@/pages/administrator/routes';
 import routesAuth from '@/pages/auth/routes';
 import routesBond from '@/pages/bonds/routes';
+import routesCashflow from '@/pages/cashflows/routes';
 import routesCouponBond from '@/pages/coupon-bonds/routes';
 import routesDeposit from '@/pages/deposits/routes';
 import routesDividendStock from '@/pages/dividend-stocks/routes';
@@ -37,6 +38,7 @@ const router = createRouter({
             },
             routesAccount,
             routesMaster,
+            routesCashflow,
             routesDeposit,
             routesInsurance,
             routesSaving,

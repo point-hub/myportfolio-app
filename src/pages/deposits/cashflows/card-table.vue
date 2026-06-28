@@ -45,6 +45,8 @@ const {
     'placement_bank.name': { label: 'Bank', isVisible: true, isSelectable: true },
     description: { label: 'Keterangan', isVisible: true, isSelectable: true },
     income: { label: 'Pendapatan', isVisible: true, isSelectable: true },
+    principal_debit: { label: 'Debit Pokok', isVisible: true, isSelectable: true },
+    principal_credit: { label: 'Kredit Pokok', isVisible: true, isSelectable: true },
     principal_balance: { label: 'Saldo Nominal Pokok', isVisible: true, isSelectable: true },
     notes: { label: 'Notes / Biaya', isVisible: true, isSelectable: true },
     income_debit: { label: 'Debit Pendapatan', isVisible: true, isSelectable: true },
@@ -76,6 +78,8 @@ const {
     'placement_bank.name': '',
     description: '',
     income: '',
+    principal_debit: '',
+    principal_credit: '',
     principal_balance: '',
     notes: '',
     income_debit: '',
@@ -93,6 +97,8 @@ const {
     'placement_bank.name': 0,
     description: 0,
     income: 0,
+    principal_debit: 0,
+    principal_credit: 0,
     principal_balance: 0,
     notes: 0,
     income_debit: 0,
@@ -285,6 +291,8 @@ onMounted(async () => {
             <th v-if="columns['placement_bank.name']?.isVisible" @click="toggleSort('placement_bank.name')">Bank</th>
             <th v-if="columns['description']?.isVisible" @click="toggleSort('description')">Keterangan</th>
             <th v-if="columns['income']?.isVisible" @click="toggleSort('income')">Pendapatan</th>
+            <th v-if="columns['principal_debit']?.isVisible" @click="toggleSort('principal_debit')">Debit Pokok</th>
+            <th v-if="columns['principal_credit']?.isVisible" @click="toggleSort('principal_credit')">Kredit Pokok</th>
             <th v-if="columns['principal_balance']?.isVisible" @click="toggleSort('principal_balance')">Saldo Nominal Pokok</th>
             <th v-if="columns['notes']?.isVisible" @click="toggleSort('notes')">Notes / Biaya</th>
             <th v-if="columns['income_debit']?.isVisible" @click="toggleSort('income_debit')">Debit Pendapatan</th>
@@ -313,6 +321,12 @@ onMounted(async () => {
             </th>
             <th v-if="columns['income']?.isVisible">
               <base-input v-model="filter.income" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['principal_debit']?.isVisible">
+              <base-input v-model="filter.principal_debit" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
+            </th>
+            <th v-if="columns['principal_credit']?.isVisible">
+              <base-input v-model="filter.principal_credit" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
             </th>
             <th v-if="columns['principal_balance']?.isVisible">
               <base-input v-model="filter.principal_balance" placeholder="Search..." :readonly="isLoading" border="none" paddingless />
@@ -362,6 +376,8 @@ onMounted(async () => {
             <td v-if="columns['placement_bank.name']?.isVisible">{{ cashflow.placement_bank?.name }}</td>
             <td v-if="columns['description']?.isVisible">{{ cashflow.description }}</td>
             <td class="text-right" v-if="columns['income']?.isVisible">{{ formatNumber(cashflow.income, 2) }}</td>
+            <td class="text-right" v-if="columns['principal_debit']?.isVisible">{{ formatNumber(cashflow.principal_debit, 2) }}</td>
+            <td class="text-right" v-if="columns['principal_credit']?.isVisible">{{ formatNumber(cashflow.principal_credit, 2) }}</td>
             <td class="text-right" v-if="columns['principal_balance']?.isVisible">{{ formatNumber(cashflow.principal_balance, 2) }}</td>
             <td v-if="columns['notes']?.isVisible">{{ cashflow.notes }}</td>
             <td class="text-right" v-if="columns['income_debit']?.isVisible">{{ formatNumber(cashflow.income_debit, 2) }}</td>

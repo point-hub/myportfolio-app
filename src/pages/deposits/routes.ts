@@ -28,8 +28,7 @@ export default {
     },
     {
       path: 'cashflows',
-      component: () => import('./cashflows/index.vue'),
-      meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:read'] },
+      redirect: '/cashflows',
     },
     {
       path: ':id',
