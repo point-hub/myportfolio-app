@@ -2,9 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 
 import AppBreadcrumb, { type IBreadcrumb } from '@/components/app-breadcrumb.vue';
-import BaseDateRangePicker from '@/components/base-date-range-picker.vue';
 import { getDashboardInvestmentsApi, type IInvestmentSummaryItem } from '@/composables/api/dashboard/get-investments.api';
-import { useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
 import { useSelectableBanks } from '@/composables/selectable/banks';
 import { useSelectableOwners } from '@/composables/selectable/owners';
 import { toast } from '@/toast';
@@ -18,11 +16,9 @@ const breadcrumbs: IBreadcrumb[] = [
 ];
 
 const filter = reactive({
-  date_from: '',
-  date_to: '',
   owner_id: '',
   bank_id: '',
-  bank_account_uuid: '',
+  group_id: '',
   instrument_type: '',
 });
 
@@ -35,9 +31,9 @@ const instrumentOptions = ref([
   { label: 'Obligasi', value: 'bonds' },
 ]);
 
-const { options: ownerOptions, searchOwner, isLoading: isLoadingOwners } = useSelectableOwners();
+const { options: ownerOptions, searchOwner, isLoading: isLoadingOwners } = useSelectableOwners('owner');
+const { options: groupOptions, searchOwner: searchGroup, isLoading: isLoadingGroups } = useSelectableOwners('group');
 const { options: bankOptions, searchBank, isLoading: isLoadingBanks } = useSelectableBanks();
-const { options: bankAccountOptions, searchBank: searchBankAccount, isLoading: isLoadingBankAccounts } = useSelectableBankAccounts();
 
 const isLoading = ref(false);
 const isResetting = ref(false);
@@ -97,11 +93,9 @@ const getInvestments = async () => {
     isLoading.value = true;
     summary.value = await getDashboardInvestmentsApi({
       search: {
-        date_from: filter.date_from,
-        date_to: filter.date_to,
         owner_id: filter.owner_id,
         bank_id: filter.bank_id,
-        bank_account_uuid: filter.bank_account_uuid,
+        group_id: filter.group_id,
         instrument_type: filter.instrument_type,
       },
     }, controller);
@@ -120,11 +114,9 @@ const getInvestments = async () => {
 
 const resetFilter = async () => {
   isResetting.value = true;
-  filter.date_from = '';
-  filter.date_to = '';
   filter.owner_id = '';
   filter.bank_id = '';
-  filter.bank_account_uuid = '';
+  filter.group_id = '';
   filter.instrument_type = '';
   await getInvestments();
   isResetting.value = false;
@@ -181,14 +173,7 @@ onMounted(async () => {
 
     <base-card title="Alokasi Portfolio + Returnnya">
       <div class="flex flex-col gap-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
-          <base-date-range-picker
-            v-model:date_from="filter.date_from"
-            v-model:date_to="filter.date_to"
-            placeholder="Tanggal"
-            :readonly="isLoading"
-            border="full"
-          />
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <base-choosen
             v-model="filter.instrument_type"
             v-model:options="instrumentOptions"
@@ -206,12 +191,12 @@ onMounted(async () => {
             :readonly="isLoading"
           />
           <base-choosen
-            v-model="filter.bank_account_uuid"
-            v-model:options="bankAccountOptions"
-            v-model:search="searchBankAccount"
-            title="Account"
-            placeholder="Account"
-            :loading="isLoadingBankAccounts"
+            v-model="filter.group_id"
+            v-model:options="groupOptions"
+            v-model:search="searchGroup"
+            title="Group"
+            placeholder="Group"
+            :loading="isLoadingGroups"
             :readonly="isLoading"
           />
           <base-choosen
