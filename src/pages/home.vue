@@ -15,6 +15,7 @@ const menus = ref<IMenu[]>([]);
 const authStore = useAuthStore();
 
 onMounted(() => {
+  if (authStore.hasPermissions(['dashboard:read'])) { menus.value.push({ name: 'Dashboard', path: '/dashboard', icon: 'i-fa7-solid:chart-pie' }); }
   if (authStore.hasPermissions(['master:module'])) { menus.value.push({ name: 'Master', path: '/master', icon: 'i-fa7-solid:address-card' }); }
   if (authStore.hasPermissions(['savings:module'])) { menus.value.push({ name: 'Savings', path: '/savings', icon: 'i-fa7-solid:piggy-bank' }); }
   if (authStore.hasPermissions(['deposits:module', 'deposits:read'])) { menus.value.push({ name: 'Cash Flow', path: '/cashflows', icon: 'i-fa7-solid:money-bill-trend-up' }); }

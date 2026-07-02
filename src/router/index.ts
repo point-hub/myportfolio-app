@@ -7,6 +7,7 @@ import routesAuth from '@/pages/auth/routes';
 import routesBond from '@/pages/bonds/routes';
 import routesCashflow from '@/pages/cashflows/routes';
 import routesCouponBond from '@/pages/coupon-bonds/routes';
+import routesDashboard from '@/pages/dashboard/routes';
 import routesDeposit from '@/pages/deposits/routes';
 import routesDividendStock from '@/pages/dividend-stocks/routes';
 import routesInsurance from '@/pages/insurances/routes';
@@ -37,6 +38,7 @@ const router = createRouter({
               meta: { requiresAuth: true },
             },
             routesAccount,
+            routesDashboard,
             routesMaster,
             routesCashflow,
             routesDeposit,

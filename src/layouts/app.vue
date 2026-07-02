@@ -99,6 +99,9 @@ onMounted(() => {
     if (authStore.hasPermission('issuers:module')) { masterMenu.submenu?.push({ name: 'Issuers', path: '/master/issuers' }); }
     appMenu.value[0]?.menu?.push(masterMenu);
   }
+  if (authStore.hasPermission('dashboard:read')) {
+    appMenu.value[0]?.menu?.push({ name: 'Dashboard', path: '/dashboard' });
+  }
   if (authStore.hasPermission('savings:module')) {
     appMenu.value[0]?.menu?.push({ name: 'Savings', path: '/savings' });
   }
@@ -112,7 +115,13 @@ onMounted(() => {
     appMenu.value[0]?.menu?.push({ name: 'Bonds', path: '/bonds' });
   }
   if (authStore.hasPermission('stocks:module')) {
-    appMenu.value[0]?.menu?.push({ name: 'Stocks', path: '/stocks' });
+    appMenu.value[0]?.menu?.push({
+      name: 'Stocks',
+      submenu: [
+        { name: 'Stocks', path: '/stocks' },
+        { name: 'Stock Holdings', path: '/stocks/holdings' },
+      ],
+    });
   }
 });
 </script>

@@ -54,10 +54,10 @@ watchEffect(() => {
               paddingless
             />
           </td>
-          <td><base-input-number v-model="buying.lots" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number :model-value="buying.shares" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="buying.price" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="buying.total" disabled decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.lots" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number :model-value="buying.shares" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.price" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.total" disabled decimal-length="3" border="none" paddingless /></td>
         </tr>
       </tbody>
     </base-table>

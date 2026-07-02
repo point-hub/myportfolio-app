@@ -7,6 +7,11 @@ export default {
       meta: { requiresAuth: true, permissions: ['stocks:module', 'stocks:read'] },
     },
     {
+      path: 'holdings',
+      component: () => import('./holdings/index.vue'),
+      meta: { requiresAuth: true, permissions: ['stocks:module', 'stocks:read'] },
+    },
+    {
       path: 'create',
       component: () => import('./create/index.vue'),
       meta: { requiresAuth: true, permissions: ['stocks:module', 'stocks:create'] },
