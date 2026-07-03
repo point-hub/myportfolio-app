@@ -18,8 +18,8 @@ onMounted(() => {
   if (authStore.hasPermissions(['dashboard:read'])) { menus.value.push({ name: 'Dashboard', path: '/dashboard', icon: 'i-fa7-solid:chart-pie' }); }
   if (authStore.hasPermissions(['master:module'])) { menus.value.push({ name: 'Master', path: '/master', icon: 'i-fa7-solid:address-card' }); }
   if (authStore.hasPermissions(['savings:module'])) { menus.value.push({ name: 'Savings', path: '/savings', icon: 'i-fa7-solid:piggy-bank' }); }
-  if (authStore.hasPermissions(['deposits:module'])) { menus.value.push({ name: 'Deposits', path: '/deposits', icon: 'i-fa7-solid:vault' }); }
-  if (authStore.hasPermissions(['deposits:module', 'deposits:read'])) { menus.value.push({ name: 'Cashflow', path: '/cashflows', icon: 'i-fa7-solid:money-bill-trend-up' }); }
+  if (authStore.hasPermissions(['deposits:module', 'deposits:read'])) { menus.value.push({ name: 'Cash Flow', path: '/cashflows', icon: 'i-fa7-solid:money-bill-trend-up' }); }
+  if (authStore.hasPermissions(['deposits:module'])) { menus.value.push({ name: 'Investment Report', path: '/deposits', icon: 'i-fa7-solid:vault' }); }
   if (authStore.hasPermissions(['insurances:module'])) { menus.value.push({ name: 'Insurances', path: '/insurances', icon: 'i-fa7-solid:money-check-pen' }); }
   if (authStore.hasPermissions(['bonds:module'])) { menus.value.push({ name: 'Bonds', path: '/bonds', icon: 'i-fa7-solid:file' }); }
   if (authStore.hasPermissions(['stocks:module'])) { menus.value.push({ name: 'Stocks', path: '/stocks', icon: 'i-fa7-solid:arrow-trend-up' }); }
