@@ -5,7 +5,6 @@ export interface IOwnerData {
   _id: string
   code: string
   name: string
-  type?: 'owner' | 'group'
   notes?: string
   is_archived?: string
   created_at?: Date

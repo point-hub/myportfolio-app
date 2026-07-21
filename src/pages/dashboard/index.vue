@@ -31,8 +31,8 @@ const instrumentOptions = ref([
   { label: 'Obligasi', value: 'bonds' },
 ]);
 
-const { options: ownerOptions, searchOwner, isLoading: isLoadingOwners } = useSelectableOwners('owner');
-const { options: groupOptions, searchOwner: searchGroup, isLoading: isLoadingGroups } = useSelectableOwners('group');
+const { options: ownerOptions, searchOwner, isLoading: isLoadingOwners } = useSelectableOwners();
+const { options: groupOptions, searchOwner: searchGroup, isLoading: isLoadingGroups } = useSelectableOwners();
 const { options: bankOptions, searchBank, isLoading: isLoadingBanks } = useSelectableBanks();
 
 const isLoading = ref(false);
