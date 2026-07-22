@@ -671,10 +671,10 @@ watch(sort, async () => {
                 <td class="text-left" v-if="columns['cashback_schedule.payment_date']?.isVisible">{{ saving.cashback_schedule?.payment_date }}</td>
                 <td class="text-left" v-if="columns['cashback_schedule.received_date']?.isVisible">{{ saving.cashback_schedule?.received_date }}</td>
                 <td class="text-left" v-if="columns['cashback_schedule.received_additional_payment_date']?.isVisible">{{ saving.cashback_schedule?.received_additional_payment_date }}</td>
-                <td class="text-right" v-if="columns['cashback_schedule.amount']?.isVisible">{{ formatNumber(saving.cashback_schedule?.amount, 2) }}</td>
-                <td class="text-right" v-if="columns['cashback_schedule.received_amount']?.isVisible">{{ formatNumber(saving.cashback_schedule?.received_amount, 2) }}</td>
-                <td class="text-right" v-if="columns['cashback_schedule.received_additional_payment_amount']?.isVisible">{{ formatNumber(saving.cashback_schedule?.received_additional_payment_amount, 2) }}</td>
-                <td class="text-right" v-if="columns['cashback_schedule.remaining_amount']?.isVisible">{{ formatNumber(roundNumber((saving.cashback_schedule?.amount ?? 0) - (saving.cashback_schedule?.received_amount ?? 0) - (saving.cashback_schedule?.received_additional_payment_amount ?? 0), 2), 2) }}</td>
+                <td class="text-right" v-if="columns['cashback_schedule.amount']?.isVisible">{{ formatNumber(saving.cashback_schedule?.amount, 3) }}</td>
+                <td class="text-right" v-if="columns['cashback_schedule.received_amount']?.isVisible">{{ formatNumber(saving.cashback_schedule?.received_amount, 3) }}</td>
+                <td class="text-right" v-if="columns['cashback_schedule.received_additional_payment_amount']?.isVisible">{{ formatNumber(saving.cashback_schedule?.received_additional_payment_amount, 3) }}</td>
+                <td class="text-right" v-if="columns['cashback_schedule.remaining_amount']?.isVisible">{{ formatNumber(roundNumber((saving.cashback_schedule?.amount ?? 0) - (saving.cashback_schedule?.received_amount ?? 0) - (saving.cashback_schedule?.received_additional_payment_amount ?? 0), 3), 3) }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.bank.name']?.isVisible">{{ saving.cashback_schedule?.bank?.name }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.bank.account.account_number']?.isVisible">{{ saving.cashback_schedule?.bank?.account?.account_number }}</td>
                 <td class="text-right" v-if="columns['cashback_schedule.bank.account.account_name']?.isVisible">{{ saving.cashback_schedule?.bank?.account?.account_name }}</td>
@@ -692,13 +692,13 @@ watch(sort, async () => {
                 <td v-if="columns['placement.date']?.isVisible">{{ saving.placement?.date }}</td>
                 <td v-if="columns['placement.term']?.isVisible">{{ saving.placement?.term }}</td>
                 <td v-if="columns['placement.maturity_date']?.isVisible">{{ saving.placement?.maturity_date }}</td>
-                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(saving.placement?.amount, 2) }}</td>
+                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(saving.placement?.amount, 3) }}</td>
                 <td v-if="columns['interest.payment_method']?.isVisible">{{ saving.interest?.payment_method }}</td>
-                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(saving.interest?.rate, 2) }}</td>
-                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(saving.interest?.gross_amount, 2) }}</td>
-                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(saving.interest?.tax_rate, 2) }}</td>
-                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(saving.interest?.tax_amount, 2) }}</td>
-                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(saving.interest?.net_amount, 2) }}</td>
+                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(saving.interest?.rate, 3) }}</td>
+                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(saving.interest?.gross_amount, 3) }}</td>
+                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(saving.interest?.tax_rate, 3) }}</td>
+                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(saving.interest?.tax_amount, 3) }}</td>
+                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(saving.interest?.net_amount, 3) }}</td>
                 <td v-if="columns['notes']?.isVisible">{{ saving.notes }}</td>
                 <td v-if="columns['is_archived']?.isVisible">
                   <base-badge v-if="saving.is_archived" variant="filled" color="danger" class="font-bold">

@@ -123,10 +123,10 @@ const onDelete = (index: number) => {
             />
           </td>
           <td>{{ transaction.owner?.name }}</td>
-          <td><base-input-number v-model="transaction.shares" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="transaction.dividend_amount" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="transaction.total_dividend" disabled decimal-length="2" border="none" paddingless /></td>
-          <td><base-input-number v-model="transaction.received_amount" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number v-model="transaction.shares" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="transaction.dividend_amount" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="transaction.total_dividend" disabled decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="transaction.received_amount" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
           <td>
             <!-- <base-button @click="onDelete(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />
@@ -136,7 +136,7 @@ const onDelete = (index: number) => {
         <tr>
           <td></td>
           <td colspan="5" class="text-right font-bold">TOTAL</td>
-          <td><base-input-number :model-value="data?.total_received" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+          <td><base-input-number :model-value="data?.total_received" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
         </tr>
       </tbody>
     </base-table>

@@ -29,7 +29,7 @@ export function parseNumber(value: string | null | undefined): number {
   return isNaN(parsed) ? 0 : parsed;
 }
 
-export function roundNumber(value: number, decimals: number = 2): number {
+export function roundNumber(value: number, decimals: number = 3): number {
   const factor = Math.pow(10, decimals);
   return Math.round(value * factor) / factor;
 }

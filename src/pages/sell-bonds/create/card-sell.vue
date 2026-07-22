@@ -27,8 +27,8 @@ const isSaving = defineModel('is-saving', { default: false });
 const { options: bankOptions, searchBank } = useSelectableBankAccounts();
 
 watchEffect(() => {
-  data.value.remaining_amount = roundNumber((data.value.principal_amount ?? 0) - (data.value.disbursement_amount ?? 0), 2);
-  data.value.disbursement_amount_remaining = roundNumber((data.value.disbursement_amount ?? 0) - (data.value.disbursement_amount_received ?? 0), 2);
+  data.value.remaining_amount = roundNumber((data.value.principal_amount ?? 0) - (data.value.disbursement_amount ?? 0), 3);
+  data.value.disbursement_amount_remaining = roundNumber((data.value.disbursement_amount ?? 0) - (data.value.disbursement_amount_received ?? 0), 3);
 });
 
 const onSelectedBank = (selected: IBankAccountOption) => {

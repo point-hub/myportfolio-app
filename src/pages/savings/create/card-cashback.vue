@@ -99,8 +99,8 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
     <div class="flex flex-col lg:flex-row lg:items-end gap-1">
       <base-datepicker layout="v" label="Payment Date"  align="left" v-model="cashbackPaymentDate" :disabled="isSaving" />
       <div class="flex items-end gap-1">
-        <base-input-number layout="v" label="Rate" align="left" placeholder="Rate" v-model="cashbackRate" :disabled="isSaving" decimal-length="2"/>
-        <base-input-number layout="v" label="Amount" align="left" placeholder="Amount" v-model="cashbackAmount" :disabled="isSaving" decimal-length="2" />
+        <base-input-number layout="v" label="Rate" align="left" placeholder="Rate" v-model="cashbackRate" :disabled="isSaving" decimal-length="3"/>
+        <base-input-number layout="v" label="Amount" align="left" placeholder="Amount" v-model="cashbackAmount" :disabled="isSaving" decimal-length="3" />
       </div>
       <base-button @click="onAddCashback" variant="filled" color="primary">
         <base-icon class="i-fa7-regular:circle-plus" /> Add
@@ -118,8 +118,8 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
       <tbody>
         <tr v-for="(cashbackSchedule, index) in data.cashback_schedule">
           <td>{{ cashbackSchedule.payment_date }}</td>
-          <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 2) }}</td>
-          <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 2) }}</td>
+          <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 3) }}</td>
+          <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 3) }}</td>
           <td>
             <base-button @click="onDeleteCashback(index)" variant="filled" color="danger">
               <base-icon class="i-fa7-regular:circle-x" />
@@ -128,7 +128,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
         </tr>
         <tr class="font-bold">
           <td colspan="2" class="text-right">TOTAL SCHEDULED CASHBACK</td>
-          <td class="text-right">{{ formatNumber(totalScheduledCashback, 2) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledCashback, 3) }}</td>
           <td></td>
         </tr>
       </tbody>

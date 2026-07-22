@@ -27,6 +27,11 @@ export default {
       meta: { requiresAuth: true, permissions: ['deposits:module'] },
     },
     {
+      path: 'cashflows',
+      component: () => import('./cashflows/index.vue'),
+      meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:read'] },
+    },
+    {
       path: ':id',
       component: () => import('./details/index.vue'),
       meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:read'] },

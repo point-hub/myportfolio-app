@@ -33,8 +33,8 @@ const nextCouponDate = computed(() => {
 });
 
 watchEffect(() => {
-  data.value.coupon_gross_amount = roundNumber((data.value.principal_amount ?? 0) * (data.value.coupon_rate ?? 0) / (data.value.base_date ?? 0) * (data.value.coupon_tenor ?? 0), 2);
-  data.value.coupon_tax_amount = roundNumber((data.value.coupon_tax_rate ?? 0) / 100 * data.value.coupon_gross_amount, 2);
+  data.value.coupon_gross_amount = roundNumber((data.value.principal_amount ?? 0) * (data.value.coupon_rate ?? 0) / (data.value.base_date ?? 0) * (data.value.coupon_tenor ?? 0), 3);
+  data.value.coupon_tax_amount = roundNumber((data.value.coupon_tax_rate ?? 0) / 100 * data.value.coupon_gross_amount, 3);
   data.value.coupon_net_amount = data.value.coupon_gross_amount - data.value.coupon_tax_amount;
 
   data.value.received_coupons?.forEach((el) => {
@@ -69,7 +69,7 @@ watchEffect(() => {
           <tr v-for="(receivedCoupon, index) in data?.received_coupons">
             <td class="text-center">{{ index + 1 }}</td>
             <td class="whitespace-nowrap">{{ receivedCoupon.date }}</td>
-            <td><base-input-number v-model="receivedCoupon.amount" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
+            <td><base-input-number v-model="receivedCoupon.amount" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
             <td>
               <base-choosen
                 title="Bank Account"
@@ -83,17 +83,17 @@ watchEffect(() => {
               />
             </td>
             <td><base-datepicker v-model="receivedCoupon.received_date" :disabled="isSaving" border="none" /></td>
-            <td><base-input-number v-model="receivedCoupon.received_amount" :disabled="isSaving" decimal-length="2" border="none" paddingless /></td>
-            <td><base-input-number v-model="receivedCoupon.remaining_amount" disabled decimal-length="2" border="none" paddingless allow-negative /></td>
+            <td><base-input-number v-model="receivedCoupon.received_amount" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+            <td><base-input-number v-model="receivedCoupon.remaining_amount" disabled decimal-length="3" border="none" paddingless allow-negative /></td>
           </tr>
           <tr>
             <td></td>
             <td></td>
-            <td class="text-right">{{ formatNumber(totalAmount, 2) }}</td>
+            <td class="text-right">{{ formatNumber(totalAmount, 3) }}</td>
             <td></td>
             <td></td>
-            <td class="text-right">{{ formatNumber(totalReceived, 2) }}</td>
-            <td class="text-right">{{ formatNumber(totalRemaining, 2) }}</td>
+            <td class="text-right">{{ formatNumber(totalReceived, 3) }}</td>
+            <td class="text-right">{{ formatNumber(totalRemaining, 3) }}</td>
           </tr>
         </tbody>
       </base-table> -->
