@@ -76,15 +76,15 @@ onMounted(() => {
   subscribe();
   sidebarMenuStore.onChooseApp(route.path);
 
-  if (authStore.hasPermission('deposits:module')) {
-    const investmentReportMenu = {
+  if (authStore.hasPermission('investment-reports:module')) {
+    const investmentReportsMenu = {
       name: 'Investment Report',
       submenu: [] as Array<{ name: string; path: string }>,
     };
-    if (authStore.hasPermission('deposits:read')) {
-      investmentReportMenu.submenu?.push({ name: 'Cash Flow', path: '/cashflows' });
+    if (authStore.hasPermission('investment-reports:read')) {
+      investmentReportsMenu.submenu?.push({ name: 'Cash Flow', path: '/cashflows' });
     }
-    appMenu.value[0]?.menu?.push(investmentReportMenu);
+    appMenu.value[0]?.menu?.push(investmentReportsMenu);
   }
   if (authStore.hasPermission('master:module')) {
     const masterMenu = {
