@@ -48,7 +48,7 @@ const hasPermission = (resource: string, action: string) =>
  * SCOPES
  * ===================== */
 const SCOPE_MAP = {
-  main: ['dashboard', 'stocks', 'payment-stocks', 'dividend-stocks', 'bonds', 'deposits', 'savings', 'insurances'],
+  main: ['dashboard', 'investment-reports', 'stocks', 'payment-stocks', 'dividend-stocks', 'bonds', 'deposits', 'savings', 'insurances'],
   master: ['master', 'users', 'roles', 'owners', 'banks', 'brokers', 'issuers'],
   administrator: ['administrator', 'audit-logs'],
 } as const;
@@ -62,6 +62,7 @@ const RESOURCE_LABELS: Record<string, string> = {
   brokers: 'Brokers',
   issuers: 'Issuers',
   dashboard: 'Dashboard',
+  'investment-reports': 'Investment Report',
   stocks: 'Stocks',
   'payment-stocks': 'Payment Stocks',
   'dividend-stocks': 'Dividend Stocks',

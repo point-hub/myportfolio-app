@@ -4,7 +4,7 @@ export default {
     {
       path: '',
       component: () => import('@/pages/deposits/cashflows/index.vue'),
-      meta: { requiresAuth: true, permissions: ['deposits:module', 'deposits:read'] },
+      meta: { requiresAuth: true, permissions: ['investment-reports:module', 'investment-reports:read'] },
     },
   ],
 };
