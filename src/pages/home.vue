@@ -18,6 +18,7 @@ onMounted(() => {
   if (authStore.hasPermissions(['dashboard:read'])) { menus.value.push({ name: 'Dashboard', path: '/dashboard', icon: 'i-fa7-solid:chart-pie' }); }
   if (authStore.hasPermissions(['master:module'])) { menus.value.push({ name: 'Master', path: '/master', icon: 'i-fa7-solid:address-card' }); }
   if (authStore.hasPermissions(['savings:module'])) { menus.value.push({ name: 'Savings', path: '/savings', icon: 'i-fa7-solid:piggy-bank' }); }
+  if (authStore.hasPermissions(['investment-reports:module', 'investment-reports:read'])) { menus.value.push({ name: 'Investment Report', path: '/cashflows', icon: 'i-fa7-solid:vault' }); }
   if (authStore.hasPermissions(['deposits:module'])) { menus.value.push({ name: 'Deposits', path: '/deposits', icon: 'i-fa7-solid:vault' }); }
   if (authStore.hasPermissions(['insurances:module'])) { menus.value.push({ name: 'Insurances', path: '/insurances', icon: 'i-fa7-solid:money-check-pen' }); }
   if (authStore.hasPermissions(['bonds:module'])) { menus.value.push({ name: 'Bonds', path: '/bonds', icon: 'i-fa7-solid:file' }); }

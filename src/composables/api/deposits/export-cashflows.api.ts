@@ -7,7 +7,7 @@ export interface IResponse {
 }
 
 export const exportDepositCashflowsApi = async (query?: IQuery): Promise<IResponse> => {
-  const response = await apiRequest.get('/v1/deposits/cashflows/export', {
+  const response = await apiRequest.get('/v1/cashflows/export', {
     params: {
       search: query?.search,
       sort: query?.sort || 'transaction_date,form_number',

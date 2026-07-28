@@ -14,6 +14,8 @@ export interface ICashflowData {
   placement_bank?: IBankData
   description: string
   income: number
+  principal_debit: number
+  principal_credit: number
   principal_balance: number
   notes?: string
   income_debit: number
@@ -35,7 +37,7 @@ export const getDepositCashflowsApi = async (query?: IQuery): Promise<IResponse>
   }
 
   controller = new AbortController();
-  const response = await apiRequest.get('/v1/deposits/cashflows', {
+  const response = await apiRequest.get('/v1/cashflows', {
     params: {
       search: query?.search,
       page: query?.page || 1,
