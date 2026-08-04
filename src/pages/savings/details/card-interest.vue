@@ -79,11 +79,11 @@ const { getLabel } = useSelectableBankAccounts();
           bank_account_number: data.interest?.bank?.account?.account_number
         })"
       />
-      <base-input-number layout="h" label="Rate" align="left" :model-value="data.interest?.rate" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Gross Amount" align="left" :model-value="data.interest?.gross_amount" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Tax Rate" align="left" :model-value="data.interest?.tax_rate" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="data.interest?.tax_amount" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Net Amount" align="left" :model-value="data.interest?.net_amount" disabled decimal-length="3" />
+      <base-input-number layout="h" label="Rate" align="left" :model-value="data.interest?.rate" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Gross Amount" align="left" :model-value="data.interest?.gross_amount" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Tax Rate" align="left" :model-value="data.interest?.tax_rate" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="data.interest?.tax_amount" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Net Amount" align="left" :model-value="data.interest?.net_amount" disabled decimal-length="4" />
       <base-checkbox layout="h" label="Interest Rollover" :model-value="data.interest?.is_rollover" disabled />
     </div>
   </base-card>

@@ -168,11 +168,11 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         :disabled="isSaving"
         placeholder="Select"
       />
-      <base-input-number layout="h" label="Rate" align="left" required v-model="data.interest.rate" :errors="errors['interest.rate']" :disabled="isSaving" decimal-length="3" />
-      <base-input-number layout="h" label="Gross Amount" align="left" required :model-value="grossAmount" :errors="errors['interest.gross_amount']" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Tax Rate" align="left" v-model="data.interest.tax_rate" :errors="errors['interest.tax_rate']" :disabled="isSaving" decimal-length="3" />
-      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="taxAmount" :errors="errors['interest.tax_amount']" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Net Amount" align="left" required :model-value="netAmount" :errors="errors['interest.net_amount']" disabled decimal-length="3" />
+      <base-input-number layout="h" label="Rate" align="left" required v-model="data.interest.rate" :errors="errors['interest.rate']" :disabled="isSaving" decimal-length="4" />
+      <base-input-number layout="h" label="Gross Amount" align="left" required :model-value="grossAmount" :errors="errors['interest.gross_amount']" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Tax Rate" align="left" v-model="data.interest.tax_rate" :errors="errors['interest.tax_rate']" :disabled="isSaving" decimal-length="4" />
+      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="taxAmount" :errors="errors['interest.tax_amount']" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Net Amount" align="left" required :model-value="netAmount" :errors="errors['interest.net_amount']" disabled decimal-length="4" />
       <base-select
         label="Bank Recipient"
         required
@@ -190,10 +190,10 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
   <base-card v-if="!data.interest.is_rollover" title="Interest Schedule">
     <div class="flex flex-col lg:flex-row lg:items-end gap-1">
       <div class="flex items-end gap-1">
-        <base-input-number layout="v" label="Term" align="left" placeholder="Term" v-model="interestTerm" :disabled="isSaving" decimal-length="3" />
+        <base-input-number layout="v" label="Term" align="left" placeholder="Term" v-model="interestTerm" :disabled="isSaving" decimal-length="4" />
         <base-datepicker layout="v" label="Payment Date" align="left" :model-value="interestPaymentDate" disabled />
       </div>
-      <base-input-number layout="v" label="Amount" align="left" placeholder="Amount" :model-value="interestAmount" disabled decimal-length="3" />
+      <base-input-number layout="v" label="Amount" align="left" placeholder="Amount" :model-value="interestAmount" disabled decimal-length="4" />
       <base-button variant="filled" color="primary" @click="onAddSchedule">
         <base-icon class="i-fa7-regular:circle-plus" /> Add
       </base-button>

@@ -69,7 +69,7 @@ watchEffect(() => {
           <tr v-for="(receivedCoupon, index) in data?.received_coupons">
             <td class="text-center">{{ index + 1 }}</td>
             <td class="whitespace-nowrap">{{ receivedCoupon.date }}</td>
-            <td><base-input-number v-model="receivedCoupon.amount" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+            <td><base-input-number v-model="receivedCoupon.amount" :disabled="isSaving" decimal-length="4" border="none" paddingless /></td>
             <td>
               <base-choosen
                 title="Bank Account"
@@ -83,8 +83,8 @@ watchEffect(() => {
               />
             </td>
             <td><base-datepicker v-model="receivedCoupon.received_date" :disabled="isSaving" border="none" /></td>
-            <td><base-input-number v-model="receivedCoupon.received_amount" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
-            <td><base-input-number v-model="receivedCoupon.remaining_amount" disabled decimal-length="3" border="none" paddingless allow-negative /></td>
+            <td><base-input-number v-model="receivedCoupon.received_amount" :disabled="isSaving" decimal-length="4" border="none" paddingless /></td>
+            <td><base-input-number v-model="receivedCoupon.remaining_amount" disabled decimal-length="4" border="none" paddingless allow-negative /></td>
           </tr>
           <tr>
             <td></td>

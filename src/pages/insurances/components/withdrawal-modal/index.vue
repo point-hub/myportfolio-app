@@ -191,7 +191,7 @@ defineExpose({
   >
     <div class="flex flex-col gap-4">
       <base-datepicker layout="v" label="Maturity Date" :model-value="maturityDate" disabled />
-      <base-input-number layout="v" label="Payment Amount" align="left" :model-value="amount" disabled decimal-length="3" />
+      <base-input-number layout="v" label="Payment Amount" align="left" :model-value="amount" disabled decimal-length="4" />
       <hr class="border-slate-300 dark:border-slate-600"  />
       <base-select
         layout="v"
@@ -205,7 +205,7 @@ defineExpose({
         placeholder="Select"
       />
       <base-datepicker layout="v" label="Received Date" required v-model="receivedDate" :errors="errors.received_date" :disabled="isReceiving" />
-      <base-input-number layout="v" label="Received Amount" required align="left" v-model="receivedAmount" :errors="errors.received_amount" :disabled="isReceiving" decimal-length="3" />
+      <base-input-number layout="v" label="Received Amount" required align="left" v-model="receivedAmount" :errors="errors.received_amount" :disabled="isReceiving" decimal-length="4" />
       <hr class="border-slate-300 dark:border-slate-600"  />
       <base-select
         layout="v"
@@ -219,8 +219,8 @@ defineExpose({
         placeholder="Select"
       />
       <base-datepicker v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Date" v-model="received_additional_payment_date" :errors="errors.additional_received_date" :disabled="isReceiving" />
-      <base-input-number v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Amount" align="left" v-model="received_additional_payment_amount" :errors="errors.additional_received_amount" :disabled="isReceiving" decimal-length="3" />
-      <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="3" allow-negative />
+      <base-input-number v-if="isAddAdditionalPayment" layout="v" label="Received Additional Payment Amount" align="left" v-model="received_additional_payment_amount" :errors="errors.additional_received_amount" :disabled="isReceiving" decimal-length="4" />
+      <base-input-number layout="v" label="Remaining Amount" align="left" :model-value="remainingAmount" disabled decimal-length="4" allow-negative />
       <base-textarea layout="v" label="Notes" :min-height="128" v-model="notes" :errors="errors.notes" :disabled="isReceiving" />
     </div>
     <template #action>
