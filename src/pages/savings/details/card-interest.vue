@@ -118,7 +118,7 @@ const { getLabel } = useSelectableBankAccounts();
           <td class="text-right">{{ interestSchedule?.term }}</td>
           <td class="text-right">{{ formatNumber(interestSchedule.amount, 3) }}</td>
           <td class="text-right whitespace-nowrap">{{ interestSchedule?.received_date }}</td>
-          <td class="text-right">{{ formatNumber(interestSchedule.received_amount ?? 0, 3) }}</td>
+          <td class="text-right">{{ formatNumber(interestSchedule.received_amount ?? 0, 4) }}</td>
           <td class="whitespace-nowrap">
             {{
               getLabel({
@@ -129,7 +129,7 @@ const { getLabel } = useSelectableBankAccounts();
             }}
           </td>
           <td class="text-right whitespace-nowrap">{{ interestSchedule?.received_additional_payment_date }}</td>
-          <td class="text-right">{{ formatNumber(interestSchedule.received_additional_payment_amount ?? 0, 3) }}</td>
+          <td class="text-right">{{ formatNumber(interestSchedule.received_additional_payment_amount ?? 0, 4) }}</td>
           <td class="whitespace-nowrap">
             {{
               getLabel({
