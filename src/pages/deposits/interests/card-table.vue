@@ -670,10 +670,10 @@ watch(sort, async () => {
                 <td class="text-left" v-if="columns['interest_schedule.payment_date']?.isVisible">{{ deposit.interest_schedule?.payment_date }}</td>
                 <td class="text-left" v-if="columns['interest_schedule.received_date']?.isVisible">{{ deposit.interest_schedule?.received_date }}</td>
                 <td class="text-left" v-if="columns['interest_schedule.received_additional_payment_date']?.isVisible">{{ deposit.interest_schedule?.received_additional_payment_date }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.amount']?.isVisible">{{ formatNumber(deposit.interest_schedule?.amount, 3) }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.received_amount']?.isVisible">{{ formatNumber(deposit.interest_schedule?.received_amount, 3) }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.received_additional_payment_amount']?.isVisible">{{ formatNumber(deposit.interest_schedule?.received_additional_payment_amount, 3) }}</td>
-                <td class="text-right" v-if="columns['interest_schedule.remaining_amount']?.isVisible">{{ formatNumber(roundNumber((deposit.interest_schedule?.amount ?? 0) - (deposit.interest_schedule?.received_amount ?? 0) - (deposit.interest_schedule?.received_additional_payment_amount ?? 0), 3), 3) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.amount']?.isVisible">{{ formatNumber(deposit.interest_schedule?.amount, 4) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.received_amount']?.isVisible">{{ formatNumber(deposit.interest_schedule?.received_amount, 4) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.received_additional_payment_amount']?.isVisible">{{ formatNumber(deposit.interest_schedule?.received_additional_payment_amount, 4) }}</td>
+                <td class="text-right" v-if="columns['interest_schedule.remaining_amount']?.isVisible">{{ formatNumber(roundNumber((deposit.interest_schedule?.amount ?? 0) - (deposit.interest_schedule?.received_amount ?? 0) - (deposit.interest_schedule?.received_additional_payment_amount ?? 0), 4), 4) }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.name']?.isVisible">{{ deposit.interest_schedule?.bank?.name }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.account.account_name']?.isVisible">{{ deposit.interest_schedule?.bank?.account?.account_name }}</td>
                 <td class="text-right" v-if="columns['interest_schedule.bank.account.account_number']?.isVisible">{{ deposit.interest_schedule?.bank?.account?.account_number }}</td>
@@ -689,15 +689,15 @@ watch(sort, async () => {
                 </td>
                 <td v-if="columns['placement.base_date']?.isVisible">{{ deposit.placement?.base_date }}</td>
                 <td v-if="columns['placement.date']?.isVisible">{{ deposit.placement?.date }}</td>
-                <td v-if="columns['placement.term']?.isVisible">{{ formatNumber(deposit.placement?.term, 3) }}</td>
+                <td v-if="columns['placement.term']?.isVisible">{{ formatNumber(deposit.placement?.term, 4) }}</td>
                 <td v-if="columns['placement.maturity_date']?.isVisible">{{ deposit.placement?.maturity_date }}</td>
-                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount, 3) }}</td>
+                <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(deposit.placement?.amount, 4) }}</td>
                 <td v-if="columns['interest.payment_method']?.isVisible">{{ deposit.interest?.payment_method }}</td>
-                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate, 3) }}</td>
-                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount, 3) }}</td>
-                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate, 3) }}</td>
-                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount, 3) }}</td>
-                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount, 3) }}</td>
+                <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(deposit.interest?.rate, 4) }}</td>
+                <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(deposit.interest?.gross_amount, 4) }}</td>
+                <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(deposit.interest?.tax_rate, 4) }}</td>
+                <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(deposit.interest?.tax_amount, 4) }}</td>
+                <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(deposit.interest?.net_amount, 4) }}</td>
                 <td v-if="columns['notes']?.isVisible">{{ deposit.notes }}</td>
                 <td v-if="columns['is_archived']?.isVisible">
                   <base-badge v-if="deposit.is_archived" variant="filled" color="danger" class="font-bold">

@@ -442,7 +442,7 @@ watch(sort, async () => {
                 <router-link :to="`/master/owners/${paymentStock.broker?._id}`" class="text-blue">{{ paymentStock.broker?.name }}</router-link>
               </td>
               <td v-if="columns['payment_date']?.isVisible">{{ paymentStock.payment_date }}</td>
-              <td v-if="columns['total']?.isVisible">{{ formatNumber(paymentStock.total, 3) }}</td>
+              <td v-if="columns['total']?.isVisible">{{ formatNumber(paymentStock.total, 4) }}</td>
               <td v-if="columns['notes']?.isVisible">{{ paymentStock.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="paymentStock.is_archived" variant="filled" color="danger" class="font-bold">

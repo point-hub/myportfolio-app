@@ -74,7 +74,7 @@ const onSelected = (selected: IStockOption,  transaction: ITransaction) => {
             />
           </td>
           <td>{{ transaction.date }}</td>
-          <td class="text-right">{{ formatNumber(transaction?.amount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(transaction?.amount, 4) }}</td>
           <td>
             <!-- <base-button @click="onDelete(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />
@@ -85,7 +85,7 @@ const onSelected = (selected: IStockOption,  transaction: ITransaction) => {
           <td></td>
           <td></td>
           <td class="text-right font-bold">TOTAL</td>
-          <td class="text-right">{{ formatNumber(data?.total, 3) }}</td>
+          <td class="text-right">{{ formatNumber(data?.total, 4) }}</td>
         </tr>
       </tbody>
     </base-table>

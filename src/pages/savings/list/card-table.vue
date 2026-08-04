@@ -662,7 +662,7 @@ const getWithdrawalAmount = (saving: ISavingData) => {
               <td v-if="columns['placement.date']?.isVisible">{{ saving.placement?.date }}</td>
               <td v-if="columns['placement.term']?.isVisible">{{ saving.placement?.term }}</td>
               <td v-if="columns['placement.maturity_date']?.isVisible">{{ saving.placement?.maturity_date }}</td>
-              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(saving.placement?.amount, 3) }}</td>
+              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(saving.placement?.amount, 4) }}</td>
               <td v-if="columns['placement.bank.name']?.isVisible">{{ saving.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ saving.source?.bank?.name }}</td>
@@ -670,17 +670,17 @@ const getWithdrawalAmount = (saving: ISavingData) => {
               <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ saving.source?.bank?.account?.account_name }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ saving.interest?.payment_method }}</td>
-              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(saving.interest?.rate, 3) }}</td>
-              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(saving.interest?.gross_amount, 3) }}</td>
-              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(saving.interest?.tax_rate, 3) }}</td>
-              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(saving.interest?.tax_amount, 3) }}</td>
-              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(saving.interest?.net_amount, 3) }}</td>
+              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(saving.interest?.rate, 4) }}</td>
+              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(saving.interest?.gross_amount, 4) }}</td>
+              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(saving.interest?.tax_rate, 4) }}</td>
+              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(saving.interest?.tax_amount, 4) }}</td>
+              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(saving.interest?.net_amount, 4) }}</td>
               <td v-if="columns['interest.bank.name']?.isVisible">{{ saving.interest?.bank?.name }}</td>
               <td v-if="columns['interest.bank.account.account_number']?.isVisible">{{ saving.interest?.bank?.account?.account_number }}</td>
               <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ saving.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['withdrawal.received_date']?.isVisible">{{ saving.withdrawal?.received_date }}</td>
-              <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(saving.withdrawal?.received_amount, 3) }}</td>
-              <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(saving.withdrawal?.remaining_amount, 3) }}</td>
+              <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(saving.withdrawal?.received_amount, 4) }}</td>
+              <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(saving.withdrawal?.remaining_amount, 4) }}</td>
               <td v-if="columns['notes']?.isVisible">{{ saving.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="saving.is_archived" variant="filled" color="danger" class="font-bold">

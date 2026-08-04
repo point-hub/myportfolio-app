@@ -662,7 +662,7 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
               <td v-if="columns['placement.date']?.isVisible">{{ insurance.placement?.date }}</td>
               <td v-if="columns['placement.term']?.isVisible">{{ insurance.placement?.term }}</td>
               <td v-if="columns['placement.maturity_date']?.isVisible">{{ insurance.placement?.maturity_date }}</td>
-              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(insurance.placement?.amount, 3) }}</td>
+              <td v-if="columns['placement.amount']?.isVisible">{{ formatNumber(insurance.placement?.amount, 4) }}</td>
               <td v-if="columns['placement.bank.name']?.isVisible">{{ insurance.placement?.bank?.name }}</td>
 
               <td v-if="columns['source.bank.name']?.isVisible">{{ insurance.source?.bank?.name }}</td>
@@ -670,17 +670,17 @@ const getWithdrawalAmount = (insurance: IInsuranceData) => {
               <td v-if="columns['source.bank.account.account_name']?.isVisible">{{ insurance.source?.bank?.account?.account_name }}</td>
 
               <td v-if="columns['interest.payment_method']?.isVisible">{{ insurance.interest?.payment_method }}</td>
-              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(insurance.interest?.rate, 3) }}</td>
-              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(insurance.interest?.gross_amount, 3) }}</td>
-              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(insurance.interest?.tax_rate, 3) }}</td>
-              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(insurance.interest?.tax_amount, 3) }}</td>
-              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(insurance.interest?.net_amount, 3) }}</td>
+              <td v-if="columns['interest.rate']?.isVisible">{{ formatNumber(insurance.interest?.rate, 4) }}</td>
+              <td v-if="columns['interest.gross_amount']?.isVisible">{{ formatNumber(insurance.interest?.gross_amount, 4) }}</td>
+              <td v-if="columns['interest.tax_rate']?.isVisible">{{ formatNumber(insurance.interest?.tax_rate, 4) }}</td>
+              <td v-if="columns['interest.tax_amount']?.isVisible">{{ formatNumber(insurance.interest?.tax_amount, 4) }}</td>
+              <td v-if="columns['interest.net_amount']?.isVisible">{{ formatNumber(insurance.interest?.net_amount, 4) }}</td>
               <td v-if="columns['interest.bank.name']?.isVisible">{{ insurance.interest?.bank?.name }}</td>
               <td v-if="columns['interest.bank.account.account_name']?.isVisible">{{ insurance.interest?.bank?.account?.account_name }}</td>
               <td v-if="columns['interest.bank.account.account_number']?.isVisible">{{ insurance.interest?.bank?.account?.account_number }}</td>
               <td v-if="columns['withdrawal.received_date']?.isVisible">{{ insurance.withdrawal?.received_date }}</td>
-              <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(insurance.withdrawal?.received_amount, 3) }}</td>
-              <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(insurance.withdrawal?.remaining_amount, 3) }}</td>
+              <td v-if="columns['withdrawal.received_amount']?.isVisible">{{ formatNumber(insurance.withdrawal?.received_amount, 4) }}</td>
+              <td v-if="columns['withdrawal.remaining_amount']?.isVisible">{{ formatNumber(insurance.withdrawal?.remaining_amount, 4) }}</td>
               <td v-if="columns['notes']?.isVisible">{{ insurance.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="insurance.is_archived" variant="filled" color="danger" class="font-bold">

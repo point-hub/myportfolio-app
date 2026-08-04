@@ -546,16 +546,16 @@ watch(sort, async () => {
               <td v-if="columns['owner.name']?.isVisible">{{ bond.owner?.name }}</td>
               <td v-if="columns['coupon_tenor']?.isVisible">{{ formatNumber(bond.coupon_tenor) }}</td>
               <td v-if="columns['received_coupons.date']?.isVisible">{{ bond.received_coupons?.date }}</td>
-              <td v-if="columns['coupon_rate']?.isVisible">{{ formatNumber(bond.coupon_rate, 3) }}%</td>
-              <td v-if="columns['coupon_gross_amount']?.isVisible">{{ formatNumber(bond.coupon_gross_amount, 3) }}</td>
-              <td v-if="columns['coupon_tax_rate']?.isVisible">{{ formatNumber(bond.coupon_tax_rate, 3) }}%</td>
-              <td v-if="columns['coupon_tax_amount']?.isVisible">{{ formatNumber(bond.coupon_tax_amount, 3) }}</td>
-              <td v-if="columns['coupon_net_amount']?.isVisible">{{ formatNumber(bond.coupon_net_amount, 3) }}</td>
+              <td v-if="columns['coupon_rate']?.isVisible">{{ formatNumber(bond.coupon_rate, 4) }}%</td>
+              <td v-if="columns['coupon_gross_amount']?.isVisible">{{ formatNumber(bond.coupon_gross_amount, 4) }}</td>
+              <td v-if="columns['coupon_tax_rate']?.isVisible">{{ formatNumber(bond.coupon_tax_rate, 4) }}%</td>
+              <td v-if="columns['coupon_tax_amount']?.isVisible">{{ formatNumber(bond.coupon_tax_amount, 4) }}</td>
+              <td v-if="columns['coupon_net_amount']?.isVisible">{{ formatNumber(bond.coupon_net_amount, 4) }}</td>
               <td v-if="columns['coupon_disbursement_bank']?.isVisible">{{ bond.received_coupons?.bank?.name }}</td>
               <td v-if="columns['coupon_disbursement_bank_account_number']?.isVisible">{{ bond.received_coupons?.bank?.account.account_number }}</td>
               <td v-if="columns['coupon_disbursement_bank_account_name']?.isVisible">{{ bond.received_coupons?.bank?.account.account_name }}</td>
               <td v-if="columns['coupon_disbursement_date']?.isVisible">{{ bond.received_coupons?.received_date }}</td>
-              <td v-if="columns['coupon_disbursement_amount']?.isVisible">{{ bond.received_coupons?.received_amount ? formatNumber(bond.received_coupons?.received_amount, 3) : '' }}</td>
+              <td v-if="columns['coupon_disbursement_amount']?.isVisible">{{ bond.received_coupons?.received_amount ? formatNumber(bond.received_coupons?.received_amount, 4) : '' }}</td>
               <td v-if="columns['notes']?.isVisible">{{ bond.received_coupons?.notes }}</td>
             </tr>
           </template>

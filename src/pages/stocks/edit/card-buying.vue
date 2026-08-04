@@ -73,10 +73,10 @@ const onDelete = (index: number) => {
               paddingless
             />
           </td>
-          <td><base-input-number v-model="buying.lots" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
-          <td><base-input-number :model-value="buying.shares" disabled decimal-length="3" border="none" paddingless /></td>
-          <td><base-input-number v-model="buying.price" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
-          <td><base-input-number v-model="buying.total" :disabled="isSaving" decimal-length="3" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.lots" :disabled="isSaving" decimal-length="4" border="none" paddingless /></td>
+          <td><base-input-number :model-value="buying.shares" disabled decimal-length="4" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.price" :disabled="isSaving" decimal-length="4" border="none" paddingless /></td>
+          <td><base-input-number v-model="buying.total" :disabled="isSaving" decimal-length="4" border="none" paddingless /></td>
           <td>
             <!-- <base-button @click="onDelete(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />

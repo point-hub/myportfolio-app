@@ -453,7 +453,7 @@ watch(sort, async () => {
               <td v-if="columns['bank.account.account_name']?.isVisible">{{ dividendStock.bank?.account.account_name }}</td>
               <td v-if="columns['bank.account.account_number']?.isVisible">{{ dividendStock.bank?.account.account_number }}</td>
               <td v-if="columns['transactions.owner.name']?.isVisible">{{ dividendStock.transactions?.[0]?.owner?.name }}</td>
-              <td v-if="columns['total_received']?.isVisible">{{ formatNumber(dividendStock.total_received, 3) }}</td>
+              <td v-if="columns['total_received']?.isVisible">{{ formatNumber(dividendStock.total_received, 4) }}</td>
               <td v-if="columns['notes']?.isVisible">{{ dividendStock.notes }}</td>
               <td v-if="columns['is_archived']?.isVisible">
                 <base-badge v-if="dividendStock.is_archived" variant="filled" color="danger" class="font-bold">

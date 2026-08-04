@@ -70,22 +70,22 @@ const interestAmount = computed(() => {
     return undefined;
   }
 
-  return roundNumber(netAmount.value * interestTerm.value / data.value.placement.term, 3);
+  return roundNumber(netAmount.value * interestTerm.value / data.value.placement.term, 4);
 });
 
 const grossAmount = computed(() => {
   const { amount, base_date, term } = data.value.placement;
   const { rate } = data.value.interest;
   if (!amount || !base_date || !term || !rate) return undefined;
-  return roundNumber(amount * (rate / 100) / base_date * term, 3);
+  return roundNumber(amount * (rate / 100) / base_date * term, 4);
 });
 
 const taxAmount = computed(() => {
-  return roundNumber((grossAmount.value ?? 0) * ((data.value.interest.tax_rate ?? 0) / 100), 3);
+  return roundNumber((grossAmount.value ?? 0) * ((data.value.interest.tax_rate ?? 0) / 100), 4);
 });
 
 const netAmount = computed(() => {
-  return roundNumber((grossAmount.value ?? 0) - taxAmount.value, 3);
+  return roundNumber((grossAmount.value ?? 0) - taxAmount.value, 4);
 });
 
 const totalScheduledAmount = computed(() => {
@@ -95,7 +95,7 @@ const totalScheduledAmount = computed(() => {
     const amount = item.amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const totalScheduledTerm = computed(() => {
@@ -105,7 +105,7 @@ const totalScheduledTerm = computed(() => {
     const term = item.term ?? 0;
     return sum + term;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 // Persist computed values in data
@@ -133,7 +133,7 @@ const onAddSchedule = () => {
   let diff = 0;
   if (totalTermAfterAdd === placementTerm) {
     if (totalAmountAfterAdd - net !== 0) {
-      diff = roundNumber(totalAmountAfterAdd - net, 3);
+      diff = roundNumber(totalAmountAfterAdd - net, 4);
     }
   }
 
@@ -168,11 +168,11 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         :disabled="isSaving"
         placeholder="Select"
       />
-      <base-input-number layout="h" label="Rate" align="left" required v-model="data.interest.rate" :errors="errors['interest.rate']" :disabled="isSaving" decimal-length="3" />
-      <base-input-number layout="h" label="Gross Amount" align="left" required :model-value="grossAmount" :errors="errors['interest.gross_amount']" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Tax Rate" align="left" v-model="data.interest.tax_rate" :errors="errors['interest.tax_rate']" :disabled="isSaving" decimal-length="3" />
-      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="taxAmount" :errors="errors['interest.tax_amount']" disabled decimal-length="3" />
-      <base-input-number layout="h" label="Net Amount" align="left" required :model-value="netAmount" :errors="errors['interest.net_amount']" disabled decimal-length="3" />
+      <base-input-number layout="h" label="Rate" align="left" required v-model="data.interest.rate" :errors="errors['interest.rate']" :disabled="isSaving" decimal-length="4" />
+      <base-input-number layout="h" label="Gross Amount" align="left" required :model-value="grossAmount" :errors="errors['interest.gross_amount']" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Tax Rate" align="left" v-model="data.interest.tax_rate" :errors="errors['interest.tax_rate']" :disabled="isSaving" decimal-length="4" />
+      <base-input-number layout="h" label="Tax Amount" align="left" :model-value="taxAmount" :errors="errors['interest.tax_amount']" disabled decimal-length="4" />
+      <base-input-number layout="h" label="Net Amount" align="left" required :model-value="netAmount" :errors="errors['interest.net_amount']" disabled decimal-length="4" />
       <base-select
         label="Bank Recipient"
         required
@@ -190,10 +190,10 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
   <base-card v-if="!data.interest.is_rollover" title="Interest Schedule">
     <div class="flex flex-col lg:flex-row lg:items-end gap-1">
       <div class="flex items-end gap-1">
-        <base-input-number layout="v" label="Term" align="left" placeholder="Term" v-model="interestTerm" :disabled="isSaving" decimal-length="3" />
+        <base-input-number layout="v" label="Term" align="left" placeholder="Term" v-model="interestTerm" :disabled="isSaving" decimal-length="4" />
         <base-datepicker layout="v" label="Payment Date" align="left" :model-value="interestPaymentDate" disabled />
       </div>
-      <base-input-number layout="v" label="Amount" align="left" placeholder="Amount" :model-value="interestAmount" disabled decimal-length="3" />
+      <base-input-number layout="v" label="Amount" align="left" placeholder="Amount" :model-value="interestAmount" disabled decimal-length="4" />
       <base-button variant="filled" color="primary" @click="onAddSchedule">
         <base-icon class="i-fa7-regular:circle-plus" /> Add
       </base-button>
@@ -211,7 +211,7 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         <tr v-for="(interestSchedule, index) in data.interest_schedule">
           <td>{{ interestSchedule.payment_date }}</td>
           <td class="text-right">{{ interestSchedule.term }}</td>
-          <td class="text-right">{{ formatNumber(interestSchedule.amount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(interestSchedule.amount, 4) }}</td>
           <td>
             <base-button v-if="(index + 1) === data.interest_schedule.length" @click="onDeleteSchedule(index)" variant="filled" color="danger" :disabled="isSaving">
               <base-icon class="i-fa7-regular:circle-x" />
@@ -221,19 +221,19 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         <tr class="font-bold">
           <td class="text-right">TOTAL SCHEDULED PAYMENT</td>
           <td class="text-right">{{ formatNumber(totalScheduledTerm) }}</td>
-          <td class="text-right">{{ formatNumber(totalScheduledAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount, 4) }}</td>
           <td></td>
         </tr>
         <tr class="font-bold">
           <td class="text-right">TOTAL PAYMENT</td>
           <td class="text-right">{{ formatNumber(data.placement.term) }}</td>
-          <td class="text-right">{{ formatNumber(netAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(netAmount, 4) }}</td>
           <td></td>
         </tr>
         <tr class="font-bold">
           <td class="text-right">REMAINING</td>
           <td class="text-right">{{ formatNumber((data.placement.term ?? 0) - totalScheduledTerm) }}</td>
-          <td class="text-right">{{ formatNumber((netAmount ?? 0) - totalScheduledAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber((netAmount ?? 0) - totalScheduledAmount, 4) }}</td>
           <td></td>
         </tr>
       </tbody>
