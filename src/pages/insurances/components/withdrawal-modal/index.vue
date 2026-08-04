@@ -143,7 +143,7 @@ const onDelete = async () => {
 const remainingAmount = computed(() => {
   return roundNumber((amount.value ?? 0)
   - (receivedAmount.value ?? 0)
-  - (received_additional_payment_amount.value ?? 0), 3);
+  - (received_additional_payment_amount.value ?? 0), 4);
 });
 
 const { options: bankOptions, searchBank } = useSelectableBankAccounts();

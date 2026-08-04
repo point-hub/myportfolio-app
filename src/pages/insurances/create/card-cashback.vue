@@ -118,8 +118,8 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
       <tbody>
         <tr v-for="(cashbackSchedule, index) in data.cashback_schedule">
           <td>{{ cashbackSchedule.payment_date }}</td>
-          <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 3) }}</td>
-          <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 3) }}</td>
+          <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 4) }}</td>
+          <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 4) }}</td>
           <td>
             <base-button @click="onDeleteCashback(index)" variant="filled" color="danger">
               <base-icon class="i-fa7-regular:circle-x" />
@@ -128,7 +128,7 @@ watch(() => [data.value.cashback.bank_account_uuid, bankOptions.value], () => {
         </tr>
         <tr class="font-bold">
           <td colspan="2" class="text-right">TOTAL SCHEDULED CASHBACK</td>
-          <td class="text-right">{{ formatNumber(totalScheduledCashback, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledCashback, 4) }}</td>
           <td></td>
         </tr>
       </tbody>

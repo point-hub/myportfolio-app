@@ -30,7 +30,7 @@ const totalScheduledAmount = computed(() => {
     const amount = item.amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const totalScheduledReceivedAmount = computed(() => {
@@ -40,7 +40,7 @@ const totalScheduledReceivedAmount = computed(() => {
     const amount = item.received_amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
@@ -50,7 +50,7 @@ const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
     const amount = item.received_additional_payment_amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const totalScheduledTerm = computed(() => {
@@ -60,7 +60,7 @@ const totalScheduledTerm = computed(() => {
     const term = item.term ?? 0;
     return sum + term;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const { getLabel } = useSelectableBankAccounts();
@@ -116,7 +116,7 @@ const { getLabel } = useSelectableBankAccounts();
         <tr v-for="(interestSchedule, index) in data.interest_schedule">
           <td class="whitespace-nowrap">{{ interestSchedule?.payment_date }}</td>
           <td class="text-right">{{ interestSchedule?.term }}</td>
-          <td class="text-right">{{ formatNumber(interestSchedule.amount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(interestSchedule.amount, 4) }}</td>
           <td class="text-right whitespace-nowrap">{{ interestSchedule?.received_date }}</td>
           <td class="text-right">{{ formatNumber(interestSchedule.received_amount ?? 0, 4) }}</td>
           <td class="whitespace-nowrap">
@@ -139,21 +139,21 @@ const { getLabel } = useSelectableBankAccounts();
               })
             }}
           </td>
-          <td class="text-right">{{ formatNumber((interestSchedule?.amount ?? 0) - (interestSchedule.received_amount ?? 0) - (interestSchedule.received_additional_payment_amount ?? 0), 3) }}</td>
+          <td class="text-right">{{ formatNumber((interestSchedule?.amount ?? 0) - (interestSchedule.received_amount ?? 0) - (interestSchedule.received_additional_payment_amount ?? 0), 4) }}</td>
           <td class="text-right">{{ interestSchedule.created_by?.username }}</td>
           <td class="text-right">{{ formatDate(interestSchedule.created_at) }}</td>
         </tr>
         <tr class="font-bold">
           <td class="text-right"></td>
           <td class="text-right">{{ formatNumber(totalScheduledTerm) }}</td>
-          <td class="text-right">{{ formatNumber(totalScheduledAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount, 4) }}</td>
           <td class="text-right"></td>
-          <td class="text-right">{{ formatNumber(totalScheduledReceivedAmount, 3) }}</td>
-          <td class="text-right"></td>
-          <td class="text-right"></td>
+          <td class="text-right">{{ formatNumber(totalScheduledReceivedAmount, 4) }}</td>
           <td class="text-right"></td>
           <td class="text-right"></td>
-          <td class="text-right">{{ formatNumber(totalScheduledAmount - totalScheduledReceivedAmount - totalScheduledReceivedAdditionalPaymentAmount, 3) }}</td>
+          <td class="text-right"></td>
+          <td class="text-right"></td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount - totalScheduledReceivedAmount - totalScheduledReceivedAdditionalPaymentAmount, 4) }}</td>
           <td class="text-right"></td>
           <td></td>
         </tr>

@@ -39,7 +39,7 @@ const totalScheduledReceivedAmount = computed(() => {
     const amount = item.received_amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
@@ -49,7 +49,7 @@ const totalScheduledReceivedAdditionalPaymentAmount = computed(() => {
     const amount = item.received_additional_payment_amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const { getLabel } = useSelectableBankAccounts();
@@ -100,8 +100,8 @@ const { getLabel } = useSelectableBankAccounts();
       <tbody>
         <tr v-for="(cashbackSchedule, index) in data.cashback_schedule">
           <td>{{ cashbackSchedule.payment_date }}</td>
-          <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 3) }}</td>
-          <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 3) }}</td>
+          <td class="text-right w-1">{{ formatNumber(cashbackSchedule.rate, 4) }}</td>
+          <td class="text-right">{{ formatNumber(cashbackSchedule.amount, 4) }}</td>
           <td class="text-right whitespace-nowrap">{{ cashbackSchedule?.received_date }}</td>
           <td class="text-right">{{ formatNumber(cashbackSchedule.received_amount ?? 0, 4) }}</td>
           <td class="whitespace-nowrap">
@@ -124,21 +124,21 @@ const { getLabel } = useSelectableBankAccounts();
               })
             }}
           </td>
-          <td class="text-right">{{ formatNumber((cashbackSchedule?.amount ?? 0) - (cashbackSchedule.received_amount ?? 0) - (cashbackSchedule.received_additional_payment_amount ?? 0), 3) }}</td>
+          <td class="text-right">{{ formatNumber((cashbackSchedule?.amount ?? 0) - (cashbackSchedule.received_amount ?? 0) - (cashbackSchedule.received_additional_payment_amount ?? 0), 4) }}</td>
           <td class="text-right">{{ cashbackSchedule.created_by?.username }}</td>
           <td class="text-right">{{ formatDate(cashbackSchedule.created_at) }}</td>
           <td></td>
         </tr>
         <tr class="font-bold">
           <td colspan="2" class="text-right"></td>
-          <td class="text-right">{{ formatNumber(totalScheduledAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount, 4) }}</td>
           <td></td>
-          <td class="text-right">{{ formatNumber(totalScheduledReceivedAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledReceivedAmount, 4) }}</td>
           <td></td>
           <td></td>
-          <td class="text-right">{{ formatNumber(totalScheduledReceivedAdditionalPaymentAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledReceivedAdditionalPaymentAmount, 4) }}</td>
           <td></td>
-          <td class="text-right">{{ formatNumber(totalScheduledAmount - totalScheduledReceivedAmount - totalScheduledReceivedAdditionalPaymentAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount - totalScheduledReceivedAmount - totalScheduledReceivedAdditionalPaymentAmount, 4) }}</td>
           <td></td>
         </tr>
       </tbody>

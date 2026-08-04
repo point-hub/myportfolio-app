@@ -70,22 +70,22 @@ const interestAmount = computed(() => {
     return undefined;
   }
 
-  return roundNumber(netAmount.value * interestTerm.value / data.value.placement.term, 3);
+  return roundNumber(netAmount.value * interestTerm.value / data.value.placement.term, 4);
 });
 
 const grossAmount = computed(() => {
   const { amount, base_date, term } = data.value.placement;
   const { rate } = data.value.interest;
   if (!amount || !base_date || !term || !rate) return undefined;
-  return roundNumber(amount * (rate / 100) / base_date * term, 3);
+  return roundNumber(amount * (rate / 100) / base_date * term, 4);
 });
 
 const taxAmount = computed(() => {
-  return roundNumber((grossAmount.value ?? 0) * ((data.value.interest.tax_rate ?? 0) / 100), 3);
+  return roundNumber((grossAmount.value ?? 0) * ((data.value.interest.tax_rate ?? 0) / 100), 4);
 });
 
 const netAmount = computed(() => {
-  return roundNumber((grossAmount.value ?? 0) - taxAmount.value, 3);
+  return roundNumber((grossAmount.value ?? 0) - taxAmount.value, 4);
 });
 
 const totalScheduledAmount = computed(() => {
@@ -95,7 +95,7 @@ const totalScheduledAmount = computed(() => {
     const amount = item.amount ?? 0;
     return sum + amount;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 const totalScheduledTerm = computed(() => {
@@ -105,7 +105,7 @@ const totalScheduledTerm = computed(() => {
     const term = item.term ?? 0;
     return sum + term;
   }, 0);
-  return roundNumber(total, 3);
+  return roundNumber(total, 4);
 });
 
 // Persist computed values in data
@@ -133,7 +133,7 @@ const onAddSchedule = () => {
   let diff = 0;
   if (totalTermAfterAdd === placementTerm) {
     if (totalAmountAfterAdd - net !== 0) {
-      diff = roundNumber(totalAmountAfterAdd - net, 3);
+      diff = roundNumber(totalAmountAfterAdd - net, 4);
     }
   }
 
@@ -212,7 +212,7 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         <tr v-for="(interestSchedule, index) in data.interest_schedule">
           <td>{{ interestSchedule.payment_date }}</td>
           <td class="text-right">{{ interestSchedule.term }}</td>
-          <td class="text-right whitespace-nowrap">{{ formatNumber(interestSchedule.amount, 3) }}</td>
+          <td class="text-right whitespace-nowrap">{{ formatNumber(interestSchedule.amount, 4) }}</td>
           <td class="text-right whitespace-nowrap">{{ interestSchedule.received_date }}</td>
           <td>
             <base-button v-if="(index + 1) === data.interest_schedule.length && !interestSchedule.received_date" @click="onDeleteSchedule(index)" variant="filled" color="danger" :disabled="isSaving">
@@ -223,19 +223,19 @@ watch(() => [data.value.interest.bank_account_uuid, bankOptions.value], () => {
         <tr class="font-bold">
           <td class="text-right">TOTAL SCHEDULED PAYMENT</td>
           <td class="text-right">{{ formatNumber(totalScheduledTerm) }}</td>
-          <td class="text-right">{{ formatNumber(totalScheduledAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(totalScheduledAmount, 4) }}</td>
           <td></td>
         </tr>
         <tr class="font-bold">
           <td class="text-right">TOTAL PAYMENT</td>
           <td class="text-right">{{ formatNumber(data.placement.term) }}</td>
-          <td class="text-right">{{ formatNumber(netAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber(netAmount, 4) }}</td>
           <td></td>
         </tr>
         <tr class="font-bold">
           <td class="text-right">REMAINING</td>
           <td class="text-right">{{ formatNumber((data.placement.term ?? 0) - totalScheduledTerm) }}</td>
-          <td class="text-right">{{ formatNumber((netAmount ?? 0) - totalScheduledAmount, 3) }}</td>
+          <td class="text-right">{{ formatNumber((netAmount ?? 0) - totalScheduledAmount, 4) }}</td>
           <td></td>
         </tr>
       </tbody>
