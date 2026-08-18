@@ -655,7 +655,7 @@ watch(sort, async () => {
                     })"
                     v-if="authStore.hasPermission('deposits:receive-interest')
                       && (!deposit.interest_schedule?.received_amount || deposit.interest_schedule?.received_amount === 0)
-                      && (deposit.status === 'active' || deposit.status === 'withdrawn')"
+                      && (deposit.status === 'active' || deposit.status === 'withdrawn' || deposit.status === 'renewed')"
                     variant="filled"
                     color="primary"
                     class="w-32 font-bold"

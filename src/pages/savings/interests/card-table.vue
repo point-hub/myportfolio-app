@@ -656,7 +656,7 @@ watch(sort, async () => {
                     })"
                     v-if="authStore.hasPermission('savings:receive-interest')
                       && (!saving.interest_schedule?.received_amount || saving.interest_schedule?.received_amount === 0)
-                      && (saving.status === 'active' || saving.status === 'withdrawn')"
+                      && (saving.status === 'active' || saving.status === 'withdrawn' || saving.status === 'renewed')"
                     variant="filled"
                     color="primary"
                     class="w-32 font-bold"
