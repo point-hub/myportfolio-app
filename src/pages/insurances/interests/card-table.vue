@@ -656,7 +656,7 @@ watch(sort, async () => {
                     })"
                     v-if="authStore.hasPermission('insurances:receive-interest')
                       && (!insurance.interest_schedule?.received_amount || insurance.interest_schedule?.received_amount === 0)
-                      && (insurance.status === 'active' || insurance.status === 'withdrawn' || saving.status === 'renewed')"
+                      && (insurance.status === 'active' || insurance.status === 'withdrawn' || insurance.status === 'renewed')"
                     variant="filled"
                     color="primary"
                     class="w-32 font-bold"
