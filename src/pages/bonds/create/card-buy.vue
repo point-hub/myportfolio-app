@@ -120,7 +120,7 @@ const onSelectedBankPlacement = (selected: IBankAccountOption) => {
       <base-datepicker layout="horizontal" label="Last Coupon Date" required v-model="data.last_coupon_date" :errors="errors.last_coupon_date" :disabled="isSaving" />
       <base-input layout="horizontal" label="Transaction Number" required v-model="data.transaction_number" :errors="errors.transaction_number" :disabled="isSaving" />
 
-      <base-input-number layout="horizontal" label="Price" align="left" required v-model="data.price" :errors="errors.price" :disabled="isSaving" />
+      <base-input-number layout="horizontal" label="Price" align="left" required v-model="data.price" :errors="errors.price" :disabled="isSaving" decimal-length="4" />
       <base-input-number layout="horizontal" label="Principal Amount" align="left" required v-model="data.principal_amount" :errors="errors.principle_amount" :disabled="isSaving" />
       <base-input-number layout="horizontal" label="Proceed Amount" align="left" required v-model="data.proceed_amount" :errors="errors.proceed_amount" :disabled="isSaving" />
       <base-input-number layout="horizontal" label="Accrued Interest" align="left" required v-model="data.accrued_interest" :errors="errors.accrued_interest" :disabled="isSaving" />
