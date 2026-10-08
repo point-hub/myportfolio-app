@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watchEffect } from 'vue';
-
-import { retrieveCounterApi } from '@/composables/api/counters/retrieve.api';
+import { watchEffect } from 'vue';
 
 import { type IForm } from './form';
 
@@ -16,6 +14,7 @@ const data = defineModel<IForm>('data', {
     transaction_date: undefined,
     settlement_date: undefined,
     maturity_date: undefined,
+    last_coupon_date: undefined,
     transaction_number: undefined,
     price: undefined,
     principal_amount: undefined,
@@ -32,11 +31,6 @@ watchEffect(() => {
   data.value.proceed_amount = (data.value.principal_amount ?? 0) * (data.value.price ?? 0) / 100;
   data.value.total_proceed = data.value.proceed_amount + (data.value.accrued_interest ?? 0);
 });
-
-onMounted(async () => {
-  const counter = await retrieveCounterApi('bonds', new Date());
-  data.value.form_number = counter.value;
-});
 </script>
 
 <template>
@@ -50,17 +44,18 @@ onMounted(async () => {
       <base-datepicker layout="horizontal" label="Transaction Date" v-model="data.transaction_date" disabled />
       <base-datepicker layout="horizontal" label="Settlement Date" v-model="data.settlement_date" disabled />
       <base-datepicker layout="horizontal" label="Maturity Date" v-model="data.maturity_date" disabled />
+      <base-datepicker layout="horizontal" label="Last Coupon Date" v-model="data.last_coupon_date" disabled />
       <base-input layout="horizontal" label="Transaction Number" v-model="data.transaction_number" disabled />
 
-      <base-input-number layout="horizontal" label="Price" align="left" v-model="data.price" disabled />
-      <base-input-number layout="horizontal" label="Principal Amount" align="left" v-model="data.principal_amount" disabled />
-      <base-input-number layout="horizontal" label="Proceed Amount" align="left" v-model="data.proceed_amount" disabled />
-      <base-input-number layout="horizontal" label="Accrued Interest" align="left" v-model="data.accrued_interest" disabled />
-      <base-input-number layout="horizontal" label="Total Proceed" align="left" v-model="data.total_proceed" disabled />
+      <base-input-number layout="horizontal" label="Price" align="left" v-model="data.price" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Principal Amount" align="left" v-model="data.principal_amount" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Proceed Amount" align="left" v-model="data.proceed_amount" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Accrued Interest" align="left" v-model="data.accrued_interest" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Total Proceed" align="left" v-model="data.total_proceed" disabled decimal-length="4" />
 
-      <base-input-number layout="horizontal" label="Coupon Rate" align="left" v-model="data.coupon_rate" disabled />
-      <base-input-number layout="horizontal" label="Coupon Tenor" align="left" v-model="data.coupon_tenor" disabled />
-      <base-input-number layout="horizontal" label="Coupon Tax Rate" align="left" v-model="data.coupon_tax_rate" disabled />
+      <base-input-number layout="horizontal" label="Coupon Rate" align="left" v-model="data.coupon_rate" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Coupon Tenor" align="left" v-model="data.coupon_tenor" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Coupon Tax Rate" align="left" v-model="data.coupon_tax_rate" disabled decimal-length="4" />
     </div>
   </base-card>
 </template>

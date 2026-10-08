@@ -113,11 +113,11 @@ const onSelectedBankPlacement = (selected: IBankAccountOption) => {
       <base-datepicker layout="horizontal" label="Last Coupon Date" required v-model="data.last_coupon_date" :errors="errors.last_coupon_date" disabled />
       <base-input layout="horizontal" label="Transaction Number" required v-model="data.transaction_number" :errors="errors.transaction_number" disabled />
 
-      <base-input-number layout="horizontal" label="Price" align="left" required v-model="data.price" :errors="errors.price" disabled />
-      <base-input-number layout="horizontal" label="Principal Amount" align="left" required v-model="data.principal_amount" :errors="errors.principle_amount" disabled />
-      <base-input-number layout="horizontal" label="Proceed Amount" align="left" required v-model="data.proceed_amount" :errors="errors.proceed_amount" disabled />
-      <base-input-number layout="horizontal" label="Accrued Interest" align="left" required v-model="data.accrued_interest" :errors="errors.accrued_interest" disabled />
-      <base-input-number layout="horizontal" label="Total Proceed" align="left" required v-model="data.total_proceed" :errors="errors.total_proceed" disabled />
+      <base-input-number layout="horizontal" label="Price" align="left" required v-model="data.price" :errors="errors.price" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Principal Amount" align="left" required v-model="data.principal_amount" :errors="errors.principle_amount" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Proceed Amount" align="left" required v-model="data.proceed_amount" :errors="errors.proceed_amount" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Accrued Interest" align="left" required v-model="data.accrued_interest" :errors="errors.accrued_interest" disabled decimal-length="4" />
+      <base-input-number layout="horizontal" label="Total Proceed" align="left" required v-model="data.total_proceed" :errors="errors.total_proceed" disabled decimal-length="4" />
 
       <base-input-number layout="horizontal" label="Coupon Rate" align="left" required v-model="data.coupon_rate" :errors="errors.coupon_rate" disabled decimal-length="4" />
       <base-input-number layout="horizontal" label="Coupon Tenor" align="left" required v-model="data.coupon_tenor" :errors="errors.coupon_tenor" disabled decimal-length="4" />

@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-
-import { retrieveCounterApi } from '@/composables/api/counters/retrieve.api';
-
 import { type IForm } from './form';
 
 const data = defineModel<IForm>('data', {
@@ -14,11 +10,6 @@ const data = defineModel<IForm>('data', {
     series: undefined,
     year_issued: undefined,
   }),
-});
-
-onMounted(async () => {
-  const counter = await retrieveCounterApi('bonds', new Date());
-  data.value.form_number = counter.value;
 });
 </script>
 

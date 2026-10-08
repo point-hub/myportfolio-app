@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, watchEffect } from 'vue';
+import { watchEffect } from 'vue';
 
-import { retrieveCounterApi } from '@/composables/api/counters/retrieve.api';
 import { type IBankAccountOption,useSelectableBankAccounts } from '@/composables/selectable/bank-accounts';
 import { useSelectableOwners } from '@/composables/selectable/owners';
 
@@ -60,11 +59,6 @@ const { options: ownerOptions, searchOwner: searchOwner } = useSelectableOwners(
 watchEffect(() => {
   data.value.proceed_amount = (data.value.principal_amount ?? 0) * (data.value.price ?? 0) / 100;
   data.value.total_proceed = data.value.proceed_amount + (data.value.accrued_interest ?? 0);
-});
-
-onMounted(async () => {
-  const counter = await retrieveCounterApi('bonds', new Date());
-  data.value.form_number = counter.value;
 });
 
 const onSelectedBankSource = (selected: IBankAccountOption) => {
